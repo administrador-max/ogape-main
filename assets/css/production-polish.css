@@ -144,34 +144,6 @@ p,
   margin-top: 24px;
 }
 
-.trust-bar {
-  padding: 0 0 24px;
-}
-
-.trust-bar__inner {
-  display: grid;
-  gap: 18px;
-  padding: 22px 26px;
-  background: #FDF0E6;
-  border-radius: 16px;
-  border: 1px solid rgba(212, 147, 10, 0.12);
-}
-
-.trust-bar__stat strong {
-  display: block;
-  color: #183642;
-  margin-bottom: 6px;
-}
-
-.trust-bar__quotes {
-  display: grid;
-  gap: 10px;
-}
-
-.trust-bar__quotes p {
-  font-size: 0.98rem;
-}
-
 .editorial-page-card--split {
   background: transparent;
   box-shadow: none;
@@ -210,28 +182,14 @@ p,
 }
 
 .editorial-page-card__form--waitlist .waitlist-card::before {
-  content: '🌿';
+  content: '';
   position: absolute;
-  top: 18px;
-  right: 18px;
-  width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  background: rgba(253, 240, 230, 0.96);
-}
-
-.waitlist-card__ornament {
-  width: 40px;
-  height: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 12px;
-  border-radius: 12px;
-  background: #FDF0E6;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle at top right, rgba(212, 147, 10, 0.12), transparent 70%);
+  pointer-events: none;
 }
 
 .waitlist-form__btn {

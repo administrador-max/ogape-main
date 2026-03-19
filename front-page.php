@@ -27,21 +27,6 @@ get_header();
         </div>
     </section>
 
-    <section class="trust-bar" aria-label="Prueba social">
-        <div class="container">
-            <div class="trust-bar__inner glass-card">
-                <div class="trust-bar__stat">
-                    <strong><?php esc_html_e( 'Lista abierta', 'ogape-child' ); ?></strong>
-                    <span><?php esc_html_e( 'Recibí primero las novedades del lanzamiento en Asunción.', 'ogape-child' ); ?></span>
-                </div>
-                <div class="trust-bar__quotes">
-                    <p><?php esc_html_e( '“Quiero saber apenas abran en mi barrio.”', 'ogape-child' ); ?></p>
-                    <p><?php esc_html_e( '“Se nota una propuesta más cuidada y clara.”', 'ogape-child' ); ?></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <section class="editorial-page-section editorial-page-section--narrow">
         <div class="container">
             <div class="editorial-page-card glass-card editorial-page-card--split">

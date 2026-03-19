@@ -10,7 +10,6 @@
     <div class="waitlist-card glass-card">
 
       <div class="waitlist-card__header">
-        <div class="waitlist-card__ornament" aria-hidden="true">🌿</div>
         <h2 class="waitlist-card__title" id="waitlist-title">Entrá primero al lanzamiento piloto</h2>
         <p class="waitlist-card__subtitle">
           Sumate a la lista de espera para enterarte antes que nadie cuando confirmemos zonas, fechas y próximos pasos del piloto en Asunción.
