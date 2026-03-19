@@ -2,17 +2,51 @@
 /**
  * Production homepage — waitlist-first landing page.
  */
+
+$hero_slides = array(
+    array(
+        'label' => 'Cazuela de tilapia',
+        'image' => 'https://ogape.com.py/wp-content/uploads/2024/06/IMG_8081-scaled.jpg',
+    ),
+    array(
+        'label' => 'Ensalada de salmón',
+        'image' => 'https://ogape.com.py/wp-content/uploads/2024/06/IMG_8235-scaled.jpg',
+    ),
+    array(
+        'label' => 'Linguini con camarón',
+        'image' => 'https://ogape.com.py/wp-content/uploads/2024/06/IMG_7966-scaled.jpg',
+    ),
+    array(
+        'label' => 'Solomillo de cerdo',
+        'image' => 'https://ogape.com.py/wp-content/uploads/2024/06/IMG_8298-scaled.jpg',
+    ),
+);
+
 get_header();
 ?>
 
 <main id="main" class="site-main" role="main">
     <section class="editorial-page-hero editorial-page-hero--waitlist">
         <div class="container">
-            <div class="editorial-page-hero__media" aria-hidden="true">
+            <div class="editorial-page-hero__media" aria-label="Platos destacados de Ogape">
+                <div class="editorial-page-hero__slides" aria-hidden="true">
+                    <?php foreach ( $hero_slides as $index => $slide ) : ?>
+                        <div
+                            class="editorial-page-hero__slide"
+                            style="background-image: url('<?php echo esc_url( $slide['image'] ); ?>'); --slide-index: <?php echo esc_attr( $index ); ?>;"
+                        ></div>
+                    <?php endforeach; ?>
+                </div>
                 <div class="editorial-page-hero__media-overlay"></div>
                 <div class="editorial-page-hero__illustration">
-                    <span class="editorial-page-hero__icon">🍽️</span>
-                    <span class="editorial-page-hero__badge">Hecho para Asunción</span>
+                    <div class="editorial-page-hero__meta">
+                        <span class="editorial-page-hero__badge">Hecho para Asunción</span>
+                        <div class="editorial-page-hero__slide-labels" aria-hidden="true">
+                            <?php foreach ( $hero_slides as $index => $slide ) : ?>
+                                <span class="editorial-page-hero__slide-label" style="--slide-index: <?php echo esc_attr( $index ); ?>;"><?php echo esc_html( $slide['label'] ); ?></span>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
 
