@@ -95,6 +95,22 @@
     form.querySelectorAll('.waitlist-form__field').forEach(function (field) {
       field.classList.remove('has-error');
     });
+    form.querySelectorAll('.waitlist-form__error').forEach(function (error) {
+      error.hidden = true;
+      error.textContent = '';
+    });
+  }
+
+  function setFieldError(form, fieldName, message) {
+    var field = form.querySelector('[name="' + fieldName + '"]');
+    var error = form.querySelector('[data-error-for="' + fieldName + '"]');
+    if (field && field.closest('.waitlist-form__field')) {
+      field.closest('.waitlist-form__field').classList.add('has-error');
+    }
+    if (error) {
+      error.textContent = message;
+      error.hidden = false;
+    }
   }
 
   function setWaitlistStatus(message, type) {
@@ -121,6 +137,13 @@
     var neighbourhoodSelect = waitlistForm.querySelector('[name="neighbourhood"]');
     var otherNeighbourhoodField = waitlistForm.querySelector('.waitlist-form__field--other-neighbourhood');
     var otherNeighbourhoodInput = waitlistForm.querySelector('[name="neighbourhood_other"]');
+    var validationMessages = {
+      first_name: 'Por favor, escribí tu nombre.',
+      email: 'Ingresá un email válido.',
+      phone_whatsapp: 'Ingresá un WhatsApp válido con +595 o al menos 8 dígitos.',
+      neighbourhood: 'Seleccioná tu barrio.',
+      neighbourhood_other: 'Escribí tu barrio para continuar.'
+    };
 
     function syncNeighbourhoodOther() {
       if (!neighbourhoodSelect || !otherNeighbourhoodField || !otherNeighbourhoodInput) return;
@@ -158,12 +181,63 @@
       neighbourhoodSelect.addEventListener('change', syncNeighbourhoodOther);
     }
 
+    function validateField(field) {
+      if (!field) return true;
+
+      var name = field.name;
+      var value = (field.value || '').trim();
+      var valid = true;
+
+      if (name === 'email') {
+        valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      } else if (name === 'phone_whatsapp') {
+        var digits = value.replace(/\D+/g, '');
+        valid = value.indexOf('+595') === 0 || digits.length >= 8;
+      } else if (field.required) {
+        valid = value !== '';
+      }
+
+      if (!valid) {
+        setFieldError(waitlistForm, name, validationMessages[name] || 'Revisá este campo.');
+      }
+
+      return valid;
+    }
+
+    ['first_name', 'email', 'phone_whatsapp', 'neighbourhood', 'neighbourhood_other'].forEach(function (fieldName) {
+      var field = waitlistForm.querySelector('[name="' + fieldName + '"]');
+      if (!field) return;
+      field.addEventListener('blur', function () {
+        clearWaitlistErrors(waitlistForm);
+        validateField(field);
+      });
+    });
+
     waitlistForm.addEventListener('submit', function (e) {
       e.preventDefault();
 
       clearWaitlistErrors(waitlistForm);
       if (waitlistStatus) {
         waitlistStatus.hidden = true;
+      }
+
+      var requiredFields = [
+        waitlistForm.querySelector('[name="first_name"]'),
+        waitlistForm.querySelector('[name="email"]'),
+        waitlistForm.querySelector('[name="phone_whatsapp"]'),
+        waitlistForm.querySelector('[name="neighbourhood"]')
+      ];
+
+      var formIsValid = requiredFields.every(validateField);
+      if (otherNeighbourhoodInput && otherNeighbourhoodInput.required) {
+        formIsValid = validateField(otherNeighbourhoodInput) && formIsValid;
+      }
+
+      if (!formIsValid) {
+        var firstInvalid = waitlistForm.querySelector('.waitlist-form__field.has-error input, .waitlist-form__field.has-error select');
+        if (firstInvalid) firstInvalid.focus();
+        setWaitlistStatus('Revisá los campos marcados antes de enviar.', 'error');
+        return;
       }
 
       var formData = new FormData(waitlistForm);
@@ -193,7 +267,7 @@
             if (data.field) {
               var invalidField = waitlistForm.querySelector('[name="' + data.field + '"]');
               if (invalidField) {
-                invalidField.closest('.waitlist-form__field').classList.add('has-error');
+                setFieldError(waitlistForm, data.field, data.message || ogapeTheme.messages.error);
                 invalidField.focus();
               }
             }
@@ -203,7 +277,7 @@
           }
 
           if (successCopy) {
-            successCopy.textContent = data.message || ogapeTheme.messages.success;
+            successCopy.textContent = '¡Listo! Te avisamos cuando abramos tu zona. 🎉';
           }
 
           waitlistForm.hidden = true;

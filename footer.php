@@ -15,6 +15,7 @@
             <div class="footer__grid">
 
                 <div class="footer__brand">
+                    <div class="footer__logo-mark"><?php ogape_render_logo(); ?></div>
                     <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="footer__logo"><?php bloginfo( 'name' ); ?></a>
                     <p class="footer__tagline">Comida fresca y cuidada, pensada para Paraguay.</p>
                     <p class="footer__brand-copy">

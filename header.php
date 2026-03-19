@@ -14,7 +14,7 @@
 
 <div id="page" class="site">
 
-    <?php $join_url = ogape_get_waitlist_url(); ?>
+    <?php $join_url = '#waitlist-form'; ?>
 
     <!-- Background canvas (decorative orbs — matches waitlist page) -->
     <div class="bg-canvas" aria-hidden="true">
@@ -27,8 +27,11 @@
         <div class="container">
             <div class="nav__inner">
 
-                <div class="nav__logo">
-                    <?php ogape_render_logo(); ?>
+                <div class="nav__logo-wrap">
+                    <div class="nav__logo">
+                        <?php ogape_render_logo(); ?>
+                    </div>
+                    <p class="nav__tagline"><?php esc_html_e( 'Comida fresca, local y bien pensada.', 'ogape-child' ); ?></p>
                 </div>
 
                 <div class="nav__actions">

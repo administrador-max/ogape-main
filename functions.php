@@ -21,6 +21,17 @@ function ogape_get_contact_email() {
     return sanitize_email( apply_filters( 'ogape_contact_email', $email ) );
 }
 
+add_filter(
+    'show_admin_bar',
+    static function( $show ) {
+        if ( ! is_user_logged_in() ) {
+            return false;
+        }
+
+        return $show;
+    }
+);
+
 /**
  * Resolve the canonical waitlist URL.
  *
@@ -60,6 +71,13 @@ function ogape_enqueue_assets() {
         get_stylesheet_directory_uri() . '/assets/css/components/patterns.css',
         array( 'ogape-main' ),
         $patterns_version
+    );
+
+    wp_enqueue_style(
+        'ogape-production-polish',
+        get_stylesheet_directory_uri() . '/assets/css/production-polish.css',
+        array( 'ogape-patterns' ),
+        filemtime( get_stylesheet_directory() . '/assets/css/production-polish.css' )
     );
 
     // 3. Main JavaScript (loaded in footer, deferred)
@@ -227,6 +245,14 @@ function ogape_get_meta_description() {
  * @return string
  */
 function ogape_get_default_og_image_url() {
+    $site_icon_id = (int) get_option( 'site_icon' );
+    if ( $site_icon_id > 0 ) {
+        $site_icon_url = wp_get_attachment_image_url( $site_icon_id, 'full' );
+        if ( $site_icon_url ) {
+            return $site_icon_url;
+        }
+    }
+
     return get_stylesheet_directory_uri() . '/assets/img/og-default.jpg';
 }
 
@@ -243,6 +269,11 @@ function ogape_output_social_meta_tags() {
     $title       = wp_get_document_title();
     $description = ogape_get_meta_description();
     $request_uri = '/';
+
+    if ( is_front_page() || is_page( 'waitlist' ) ) {
+        $title       = __( 'Ogape — Tu Chef en Casa | Lista de Espera', 'ogape-child' );
+        $description = __( 'Sumate a la lista de espera de Ogape y sé el primero en saber cuándo abrimos en tu barrio de Asunción.', 'ogape-child' );
+    }
     if ( isset( $wp ) && isset( $wp->request ) && '' !== $wp->request ) {
         $request_uri = '/' . ltrim( trailingslashit( $wp->request ), '/' );
     }
