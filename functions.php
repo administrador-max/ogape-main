@@ -21,6 +21,16 @@ function ogape_get_contact_email() {
     return sanitize_email( apply_filters( 'ogape_contact_email', $email ) );
 }
 
+/**
+ * Resolve the canonical waitlist URL.
+ *
+ * @return string
+ */
+function ogape_get_waitlist_url() {
+    $waitlist_page = get_page_by_path( 'waitlist' );
+    return $waitlist_page ? get_permalink( $waitlist_page ) : home_url( '/waitlist/' );
+}
+
 // ── ENQUEUE ASSETS ─────────────────────────────────────────
 function ogape_enqueue_assets() {
 
@@ -280,6 +290,35 @@ function ogape_document_title_parts( $parts ) {
     return $parts;
 }
 add_filter( 'document_title_parts', 'ogape_document_title_parts' );
+
+/**
+ * Keep production focused on the waitlist funnel.
+ */
+function ogape_redirect_non_waitlist_pages() {
+    global $pagenow;
+
+    if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+        return;
+    }
+
+    if ( 'wp-login.php' === $pagenow ) {
+        return;
+    }
+
+    if ( is_feed() || is_robots() || is_trackback() ) {
+        return;
+    }
+
+    if ( is_front_page() || is_home() || is_page( 'waitlist' ) ) {
+        return;
+    }
+
+    if ( is_page() || is_singular() || is_archive() || is_search() || is_404() ) {
+        wp_safe_redirect( ogape_get_waitlist_url(), 301 );
+        exit;
+    }
+}
+add_action( 'template_redirect', 'ogape_redirect_non_waitlist_pages' );
 
 // ── REMOVE UNNECESSARY WP BLOAT ─────────────────────────────
 remove_action( 'wp_head', 'wp_generator' );           // Hide WP version

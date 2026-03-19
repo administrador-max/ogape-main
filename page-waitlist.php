@@ -5,11 +5,6 @@
  */
 
 get_header();
-
-$menu_page          = get_page_by_path( 'menu' );
-$como_funciona_page = get_page_by_path( 'como-funciona' );
-$menu_url           = $menu_page ? get_permalink( $menu_page ) : home_url( '/menu/' );
-$como_funciona_url  = $como_funciona_page ? get_permalink( $como_funciona_page ) : home_url( '/#features' );
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -43,15 +38,6 @@ $como_funciona_url  = $como_funciona_page ? get_permalink( $como_funciona_page )
                 <div class="editorial-page-card__form">
                     <?php get_template_part( 'templates/components/waitlist-form' ); ?>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="editorial-page-section editorial-page-section--narrow">
-        <div class="container">
-            <div class="editorial-inline-actions editorial-inline-actions--center">
-                <a href="<?php echo esc_url( $menu_url ); ?>" class="btn btn--secondary btn--md">Ver menú</a>
-                <a href="<?php echo esc_url( $como_funciona_url ); ?>" class="btn btn--ghost btn--md">Cómo funciona</a>
             </div>
         </div>
     </section>

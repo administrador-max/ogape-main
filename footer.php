@@ -1,70 +1,12 @@
     </div><!-- #content .site-content -->
 
     <?php
-    $ogape_contact_email    = ogape_get_contact_email();
-    $wa                     = ogape_get_whatsapp_url();
-    $wa_display             = ogape_get_whatsapp_display();
-    $menu_page           = get_page_by_path( 'menu' );
-    $nosotros_page       = get_page_by_path( 'nosotros' );
-    $faq_page            = get_page_by_path( 'faq' );
-    $como_funciona_page  = get_page_by_path( 'como-funciona' );
-    $mision_page         = get_page_by_path( 'mision' );
-    $privacidad_page     = get_page_by_path( 'politica-de-privacidad' );
-    $terminos_page       = get_page_by_path( 'terminos-y-condiciones' );
-
-    $links_navigation = array(
-        array(
-            'label' => __( 'Menú', 'ogape-child' ),
-            'url'   => $menu_page ? get_permalink( $menu_page ) : '',
-        ),
-        array(
-            'label' => __( 'Cómo funciona', 'ogape-child' ),
-            'url'   => $como_funciona_page ? get_permalink( $como_funciona_page ) : home_url( '/#features' ),
-        ),
-        array(
-            'label' => __( 'Preguntas frecuentes', 'ogape-child' ),
-            'url'   => $faq_page ? get_permalink( $faq_page ) : '',
-        ),
-    );
-
-    $links_company = array(
-        array(
-            'label' => __( 'Nosotros', 'ogape-child' ),
-            'url'   => $nosotros_page ? get_permalink( $nosotros_page ) : '',
-        ),
-        array(
-            'label' => __( 'Misión y propuesta', 'ogape-child' ),
-            'url'   => $mision_page ? get_permalink( $mision_page ) : ( $nosotros_page ? get_permalink( $nosotros_page ) . '#nosotros-mision' : '' ),
-        ),
-    );
-
-    $render_footer_links = static function( $links ) {
-        $has_links = false;
-        foreach ( $links as $link ) {
-            if ( ! empty( $link['url'] ) ) {
-                $has_links = true;
-                break;
-            }
-        }
-
-        if ( ! $has_links ) {
-            return;
-        }
-
-        echo '<ul class="footer__menu">';
-        foreach ( $links as $link ) {
-            if ( empty( $link['url'] ) ) {
-                continue;
-            }
-
-            printf(
-                '<li><a href="%1$s">%2$s</a></li>',
-                esc_url( $link['url'] ),
-                esc_html( $link['label'] )
-            );
-        }
-        echo '</ul>';
-    };
+    $ogape_contact_email = ogape_get_contact_email();
+    $wa                  = ogape_get_whatsapp_url();
+    $wa_display          = ogape_get_whatsapp_display();
+    $waitlist_url        = ogape_get_waitlist_url();
+    $privacidad_page     = get_page_by_path( 'privacidad' );
+    $terminos_page       = get_page_by_path( 'terminos' );
     ?>
 
     <!-- Site Footer -->
@@ -76,19 +18,16 @@
                     <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="footer__logo"><?php bloginfo( 'name' ); ?></a>
                     <p class="footer__tagline">Comida fresca y cuidada, pensada para Paraguay.</p>
                     <p class="footer__brand-copy">
-                        <?php esc_html_e( 'Piloto inicial en Asunción con una selección breve y confiable.', 'ogape-child' ); ?>
+                        <?php esc_html_e( 'Estamos abriendo con foco: una sola experiencia activa para acompañar el lanzamiento y ordenar la demanda del piloto.', 'ogape-child' ); ?>
                     </p>
                 </div>
 
                 <div class="footer__columns">
                     <div class="footer__nav">
-                        <h3 class="footer__nav-title"><?php esc_html_e( 'Navegación', 'ogape-child' ); ?></h3>
-                        <?php $render_footer_links( $links_navigation ); ?>
-                    </div>
-
-                    <div class="footer__nav">
-                        <h3 class="footer__nav-title"><?php esc_html_e( 'Empresa', 'ogape-child' ); ?></h3>
-                        <?php $render_footer_links( $links_company ); ?>
+                        <h3 class="footer__nav-title"><?php esc_html_e( 'Lista de espera', 'ogape-child' ); ?></h3>
+                        <ul class="footer__menu">
+                            <li><a href="<?php echo esc_url( $waitlist_url ); ?>"><?php esc_html_e( 'Unirme ahora', 'ogape-child' ); ?></a></li>
+                        </ul>
                     </div>
 
                     <div class="footer__contact">
@@ -102,7 +41,7 @@
                             <?php endif; ?>
                             <a href="https://www.instagram.com/ogapepy" class="footer__contact-link" target="_blank" rel="noopener noreferrer">Instagram</a>
                         </div>
-                        <p class="footer__contact-note"><?php esc_html_e( 'Consultas sobre cobertura, piloto y alianzas.', 'ogape-child' ); ?></p>
+                        <p class="footer__contact-note"><?php esc_html_e( 'Consultas sobre cobertura, piloto y lanzamiento.', 'ogape-child' ); ?></p>
                     </div>
                 </div>
 
