@@ -108,15 +108,11 @@ p,
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)),
-    linear-gradient(135deg, rgba(24, 54, 66, 0.42), rgba(212, 147, 10, 0.20));
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
 }
 
 .editorial-page-hero__media-overlay {
-  background:
-    radial-gradient(circle at 20% 18%, rgba(255,255,255,0.22), transparent 24%),
-    linear-gradient(180deg, rgba(14, 23, 29, 0.08), rgba(14, 23, 29, 0.34));
+  background: linear-gradient(180deg, rgba(14, 23, 29, 0.02), rgba(14, 23, 29, 0.16));
   z-index: 2;
 }
 
