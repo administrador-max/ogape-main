@@ -40,7 +40,6 @@ get_header();
                 <div class="editorial-page-hero__media-overlay"></div>
                 <div class="editorial-page-hero__illustration">
                     <div class="editorial-page-hero__meta">
-                        <span class="editorial-page-hero__badge">Hecho para Asunción</span>
                         <div class="editorial-page-hero__slide-labels" aria-hidden="true">
                             <?php foreach ( $hero_slides as $index => $slide ) : ?>
                                 <span class="editorial-page-hero__slide-label" style="--slide-index: <?php echo esc_attr( $index ); ?>;"><?php echo esc_html( $slide['label'] ); ?></span>
