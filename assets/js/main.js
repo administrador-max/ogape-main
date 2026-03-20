@@ -87,7 +87,7 @@
   }, { passive: true });
 
   // ── WAITLIST SUBMISSION ───────────────────────────────────
-  var waitlistForm = document.getElementById('waitlist-form');
+  var waitlistForm = document.querySelector('form.waitlist-form');
   var waitlistStatus = document.getElementById('waitlist-status');
   var waitlistSuccess = document.getElementById('waitlist-success');
 
