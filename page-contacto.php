@@ -47,8 +47,8 @@ $methods = array(
         'eyebrow'  => __( 'Facebook', 'ogape-child' ),
         'title'    => __( 'Seguí novedades en Facebook', 'ogape-child' ),
         'body'     => __( 'También vamos a compartir actualizaciones y señales del lanzamiento en Facebook.', 'ogape-child' ),
-        'label'    => __( 'facebook.com/ogapechef1', 'ogape-child' ),
-        'url'      => 'https://facebook.com/ogapechef1',
+        'label'    => __( 'facebook.com/ogapechefpy1', 'ogape-child' ),
+        'url'      => 'https://facebook.com/ogapechefpy1',
         'external' => true,
     ),
 );

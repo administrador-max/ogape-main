@@ -42,7 +42,7 @@
                             <?php endif; ?>
                             <a href="https://www.instagram.com/ogapechefpy" class="footer__contact-link" target="_blank" rel="noopener noreferrer">Instagram</a>
                             <a href="https://x.com/ogapechefpy" class="footer__contact-link" target="_blank" rel="noopener noreferrer">X.com</a>
-                            <a href="https://facebook.com/ogapechef1" class="footer__contact-link" target="_blank" rel="noopener noreferrer">Facebook</a>
+                            <a href="https://facebook.com/ogapechefpy1" class="footer__contact-link" target="_blank" rel="noopener noreferrer">Facebook</a>
                         </div>
                         <p class="footer__contact-note"><?php esc_html_e( 'Consultas sobre cobertura, piloto y lanzamiento.', 'ogape-child' ); ?></p>
                     </div>
