@@ -73,6 +73,15 @@
     });
   });
 
+  // Footer legal links — force direct navigation if any stale client behavior interferes.
+  document.querySelectorAll('.footer__legal-links a').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.location.assign(link.href);
+    });
+  });
+
   // Scroll depth tracking
   var depths = [25, 50, 75, 90];
   var fired = {};
