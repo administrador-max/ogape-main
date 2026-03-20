@@ -5,19 +5,19 @@
 
 $hero_slides = array(
     array(
-        'label' => 'Cazuela de tilapia',
+        'label' => 'Cazuela de Tilapia',
         'image' => get_stylesheet_directory_uri() . '/assets/img/hero-drive/cazuela-de-tilapia.jpg',
     ),
     array(
-        'label' => 'Ensalada de salmón',
+        'label' => 'Ensalada de Salmón',
         'image' => get_stylesheet_directory_uri() . '/assets/img/hero-drive/ensalada-de-salmon.jpg',
     ),
     array(
-        'label' => 'Linguini con camarón',
+        'label' => 'Linguini con Camarón',
         'image' => get_stylesheet_directory_uri() . '/assets/img/hero-drive/linguini-con-camaron.jpg',
     ),
     array(
-        'label' => 'Solomillo de cerdo',
+        'label' => 'Solomillo de Cerdo',
         'image' => get_stylesheet_directory_uri() . '/assets/img/hero-drive/solomillo-de-cerdo.jpg',
     ),
 );
