@@ -65,12 +65,13 @@ get_header();
             <div class="editorial-page-card glass-card editorial-page-card--split">
                 <div class="editorial-page-card__copy editorial-page-card__copy--waitlist">
                     <div class="editorial-page-card__icon" aria-hidden="true">🥕</div>
-                    <p class="section__label"><?php esc_html_e( 'Por qué anotarte', 'ogape-child' ); ?></p>
-                    <h2 class="section__heading"><?php esc_html_e( 'Primero claridad, después escala.', 'ogape-child' ); ?></h2>
-                    <p class="section__sub editorial-page-card__lead"><?php esc_html_e( 'Queremos abrir bien. Eso significa cupos limitados, zonas priorizadas por demanda y una comunicación directa con quienes se anoten primero.', 'ogape-child' ); ?></p>
+                    <p class="section__label"><?php esc_html_e( 'POR QUÉ ANOTARTE', 'ogape-child' ); ?></p>
+                    <h2 class="section__heading"><?php esc_html_e( 'Cociná en casa, sin pensar en qué ni cómo.', 'ogape-child' ); ?></h2>
+                    <p class="section__sub editorial-page-card__lead"><?php esc_html_e( 'Ogape es tu chef en casa a través de meal kits: cajas con ingredientes frescos, porcionados y recetas simples para que cocines en tu casa sin complicaciones. Empezamos con foco —cupos limitados y zonas priorizadas— para asegurar una experiencia impecable mientras construimos la base para escalar.', 'ogape-child' ); ?></p>
                     <ul class="editorial-checklist">
                         <li><?php esc_html_e( 'Te avisamos cuando abramos tu zona.', 'ogape-child' ); ?></li>
-                        <li><?php esc_html_e( 'Recibís primero novedades del piloto y del menú.', 'ogape-child' ); ?></li>
+                        <li><?php esc_html_e( 'Recibís primero novedades del piloto, menús y lanzamientos.', 'ogape-child' ); ?></li>
+                        <li><?php esc_html_e( 'Accedés antes a nuestros meal kits y mejoras continuas.', 'ogape-child' ); ?></li>
                         <li><?php esc_html_e( 'Nos ayudás a definir dónde expandir la cobertura.', 'ogape-child' ); ?></li>
                     </ul>
                 </div>
