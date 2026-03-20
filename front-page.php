@@ -54,7 +54,7 @@ get_header();
                 <h1 class="editorial-page-hero__title"><?php esc_html_e( 'Entrá temprano y seguí el lanzamiento desde adentro.', 'ogape-child' ); ?></h1>
                 <p class="editorial-page-hero__subtitle"><?php esc_html_e( 'Ogape está armando una apertura cuidada en Asunción. Sumate hoy para enterarte primero cuándo abrimos tu zona, qué entra al piloto y cómo acceder antes que el resto.', 'ogape-child' ); ?></p>
                 <div class="editorial-inline-actions editorial-inline-actions--hero">
-                    <a href="#waitlist-form" class="btn btn--primary btn--lg"><?php esc_html_e( 'Unirme a la lista', 'ogape-child' ); ?></a>
+                    <a href="#waitlist-form-section" class="btn btn--primary btn--lg"><?php esc_html_e( 'Unirme a la lista', 'ogape-child' ); ?></a>
                 </div>
             </div>
         </div>
@@ -74,7 +74,7 @@ get_header();
                         <li><?php esc_html_e( 'Nos ayudás a definir dónde expandir la cobertura.', 'ogape-child' ); ?></li>
                     </ul>
                 </div>
-                <div class="editorial-page-card__form editorial-page-card__form--waitlist" id="waitlist-form">
+                <div class="editorial-page-card__form editorial-page-card__form--waitlist" id="waitlist-form-section">
                     <?php get_template_part( 'templates/components/waitlist-form' ); ?>
                 </div>
             </div>
