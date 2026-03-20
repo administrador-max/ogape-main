@@ -6,19 +6,19 @@
 $hero_slides = array(
     array(
         'label' => 'Cazuela de tilapia',
-        'image' => 'https://ogape.com.py/wp-content/uploads/2024/06/IMG_8081-scaled.jpg',
+        'image' => get_stylesheet_directory_uri() . '/assets/img/hero-drive/cazuela-de-tilapia.jpg',
     ),
     array(
         'label' => 'Ensalada de salmón',
-        'image' => 'https://ogape.com.py/wp-content/uploads/2024/06/IMG_8235-scaled.jpg',
+        'image' => get_stylesheet_directory_uri() . '/assets/img/hero-drive/ensalada-de-salmon.jpg',
     ),
     array(
         'label' => 'Linguini con camarón',
-        'image' => 'https://ogape.com.py/wp-content/uploads/2024/06/IMG_7966-scaled.jpg',
+        'image' => get_stylesheet_directory_uri() . '/assets/img/hero-drive/linguini-con-camaron.jpg',
     ),
     array(
         'label' => 'Solomillo de cerdo',
-        'image' => 'https://ogape.com.py/wp-content/uploads/2024/06/IMG_8298-scaled.jpg',
+        'image' => get_stylesheet_directory_uri() . '/assets/img/hero-drive/solomillo-de-cerdo.jpg',
     ),
 );
 
