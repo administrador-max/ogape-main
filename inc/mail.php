@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! function_exists( 'ogape_mail_from_email' ) ) {
     function ogape_mail_from_email() {
-        $email = defined( 'OGAPE_MAIL_FROM_EMAIL' ) ? OGAPE_MAIL_FROM_EMAIL : 'notificaciones@ogape.com.py';
+        $email = defined( 'OGAPE_MAIL_FROM_EMAIL' ) ? OGAPE_MAIL_FROM_EMAIL : 'no-reply@ogape.com.py';
         return sanitize_email( $email );
     }
 }
