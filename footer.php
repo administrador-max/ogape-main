@@ -53,8 +53,8 @@
             <div class="footer__legal">
                 <p>&copy; <?php echo esc_html( date( 'Y' ) ); ?> Ogape</p>
                 <div class="footer__legal-links">
-                    <a href="<?php echo esc_url( $privacidad_url ); ?>"><?php esc_html_e( 'Privacidad', 'ogape-child' ); ?></a>
-                    <a href="<?php echo esc_url( $terminos_url ); ?>"><?php esc_html_e( 'Términos', 'ogape-child' ); ?></a>
+                    <a href="<?php echo esc_url( $privacidad_url ); ?>" onclick="window.location.href=this.href; return false;"><?php esc_html_e( 'Privacidad', 'ogape-child' ); ?></a>
+                    <a href="<?php echo esc_url( $terminos_url ); ?>" onclick="window.location.href=this.href; return false;"><?php esc_html_e( 'Términos', 'ogape-child' ); ?></a>
                 </div>
             </div>
 
