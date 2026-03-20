@@ -31,8 +31,16 @@ $methods = array(
         'eyebrow'  => __( 'Instagram', 'ogape-child' ),
         'title'    => __( 'Seguí el lanzamiento', 'ogape-child' ),
         'body'     => __( 'Ahí vamos a compartir novedades, avances del piloto y señales de apertura.', 'ogape-child' ),
-        'label'    => __( '@ogapepy', 'ogape-child' ),
-        'url'      => 'https://www.instagram.com/ogapepy',
+        'label'    => __( '@ogapechefpy', 'ogape-child' ),
+        'url'      => 'https://www.instagram.com/ogapechefpy',
+        'external' => true,
+    ),
+    array(
+        'eyebrow'  => __( 'X', 'ogape-child' ),
+        'title'    => __( 'Seguí actualizaciones rápidas', 'ogape-child' ),
+        'body'     => __( 'También vamos a usar X para avisos cortos, novedades y señales del lanzamiento.', 'ogape-child' ),
+        'label'    => __( '@ogapechefpy', 'ogape-child' ),
+        'url'      => 'https://x.com/ogapechefpy',
         'external' => true,
     ),
 );

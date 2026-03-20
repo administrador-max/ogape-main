@@ -61,10 +61,7 @@ if ( ! function_exists( 'ogape_get_whatsapp_display' ) ) {
             $raw = '+595 0000';
         }
 
-        $display = preg_replace( '/^\+?595\s*/', '', $raw );
-        $display = trim( preg_replace( '/\s+/', ' ', (string) $display ) );
-
-        return '' !== $display ? $display : $raw;
+        return trim( preg_replace( '/\s+/', ' ', (string) $raw ) );
     }
 }
 

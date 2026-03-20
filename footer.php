@@ -40,7 +40,8 @@
                             <?php if ( $ogape_contact_email ) : ?>
                                 <a href="mailto:<?php echo esc_attr( $ogape_contact_email ); ?>" class="footer__contact-link"><?php echo esc_html( $ogape_contact_email ); ?></a>
                             <?php endif; ?>
-                            <a href="https://www.instagram.com/ogapepy" class="footer__contact-link" target="_blank" rel="noopener noreferrer">Instagram</a>
+                            <a href="https://www.instagram.com/ogapechefpy" class="footer__contact-link" target="_blank" rel="noopener noreferrer">Instagram</a>
+                            <a href="https://x.com/ogapechefpy" class="footer__contact-link" target="_blank" rel="noopener noreferrer">X.com</a>
                         </div>
                         <p class="footer__contact-note"><?php esc_html_e( 'Consultas sobre cobertura, piloto y lanzamiento.', 'ogape-child' ); ?></p>
                     </div>

@@ -101,7 +101,7 @@
       <div class="waitlist-form__success" id="waitlist-success" hidden>
         <p></p>
         <div class="waitlist-form__success-actions">
-          <a href="https://www.instagram.com/ogapepy" target="_blank" rel="noopener noreferrer" class="btn btn--secondary btn--md">Seguir en Instagram</a>
+          <a href="https://www.instagram.com/ogapechefpy" target="_blank" rel="noopener noreferrer" class="btn btn--secondary btn--md">Seguir en Instagram</a>
           <a href="<?php echo esc_url( ogape_get_whatsapp_url() ); ?>" target="_blank" rel="noopener noreferrer" class="btn btn--ghost btn--md">Escribir por WhatsApp</a>
         </div>
       </div>
