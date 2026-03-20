@@ -5,8 +5,8 @@
     $wa                  = ogape_get_whatsapp_url();
     $wa_display          = ogape_get_whatsapp_display();
     $waitlist_url        = ogape_get_waitlist_url();
-    $privacidad_page     = get_page_by_path( 'privacidad' );
-    $terminos_page       = get_page_by_path( 'terminos' );
+    $privacidad_url      = home_url( '/privacidad/' );
+    $terminos_url        = home_url( '/terminos/' );
     ?>
 
     <!-- Site Footer -->
@@ -53,12 +53,8 @@
             <div class="footer__legal">
                 <p>&copy; <?php echo esc_html( date( 'Y' ) ); ?> Ogape</p>
                 <div class="footer__legal-links">
-                    <?php if ( $privacidad_page ) : ?>
-                        <a href="<?php echo esc_url( get_permalink( $privacidad_page ) ); ?>"><?php esc_html_e( 'Privacidad', 'ogape-child' ); ?></a>
-                    <?php endif; ?>
-                    <?php if ( $terminos_page ) : ?>
-                        <a href="<?php echo esc_url( get_permalink( $terminos_page ) ); ?>"><?php esc_html_e( 'Términos', 'ogape-child' ); ?></a>
-                    <?php endif; ?>
+                    <a href="<?php echo esc_url( $privacidad_url ); ?>"><?php esc_html_e( 'Privacidad', 'ogape-child' ); ?></a>
+                    <a href="<?php echo esc_url( $terminos_url ); ?>"><?php esc_html_e( 'Términos', 'ogape-child' ); ?></a>
                 </div>
             </div>
 
