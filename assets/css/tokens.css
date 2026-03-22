@@ -1,0 +1,152 @@
+/*
+ * tokens.css — Ogape Design Tokens
+ * Generated from: assets/design-tokens/tokens.json
+ * DO NOT EDIT MANUALLY — edit tokens.json and regenerate
+ * Version: 1.0.0 | 2026-03-12
+ */
+
+:root {
+  /* ── Semantic Theme: Base ────────────────────────── */
+  --bg-page:    #F7F8FA;
+  --bg-surface: rgba(255, 255, 255, 0.85);
+  --bg-glass:   rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.45);
+  --glass-shadow: 0 6px 20px rgba(16, 24, 40, 0.06);
+
+  /* ── Semantic Theme: Text ────────────────────────── */
+  --text-primary:   #111827;
+  --text-secondary: #4B5563;
+  --muted:          #6B7280;
+
+  /* ── Semantic Theme: Brand ───────────────────────── */
+  --brand-primary:          #E8A045;
+  --brand-primary-strong:   #9A5A08;
+  --brand-primary-contrast: #111827;
+  --brand-accent:           #6B7FE8;
+  --brand-rose:             #E86B9A;
+
+  /* ── Semantic Theme: Accessibility ──────────────── */
+  --focus-ring:   3px solid rgba(59, 130, 246, 0.35);
+  --shadow-strong: 0 10px 30px rgba(16, 24, 40, 0.08);
+
+  /* ── Colours: Backgrounds ─────────────────────────── */
+  --color-bg-primary:     var(--bg-page);
+  --color-bg-secondary:   rgba(255, 255, 255, 0.72);
+  --color-bg-surface:     var(--bg-surface);
+  --color-bg-glass:       var(--bg-glass);
+  --color-bg-glass-hover: rgba(255, 255, 255, 0.78);
+
+  /* ── Colours: Borders ────────────────────────────── */
+  --color-border:       rgba(148, 163, 184, 0.24);
+  --color-border-light: rgba(148, 163, 184, 0.18);
+
+  /* ── Colours: Text ───────────────────────────────── */
+  --color-text-primary:   var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary:  var(--muted);
+
+  /* ── Colours: Accents ────────────────────────────── */
+  --color-accent-warm:            var(--brand-primary);
+  --color-accent-warm-glow:       rgba(232, 160, 69, 0.15);
+  --color-accent-warm-glow-strong: rgba(232, 160, 69, 0.30);
+  --color-accent-cool:  var(--brand-accent);
+  --color-accent-rose:  var(--brand-rose);
+
+  /* ── Colours: Status ─────────────────────────────── */
+  --color-success: #4CAF50;
+  --color-warning: #FFC107;
+  --color-error:   #F44336;
+
+  /* ── Typography: Font Families ───────────────────── */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:    'Courier New', Courier, monospace;
+
+  /* ── Typography: Size Scale ──────────────────────── */
+  --text-xs:   0.75rem;    /* 12px */
+  --text-sm:   0.875rem;   /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg:   1.125rem;   /* 18px */
+  --text-xl:   1.25rem;    /* 20px */
+  --text-2xl:  1.5rem;     /* 24px */
+  --text-3xl:  1.875rem;   /* 30px */
+  --text-4xl:  2.25rem;    /* 36px */
+  --text-5xl:  3rem;       /* 48px */
+  --text-6xl:  4rem;       /* 64px */
+
+  /* ── Typography: Font Weights ────────────────────── */
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* ── Typography: Line Heights ────────────────────── */
+  --leading-tight:   1.2;
+  --leading-snug:    1.4;
+  --leading-normal:  1.6;
+  --leading-relaxed: 1.8;
+
+  /* ── Spacing (8px base grid) ─────────────────────── */
+  --space-1:  0.25rem;   /* 4px  */
+  --space-2:  0.5rem;    /* 8px  */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+  --space-24: 6rem;      /* 96px */
+
+  /* ── Border Radius ───────────────────────────────── */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-2xl:  24px;
+  --radius-pill: 9999px;
+  --radius-full: 50%;
+
+  /* ── Shadows ─────────────────────────────────────── */
+  --shadow-sm:          0 2px 8px rgba(15, 23, 42, 0.06);
+  --shadow-md:          0 8px 28px rgba(15, 23, 42, 0.08);
+  --shadow-lg:          0 16px 44px rgba(15, 23, 42, 0.10);
+  --shadow-warm:        0 12px 32px rgba(232, 160, 69, 0.16);
+  --shadow-warm-strong: 0 16px 40px rgba(232, 160, 69, 0.22);
+  --shadow-cool:        0 12px 32px rgba(107, 127, 232, 0.12);
+
+  /* ── Transitions ─────────────────────────────────── */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease-in-out;
+
+  /* ── Editorial / Card Motion (aliases + new) ────────────── */
+  --radius-card:             var(--radius-lg);
+  --shadow-card-rest:        var(--shadow-sm);
+  --shadow-card-hover:       var(--shadow-md);
+  --transition-card:         var(--transition-base);
+  --scale-img-hover:         1.04;
+  --lift-card-hover:         -3px;
+
+  /* ── Section Rhythm ──────────────────────────────────────── */
+  --spacing-section-desktop: var(--space-20);
+  --spacing-section-mobile:  var(--space-12);
+  --grid-gap-cards:          var(--space-6);
+
+  /* ── Image ───────────────────────────────────────────────── */
+  --img-aspect-menu:         4 / 3;
+  --img-aspect-hero:         16 / 9;
+
+  /* ── Badge ───────────────────────────────────────────────── */
+  --badge-hero-bg:           var(--brand-primary);
+  --badge-hero-text:         var(--brand-primary-contrast);
+  --badge-local-bg:          #E8F5E9;
+  --badge-local-text:        #1B5E20;
+  --badge-nomad-bg:          #EDE7F6;
+  --badge-nomad-text:        #4527A0;
+  --badge-intl-bg:           #E3F2FD;
+  --badge-intl-text:         #0D47A1;
+}

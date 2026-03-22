@@ -1,0 +1,109 @@
+{
+  "mains": [
+    {
+      "title": "Surubí al Maracuyá",
+      "title_en": "Surubi with Passion Fruit Butter",
+      "slug": "surubi-al-maracuya",
+      "description": "Surubí del río Paraná con mantequilla de maracuyá, mandioca dorada y vegetales tiernos.",
+      "description_en": "Parana River surubi fillet with passion fruit butter, golden cassava, and tender vegetables.",
+      "price_pyg": 89000,
+      "show_price": false,
+      "is_hero": true,
+      "tags": [
+        { "label": "Plato Estrella", "type": "hero" },
+        { "label": "Local", "type": "local" }
+      ],
+      "img_src": "",
+      "img_srcset": "",
+      "img_alt": "Filete de surubí del Paraná sellado en mantequilla de maracuyá con arroz jazmín y hierbas frescas"
+    },
+    {
+      "title": "Bife Koygua Negro",
+      "title_en": "Black Beer Countryside Beef",
+      "slug": "bife-koygua-negro",
+      "description": "Costilla de res braseada con reducción de cerveza negra, cebolla asada y puré rústico.",
+      "description_en": "Slow-braised beef rib with dark beer reduction, roasted onion, and rustic mash.",
+      "price_pyg": 94000,
+      "show_price": false,
+      "is_hero": false,
+      "tags": [
+        { "label": "Favorito", "type": "nomad" }
+      ],
+      "img_src": "",
+      "img_srcset": "",
+      "img_alt": "Costilla de res braseada lentamente con reducción de cerveza negra y purée de mandioca"
+    },
+    {
+      "title": "Bowl Proteico Ogape",
+      "title_en": "Ogape Protein Bowl",
+      "slug": "bowl-proteico-ogape",
+      "description": "Pollo grillado, arroz jazmín, hummus suave, verduras encurtidas y crocante de semillas.",
+      "description_en": "Grilled chicken, jasmine rice, greens, hummus, pickled vegetables, and seed crunch.",
+      "price_pyg": 72000,
+      "show_price": false,
+      "is_hero": false,
+      "tags": [
+        { "label": "Favorito", "type": "nomad" }
+      ],
+      "img_src": "",
+      "img_srcset": "",
+      "img_alt": "Bowl de quinoa con proteína grillada, chimichurri de la casa y vegetales encurtidos"
+    },
+    {
+      "title": "Pollo al Curry Suave",
+      "title_en": "Mild Curry Chicken",
+      "slug": "pollo-al-curry-suave",
+      "description": "Pollo en curry suave de coco con arroz perfumado y hierbas frescas.",
+      "description_en": "Slow-cooked chicken in mild coconut curry with fragrant rice and fresh herbs.",
+      "price_pyg": 76000,
+      "show_price": false,
+      "is_hero": false,
+      "tags": [
+        { "label": "Internacional", "type": "intl" }
+      ],
+      "img_src": "",
+      "img_srcset": "",
+      "img_alt": "Pechuga de pollo en curry suave de coco con arroz jazmín y cilantro fresco"
+    },
+    {
+      "title": "Milanesa Signature",
+      "title_en": "Signature Milanesa",
+      "slug": "milanesa-signature",
+      "description": "Milanesa crocante de corte premium con papas rústicas, limón y alioli casero.",
+      "description_en": "Crisp premium-cut milanesa with rustic potatoes, lemon, aioli, and fresh salad.",
+      "price_pyg": 81000,
+      "show_price": false,
+      "is_hero": false,
+      "tags": [
+        { "label": "Favorito", "type": "nomad" }
+      ],
+      "img_src": "",
+      "img_srcset": "",
+      "img_alt": "Milanesa en panko con rúcula fresca, parmesano en láminas y ralladura de limón"
+    }
+  ],
+  "sides": [
+    {
+      "title": "Sopa Paraguaya Artesanal",
+      "slug": "sopa-paraguaya",
+      "description": "Pan de maíz paraguayo horneado con queso fresco y cebolla caramelizada.",
+      "price_pyg": 18000,
+      "show_price": false
+    },
+    {
+      "title": "Mandioca Frita con Alioli",
+      "slug": "mandioca-frita-alioli",
+      "description": "Bastones de mandioca dorados con sal marina gruesa y alioli casero.",
+      "price_pyg": 16000,
+      "show_price": false
+    },
+    {
+      "title": "Ensalada de Temporada",
+      "slug": "ensalada-de-temporada",
+      "description": "Hojas frescas de temporada con vegetales encurtidos y vinagreta cítrica de la casa.",
+      "price_pyg": 14000,
+      "show_price": false
+    }
+  ],
+  "image_placeholder_note": "PLACEHOLDER — no real photography yet. Keep show_price false until Alex confirms final pricing."
+}
