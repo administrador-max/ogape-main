@@ -1,0 +1,53 @@
+# deploy.yml — Ogape Main Theme Deployment Workflow
+# GitHub Actions: Deploy child theme to GreenGeeks via FTP
+# Version: v1.0 | 2026-03-22
+# Repo: github.com/administrador-max/ogape-main
+#
+# REQUIRED SECRETS (GitHub > Settings > Secrets > Actions):
+#   FTP_HOST       — ftp.ogape.com.py
+#   FTP_USERNAME   — github-deploy@ogape.com.py
+#   FTP_PASSWORD   — (your FTP password)
+#   FTP_PATH       — /wp-content/themes/ogape-child-theme/
+
+name: Deploy Main Theme to GreenGeeks
+
+on:
+  push:
+    branches:
+      - master     # Production deploy
+
+jobs:
+  deploy:
+    name: FTP Deploy to GreenGeeks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Deploy to Production (master branch)
+        if: github.ref == 'refs/heads/master'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_PATH }}
+          local-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.gitkeep
+            **/.github/**
+            .github/**
+
+      - name: Deployment Success
+        if: success()
+        run: echo "✅ Deployed ogape-main to GreenGeeks at $(date)"
+
+      - name: Deployment Failed
+        if: failure()
+        run: echo "❌ DEPLOY FAILED — Check FTP credentials and file paths in GitHub Secrets"
