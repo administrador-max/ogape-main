@@ -23,8 +23,8 @@
         array( 'label' => 'Planes',          'url' => $future_site_url . '#planes' ),
         array( 'label' => 'Nosotros',        'url' => $future_site_url . '#nosotros' ),
         array( 'label' => 'Menús',           'url' => $future_site_url . '#menus' ),
-        array( 'label' => 'Meal Kits',       'url' => $future_site_url . '#meal-kits' ),
-        array( 'label' => 'Gift Cards',      'url' => $future_site_url . '#gift-cards' ),
+        array( 'label' => 'Kits',            'url' => $future_site_url . '#meal-kits' ),
+        array( 'label' => 'Tarjetas regalo', 'url' => $future_site_url . '#gift-cards' ),
         array( 'label' => 'Sostenibilidad',  'url' => $future_site_url . '#sostenibilidad' ),
         array( 'label' => 'Alianzas',        'url' => $future_site_url . '#alianzas' ),
     );

@@ -23,7 +23,7 @@ $menu_url     = home_url( '/menu/' );
                 <div class="future-site-hero__content glass-card">
                     <p class="future-site-hero__eyebrow">Sitio oficial Ogape</p>
                     <h1 class="future-site-hero__title">Comida real, hecha con cuidado, para una experiencia que se siente premium desde el primer clic.</h1>
-                    <p class="future-site-hero__subtitle">Esta vista previa reúne la dirección oficial del sitio: navegación completa, sistema de cuenta, menús, meal kits, gift cards, sostenibilidad y alianzas. El lanzamiento visible al público sigue enfocado en la lista de espera mientras terminamos de conectar todo.</p>
+                    <p class="future-site-hero__subtitle">Esta vista previa reúne la dirección oficial del sitio: navegación completa, sistema de cuenta, menús, kits, tarjetas regalo, sostenibilidad y alianzas. El lanzamiento visible al público sigue enfocado en la lista de espera mientras terminamos de conectar todo.</p>
 
                     <div class="future-site-hero__actions">
                         <a href="<?php echo esc_url( $waitlist_url ); ?>" class="btn btn--primary btn--lg">Unirme a la lista de espera</a>
@@ -48,12 +48,12 @@ $menu_url     = home_url( '/menu/' );
                         <div class="future-site-stack__item">
                             <span class="future-site-stack__kicker">Siguiente capa</span>
                             <strong>Sitio oficial</strong>
-                            <p>Planes, menús, meal kits, sostenibilidad, alianzas y narrativa de marca.</p>
+                            <p>Planes, menús, kits, sostenibilidad, alianzas y narrativa de marca.</p>
                         </div>
                         <div class="future-site-stack__item">
                             <span class="future-site-stack__kicker">Cuenta</span>
                             <strong>Login + dashboard</strong>
-                            <p>Pedidos, suscripciones, direcciones, preferencias y gift cards.</p>
+                            <p>Pedidos, suscripciones, direcciones, preferencias y tarjetas regalo.</p>
                         </div>
                     </div>
                 </div>
@@ -61,16 +61,55 @@ $menu_url     = home_url( '/menu/' );
         </div>
     </section>
 
-    <?php
-    /**
-     * Section 2: Features
-     * Three-column feature highlights
-     */
-    ?>
-    <section class="editorial-page-section" id="meal-kits">
+    <section class="editorial-page-section" id="planes">
         <div class="container">
             <div class="section-header">
-                <p class="section__label">Meal kits Ogape</p>
+                <p class="section__label">Planes</p>
+                <h2 class="section__heading">Tres formas claras de entrar al ecosistema Ogape.</h2>
+                <p class="section__sub">Todavía estamos en vista previa, pero esta sección ya ordena cómo debería presentarse la oferta cuando el sitio oficial esté completo.</p>
+            </div>
+
+            <div class="future-plan-grid">
+                <article class="future-plan-card glass-card">
+                    <span class="future-plan-card__badge">Descubrimiento</span>
+                    <h3>Plan Explorador</h3>
+                    <p>Para quien quiere probar Ogape sin fricción: menús curados, acceso temprano y ritmo flexible.</p>
+                    <ul>
+                        <li>Acceso temprano a lanzamientos</li>
+                        <li>Selección semanal recomendada</li>
+                        <li>Ideal para 1–2 personas</li>
+                    </ul>
+                </article>
+
+                <article class="future-plan-card glass-card future-plan-card--featured">
+                    <span class="future-plan-card__badge">Prioridad</span>
+                    <h3>Plan Hogar</h3>
+                    <p>La opción central para familias o rutinas estables: mejor organización, más previsibilidad y relación continua con Ogape.</p>
+                    <ul>
+                        <li>Frecuencia semanal sugerida</li>
+                        <li>Preferencias y direcciones guardadas</li>
+                        <li>Base para suscripción futura</li>
+                    </ul>
+                </article>
+
+                <article class="future-plan-card glass-card">
+                    <span class="future-plan-card__badge">Regalo / especial</span>
+                    <h3>Plan Regalo</h3>
+                    <p>Entrada pensada para obsequios, ocasiones especiales y compra con intención más premium.</p>
+                    <ul>
+                        <li>Tarjetas regalo conectadas al catálogo</li>
+                        <li>Experiencia lista para regalar</li>
+                        <li>Puente entre marca y compra</li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="editorial-page-section editorial-page-section--alt" id="meal-kits">
+        <div class="container">
+            <div class="section-header">
+                <p class="section__label">Kits Ogape</p>
                 <h2 class="section__heading">La estructura comercial empieza a tomar forma.</h2>
             </div>
             <div class="features-grid">
@@ -114,21 +153,33 @@ $menu_url     = home_url( '/menu/' );
         </div>
     </section>
 
-    <?php
-    /**
-     * Section 3: How It Works
-     * Step-by-step process
-     */
-    ?>
-    <section class="editorial-page-section editorial-page-section--alt" id="menus">
+    <section class="editorial-page-section" id="menus">
         <div class="container">
             <div class="section-header">
-                <p class="section__label">Cómo funciona</p>
-                <h2 class="section__heading">Tres pasos. Nada más.</h2>
+                <p class="section__label">Menús</p>
+                <h2 class="section__heading">Un catálogo pensado para elegir rápido y confiar más.</h2>
+                <p class="section__sub">La vista oficial no debería sentirse como un marketplace desordenado, sino como una selección clara y cuidada.</p>
             </div>
 
-            <div class="steps-grid">
-                
+            <div class="future-menu-grid">
+                <article class="future-menu-card glass-card">
+                    <span class="future-menu-card__kicker">Semanal</span>
+                    <h3>Menú curado</h3>
+                    <p>Selección breve de platos destacados con prioridad editorial y mejor experiencia de descubrimiento.</p>
+                </article>
+                <article class="future-menu-card glass-card">
+                    <span class="future-menu-card__kicker">Categorías</span>
+                    <h3>Navegación útil</h3>
+                    <p>Almuerzos, cenas, kits y opciones especiales organizadas de forma simple para decidir sin fricción.</p>
+                </article>
+                <article class="future-menu-card glass-card">
+                    <span class="future-menu-card__kicker">Confianza</span>
+                    <h3>Información clara</h3>
+                    <p>Fotos reales, disponibilidad visible, notas de preparación y contexto suficiente antes de comprar.</p>
+                </article>
+            </div>
+
+            <div class="steps-grid" style="margin-top: 1.5rem;">
                 <div class="step-item">
                     <span class="step-item__number">01</span>
                     <h3 class="step-item__title">Elegís</h3>
@@ -146,7 +197,6 @@ $menu_url     = home_url( '/menu/' );
                     <h3 class="step-item__title">Recibís</h3>
                     <p class="step-item__text">Entrega puntual en tu zona. Comida hecha hace horas, no días.</p>
                 </div>
-
             </div>
         </div>
     </section>
@@ -161,15 +211,15 @@ $menu_url     = home_url( '/menu/' );
         <div class="container">
             <div class="editorial-page-card glass-card editorial-page-card--split">
                 <div class="editorial-page-card__copy">
-                    <p class="section__label">Gift Cards + catálogo</p>
+                    <p class="section__label">Tarjetas regalo + catálogo</p>
                     <h2 class="section__heading">Una base para menús, regalos y compra futura.</h2>
                     <p class="section__sub editorial-page-card__lead">
-                        Este bloque ya funciona como adelanto del sitio oficial: catálogo navegable, rutas de compra y un punto claro para gift cards cuando activemos la capa transaccional.
+                        Este bloque ya funciona como adelanto del sitio oficial: catálogo navegable, rutas de compra y un punto claro para tarjetas regalo cuando activemos la capa transaccional.
                     </p>
                     <ul class="editorial-checklist">
                         <li>Menús semanales y categorías visibles</li>
-                        <li>Meal kits con estructura más comercial</li>
-                        <li>Gift cards y cuenta conectados al mismo sistema</li>
+                        <li>Kits con estructura más comercial</li>
+                        <li>Tarjetas regalo y cuenta conectadas al mismo sistema</li>
                     </ul>
                     <div class="editorial-page-card__actions" style="margin-top: 1.5rem;">
                         <a href="<?php echo esc_url( $menu_url ); ?>" class="btn btn--secondary btn--md">Ver menú actual</a>
@@ -178,7 +228,7 @@ $menu_url     = home_url( '/menu/' );
                 <div class="editorial-page-card__visual">
                     <!-- Placeholder for menu preview image -->
                     <div class="placeholder-visual" style="background: var(--surface-secondary); border-radius: 12px; height: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-align: center; padding: 1.5rem;">
-                        <span>Vista previa del sitio oficial<br>Catálogo · Gift Cards · Cuenta</span>
+                        <span>Vista previa del sitio oficial<br>Catálogo · Tarjetas regalo · Cuenta</span>
                     </div>
                 </div>
             </div>
