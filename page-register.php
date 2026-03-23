@@ -8,7 +8,8 @@
 
 get_header();
 
-$login_url = home_url( '/login/' );
+$login_url         = home_url( '/login/' );
+$account_setup_url = home_url( '/account-setup/' );
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -41,6 +42,7 @@ $login_url = home_url( '/login/' );
                         </form>
                         <div class="account-entry-shell__actions">
                             <a href="<?php echo esc_url( $login_url ); ?>?fresh=1"><?php esc_html_e( 'Ya tengo cuenta', 'ogape-child' ); ?></a>
+                            <a href="<?php echo esc_url( $account_setup_url ); ?>?fresh=1"><?php esc_html_e( 'Ver configuración inicial', 'ogape-child' ); ?></a>
                         </div>
                     </div>
                 </div>

@@ -8,8 +8,9 @@
 
 get_header();
 
-$register_url = home_url( '/register/' );
-$account_url  = home_url( '/account/' );
+$register_url        = home_url( '/register/' );
+$account_url         = home_url( '/account/' );
+$forgot_password_url = home_url( '/forgot-password/' );
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -52,6 +53,7 @@ $account_url  = home_url( '/account/' );
 
                         <div class="account-entry-shell__actions">
                             <a href="<?php echo esc_url( $register_url ); ?>?fresh=1"><?php esc_html_e( 'Crear cuenta', 'ogape-child' ); ?></a>
+                            <a href="<?php echo esc_url( $forgot_password_url ); ?>?fresh=1"><?php esc_html_e( 'Olvidé mi contraseña', 'ogape-child' ); ?></a>
                             <a href="<?php echo esc_url( $account_url ); ?>?fresh=1"><?php esc_html_e( 'Ver área de cuenta', 'ogape-child' ); ?></a>
                         </div>
                     </div>

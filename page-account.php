@@ -63,6 +63,7 @@ get_header();
                         <li><a href="#"><?php esc_html_e( 'Direcciones', 'ogape-child' ); ?></a></li>
                         <li><a href="#"><?php esc_html_e( 'Preferencias', 'ogape-child' ); ?></a></li>
                         <li><a href="#"><?php esc_html_e( 'Tarjetas regalo', 'ogape-child' ); ?></a></li>
+                        <li><a href="<?php echo esc_url( home_url( '/account-setup/' ) ); ?>?fresh=1"><?php esc_html_e( 'Configuración inicial', 'ogape-child' ); ?></a></li>
                     </ul>
                 </aside>
 
@@ -75,6 +76,14 @@ get_header();
                         <div class="account-panel-card">
                             <h2><?php esc_html_e( 'Direcciones y preferencias', 'ogape-child' ); ?></h2>
                             <p><?php esc_html_e( 'Bloque preparado para dirección principal, notas de entrega y perfil alimentario.', 'ogape-child' ); ?></p>
+                        </div>
+                        <div class="account-panel-card">
+                            <h2><?php esc_html_e( 'Onboarding pendiente', 'ogape-child' ); ?></h2>
+                            <p><?php esc_html_e( 'Este módulo sirve para empujar la configuración inicial: dirección, preferencias, zona y señales para personalización futura.', 'ogape-child' ); ?></p>
+                        </div>
+                        <div class="account-panel-card">
+                            <h2><?php esc_html_e( 'Acciones rápidas', 'ogape-child' ); ?></h2>
+                            <p><?php esc_html_e( 'Espacio para reordenar, editar dirección principal, revisar saldo regalo o retomar una compra.', 'ogape-child' ); ?></p>
                         </div>
                         <div class="account-panel-card account-panel-card--wide">
                             <h2><?php esc_html_e( 'Base para suscripciones y gifting', 'ogape-child' ); ?></h2>
