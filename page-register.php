@@ -45,6 +45,7 @@ $register_demo_url = add_query_arg( 'demo', 'register', $account_setup_url );
                         <div class="account-entry-shell__actions">
                             <a href="<?php echo esc_url( $login_url ); ?>?fresh=1"><?php esc_html_e( 'Ya tengo cuenta', 'ogape-child' ); ?></a>
                             <a href="<?php echo esc_url( $account_setup_url ); ?>?fresh=1"><?php esc_html_e( 'Ver configuración inicial', 'ogape-child' ); ?></a>
+                            <a href="<?php echo esc_url( $account_url ); ?>?fresh=1"><?php esc_html_e( 'Ir directo al dashboard demo', 'ogape-child' ); ?></a>
                         </div>
                     </div>
                 </div>

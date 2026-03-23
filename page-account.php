@@ -7,6 +7,19 @@
  */
 
 get_header();
+
+$demo_message = '';
+if ( isset( $_GET['demo'] ) ) {
+    $demo_value = sanitize_text_field( wp_unslash( $_GET['demo'] ) );
+    if ( 'login' === $demo_value ) {
+        $demo_message = __( 'Ingreso de demo completado. Ya podés recorrer el dashboard visual.', 'ogape-child' );
+    } elseif ( 'register' === $demo_value ) {
+        $demo_message = __( 'Registro de demo completado. Ya podés explorar el dashboard y después pasar por la configuración inicial si querés probar ese paso también.', 'ogape-child' );
+    }
+}
+if ( isset( $_GET['setup'] ) ) {
+    $demo_message = __( 'Configuración inicial de demo completada. El dashboard queda listo para seguir explorando.', 'ogape-child' );
+}
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -91,16 +104,6 @@ get_header();
                         <div class="account-panel-card account-panel-card--wide">
                             <h2><?php esc_html_e( 'Base para suscripciones y gifting', 'ogape-child' ); ?></h2>
                             <p><?php esc_html_e( 'Este shell ya deja espacio para conectar plan activo, frecuencia, saldo de tarjetas regalo y continuidad de compra dentro de la misma cuenta.', 'ogape-child' ); ?></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</main>
-
-<?php get_footer(); ?>
-e compra dentro de la misma cuenta.', 'ogape-child' ); ?></p>
                         </div>
                     </div>
                 </div>
