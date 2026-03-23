@@ -17,32 +17,45 @@ $menu_url     = home_url( '/menu/' );
 
     <div id="planes" aria-hidden="true"></div>
 
-    <?php
-    /**
-     * Section 1: Hero
-     * Full-width hero with primary CTA
-     */
-    get_template_part(
-        'templates/components/editorial-page-hero',
-        null,
-        array(
-            'eyebrow'  => __( 'Ogape', 'ogape-child' ),
-            'title'    => __( 'Comida real, hecha con cuidado, entregada sin fricción.', 'ogape-child' ),
-            'subtitle' => __( 'Conectamos quienes cocinan bien con quienes necesitan comer bien. Primero en Asunción. Después, donde nos necesiten.', 'ogape-child' ),
-        )
-    );
-    ?>
-
-    <section class="editorial-page-section editorial-page-section--narrow" id="nosotros">
+    <section class="future-site-hero" id="nosotros">
         <div class="container">
-            <div class="editorial-page-card glass-card editorial-page-card--centered">
-                <div class="editorial-page-card__copy">
-                    <a href="<?php echo esc_url( $waitlist_url ); ?>" class="btn btn--primary btn--lg">
-                        Unirme a la lista de espera
-                    </a>
-                    <p class="section__sub" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary);">
-                        Lanzamiento piloto con cupos limitados.
-                    </p>
+            <div class="future-site-hero__grid">
+                <div class="future-site-hero__content glass-card">
+                    <p class="future-site-hero__eyebrow">Sitio oficial Ogape</p>
+                    <h1 class="future-site-hero__title">Comida real, hecha con cuidado, para una experiencia que se siente premium desde el primer clic.</h1>
+                    <p class="future-site-hero__subtitle">Esta vista previa reúne la dirección oficial del sitio: navegación completa, sistema de cuenta, menús, meal kits, gift cards, sostenibilidad y alianzas. El lanzamiento visible al público sigue enfocado en la lista de espera mientras terminamos de conectar todo.</p>
+
+                    <div class="future-site-hero__actions">
+                        <a href="<?php echo esc_url( $waitlist_url ); ?>" class="btn btn--primary btn--lg">Unirme a la lista de espera</a>
+                        <a href="<?php echo esc_url( home_url( '/login/' ) ); ?>?fresh=1" class="btn btn--secondary btn--lg">Ver acceso de cuenta</a>
+                    </div>
+
+                    <ul class="future-site-hero__trust">
+                        <li>Piloto enfocado en Asunción</li>
+                        <li>Arquitectura oficial en construcción visible</li>
+                        <li>Marca, producto y cuenta en el mismo sistema</li>
+                    </ul>
+                </div>
+
+                <div class="future-site-hero__panel glass-card">
+                    <p class="future-site-hero__panel-label">Vista del ecosistema</p>
+                    <div class="future-site-stack">
+                        <div class="future-site-stack__item future-site-stack__item--primary">
+                            <span class="future-site-stack__kicker">Ahora visible</span>
+                            <strong>Lista de espera + soporte legal</strong>
+                            <p>Homepage, privacidad, términos, FAQ y onboarding inicial.</p>
+                        </div>
+                        <div class="future-site-stack__item">
+                            <span class="future-site-stack__kicker">Siguiente capa</span>
+                            <strong>Sitio oficial</strong>
+                            <p>Planes, menús, meal kits, sostenibilidad, alianzas y narrativa de marca.</p>
+                        </div>
+                        <div class="future-site-stack__item">
+                            <span class="future-site-stack__kicker">Cuenta</span>
+                            <strong>Login + dashboard</strong>
+                            <p>Pedidos, suscripciones, direcciones, preferencias y gift cards.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
