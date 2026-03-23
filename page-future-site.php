@@ -308,13 +308,23 @@ $menu_url     = home_url( '/menu/' );
         </div>
     </section>
 
-    <?php
-    /**
-     * Section 5: Waitlist CTA
-     * Reuse the waitlist form component
-     */
-    get_template_part( 'templates/components/waitlist-form' );
-    ?>
+    <section class="editorial-page-section future-site-cta-shell">
+        <div class="container">
+            <div class="editorial-page-card glass-card editorial-page-card--centered">
+                <div class="editorial-page-card__copy">
+                    <p class="section__label">Próximos pasos</p>
+                    <h2 class="section__heading">Seguimos construyendo la versión oficial.</h2>
+                    <p class="section__sub editorial-page-card__lead">
+                        Esta vista queda enfocada en arquitectura, navegación y presentación del futuro sitio oficial. El formulario del piloto permanece en la experiencia principal de waitlist, no acá.
+                    </p>
+                    <div class="editorial-page-card__actions" style="margin-top: 1.5rem; justify-content: center;">
+                        <a href="<?php echo esc_url( $waitlist_url ); ?>" class="btn btn--primary btn--md">Ir a la waitlist</a>
+                        <a href="<?php echo esc_url( home_url( '/login/' ) ); ?>?fresh=1" class="btn btn--secondary btn--md">Ver acceso de cuenta</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
 </main>
 
