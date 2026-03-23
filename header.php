@@ -62,7 +62,7 @@
 
                     <div class="nav__actions">
                         <?php if ( $account_demo_mode ) : ?>
-                            <a href="<?php echo esc_url( $account_url ); ?>?fresh=1" class="nav__login-link">Cuenta</a>
+                            <a href="<?php echo esc_url( $account_url ); ?>?fresh=1" class="btn btn--primary btn--sm">Cuenta</a>
                             <a href="<?php echo esc_url( $logout_url ); ?>?fresh=1" class="nav__logout-link">Cerrar sesión</a>
                         <?php else : ?>
                             <a href="<?php echo esc_url( $login_url ); ?>" class="nav__login-link">Iniciar sesión</a>
