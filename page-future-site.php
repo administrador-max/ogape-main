@@ -360,6 +360,58 @@ $menu_url     = home_url( '/menu/' );
         </div>
     </section>
 
+    <section class="editorial-page-section future-site-lower-nav">
+        <div class="container">
+            <div class="future-site-footer-shell glass-card">
+                <div class="future-site-footer-shell__intro">
+                    <p class="section__label">Mapa del sitio oficial</p>
+                    <h2 class="section__heading">Una base clara para navegar Ogape de punta a punta.</h2>
+                    <p class="section__sub">Este bloque funciona como footer interno del preview: resume la arquitectura del sitio oficial sin alterar todavía el footer principal de producción.</p>
+                </div>
+
+                <div class="future-site-footer-grid">
+                    <div class="future-site-footer-column">
+                        <h3>Explorar</h3>
+                        <ul>
+                            <li><a href="#planes">Planes</a></li>
+                            <li><a href="#menus">Menús</a></li>
+                            <li><a href="#meal-kits">Kits</a></li>
+                            <li><a href="#gift-cards">Tarjetas regalo</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="future-site-footer-column">
+                        <h3>Marca</h3>
+                        <ul>
+                            <li><a href="#nosotros">Nosotros</a></li>
+                            <li><a href="#sostenibilidad">Sostenibilidad</a></li>
+                            <li><a href="#alianzas">Alianzas</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="future-site-footer-column">
+                        <h3>Cuenta</h3>
+                        <ul>
+                            <li><a href="<?php echo esc_url( home_url( '/login/' ) ); ?>?fresh=1">Iniciar sesión</a></li>
+                            <li><a href="<?php echo esc_url( home_url( '/register/' ) ); ?>?fresh=1">Crear cuenta</a></li>
+                            <li><a href="<?php echo esc_url( home_url( '/account/' ) ); ?>?fresh=1">Mi cuenta</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="future-site-footer-column">
+                        <h3>Estado actual</h3>
+                        <ul>
+                            <li><a href="<?php echo esc_url( home_url( '/' ) ); ?>">Homepage actual</a></li>
+                            <li><a href="<?php echo esc_url( $waitlist_url ); ?>">Waitlist</a></li>
+                            <li><a href="<?php echo esc_url( home_url( '/faq/' ) ); ?>">FAQ</a></li>
+                            <li><a href="<?php echo esc_url( home_url( '/privacidad/' ) ); ?>">Privacidad</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </main>
 
 <?php get_footer(); ?>

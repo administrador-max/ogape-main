@@ -2265,6 +2265,47 @@ a:hover {
   background: linear-gradient(135deg, rgba(245,249,252,0.98), rgba(255,255,255,0.95));
   transform: rotate(7deg) translate(34px, 26px);
 }
+.future-site-lower-nav {
+  padding-top: 0;
+}
+.future-site-footer-shell {
+  padding: clamp(1.4rem, 2.2vw, 2rem);
+  border-radius: 28px;
+}
+.future-site-footer-shell__intro {
+  margin-bottom: 1.25rem;
+}
+.future-site-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+.future-site-footer-column {
+  padding: 1rem 1rem 1.1rem;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(15, 23, 42, 0.07);
+}
+.future-site-footer-column h3 {
+  margin: 0 0 0.8rem;
+  font-size: 1rem;
+  color: var(--color-text-primary);
+}
+.future-site-footer-column ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.future-site-footer-column a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-weight: var(--weight-medium);
+}
+.future-site-footer-column a:hover {
+  color: var(--brand-primary-strong);
+}
 
 /* Account entry and account shell */
 .account-entry-card,
@@ -2419,6 +2460,7 @@ a:hover {
   .future-kit-grid,
   .future-benefit-strip,
   .future-dish-row,
+  .future-site-footer-grid,
   .account-panel-grid,
   .account-entry-shell--register .account-entry-form {
     grid-template-columns: 1fr;
