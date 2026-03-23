@@ -340,7 +340,26 @@ function ogape_redirect_non_waitlist_pages() {
         return;
     }
 
-    if ( is_front_page() || is_home() || is_page( 'waitlist' ) || is_page( 'future-site' ) || is_page( 'login' ) || is_page( 'register' ) || is_page( 'account' ) || is_page( 'privacidad' ) || is_page( 'terminos' ) ) {
+    $request_path = isset( $_SERVER['REQUEST_URI'] ) ? wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ) : '';
+    $request_path = is_string( $request_path ) ? trim( $request_path, '/' ) : '';
+
+    $allowed_paths = array(
+        '',
+        'waitlist',
+        'future-site',
+        'login',
+        'register',
+        'account',
+        'faq',
+        'privacidad',
+        'terminos',
+    );
+
+    if ( in_array( $request_path, $allowed_paths, true ) ) {
+        return;
+    }
+
+    if ( is_front_page() || is_home() ) {
         return;
     }
 
