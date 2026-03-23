@@ -2271,6 +2271,9 @@ a:hover {
 .account-dashboard-shell {
   border-radius: 24px;
 }
+.account-hero-shell {
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+}
 .account-entry-card__panel {
   display: flex;
   align-items: stretch;
@@ -2282,6 +2285,24 @@ a:hover {
   border-radius: 20px;
   padding: clamp(1.25rem, 2vw, 1.75rem);
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+}
+.account-entry-shell--register .account-entry-form {
+  grid-template-columns: 1fr 1fr;
+}
+.account-entry-shell--register .account-entry-form__field:nth-child(3),
+.account-entry-shell--register .account-entry-form__field:nth-child(4),
+.account-entry-shell--register .account-entry-form__button {
+  grid-column: 1 / -1;
+}
+.account-overview-preview__top strong {
+  display: block;
+  margin: 0.9rem 0 0.35rem;
+  font-size: 1.2rem;
+  color: var(--color-text-primary);
+}
+.account-overview-preview__top p {
+  margin: 0 0 1rem;
+  color: var(--color-text-secondary);
 }
 .account-entry-shell__header h3,
 .account-panel-card h2 {
@@ -2332,6 +2353,14 @@ a:hover {
   grid-template-columns: minmax(220px, 280px) 1fr;
   gap: 1.25rem;
   padding: clamp(1.25rem, 2vw, 1.75rem);
+}
+.account-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.account-panel-card--wide {
+  grid-column: 1 / -1;
 }
 .account-dashboard-shell__sidebar {
   padding-right: 1rem;
@@ -2389,7 +2418,9 @@ a:hover {
   .future-menu-grid,
   .future-kit-grid,
   .future-benefit-strip,
-  .future-dish-row {
+  .future-dish-row,
+  .account-panel-grid,
+  .account-entry-shell--register .account-entry-form {
     grid-template-columns: 1fr;
   }
 
