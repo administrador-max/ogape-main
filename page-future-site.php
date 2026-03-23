@@ -116,45 +116,52 @@ $menu_url     = home_url( '/menu/' );
         <div class="container">
             <div class="section-header">
                 <p class="section__label">Kits Ogape</p>
-                <h2 class="section__heading">La estructura comercial empieza a tomar forma.</h2>
+                <h2 class="section__heading">Una base más comercial para explorar formatos de compra.</h2>
+                <p class="section__sub">Acá el objetivo ya no es solo explicar beneficios, sino mostrar cómo podrían verse los bloques de producto dentro del sitio oficial.</p>
             </div>
-            <div class="features-grid">
-                
-                <div class="feature-item">
-                    <div class="feature-item__icon">
-                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/>
-                            <path d="M24 14V24L30 30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-item__title">Sin esperas</h3>
-                    <p class="feature-item__text">Pedís con anticipación. Nosotros coordinamos la entrega puntual.</p>
-                </div>
 
-                <div class="feature-item">
-                    <div class="feature-item__icon">
-                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M24 4L6 14V34L24 44L42 34V14L24 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                            <path d="M24 24L24 44" stroke="currentColor" stroke-width="2"/>
-                            <path d="M24 24L42 14" stroke="currentColor" stroke-width="2"/>
-                            <path d="M24 24L6 14" stroke="currentColor" stroke-width="2"/>
-                        </svg>
+            <div class="future-kit-grid">
+                <article class="future-kit-card glass-card">
+                    <div class="future-kit-card__visual">Kit rápido</div>
+                    <div class="future-kit-card__body">
+                        <span class="future-kit-card__kicker">Ritmo diario</span>
+                        <h3>Kit Express</h3>
+                        <p>Para resolver almuerzo o cena con una experiencia más simple, limpia y predecible.</p>
+                        <ul>
+                            <li>Preparación más directa</li>
+                            <li>Ideal para semana ocupada</li>
+                            <li>Plantilla de producto ágil</li>
+                        </ul>
                     </div>
-                    <h3 class="feature-item__title">Hecho local</h3>
-                    <p class="feature-item__text">Cocineros de tu zona, ingredientes de tu zona, economía local.</p>
-                </div>
+                </article>
 
-                <div class="feature-item">
-                    <div class="feature-item__icon">
-                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
-                            <path d="M16 24L22 30L32 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                <article class="future-kit-card glass-card future-kit-card--featured">
+                    <div class="future-kit-card__visual">Kit hogar</div>
+                    <div class="future-kit-card__body">
+                        <span class="future-kit-card__kicker">Centro de oferta</span>
+                        <h3>Kit Hogar</h3>
+                        <p>El formato que puede convertirse en columna vertebral del catálogo: más contexto, más valor percibido y más recurrencia.</p>
+                        <ul>
+                            <li>Mejor para familias o rutina semanal</li>
+                            <li>Plantilla para suscripción futura</li>
+                            <li>Conecta con cuenta y preferencias</li>
+                        </ul>
                     </div>
-                    <h3 class="feature-item__title">Sin sorpresas</h3>
-                    <p class="feature-item__text">Precio final antes de confirmar. Sin cargos ocultos, sin apps intermedias.</p>
-                </div>
+                </article>
 
+                <article class="future-kit-card glass-card">
+                    <div class="future-kit-card__visual">Kit edición</div>
+                    <div class="future-kit-card__body">
+                        <span class="future-kit-card__kicker">Especial</span>
+                        <h3>Kit Signature</h3>
+                        <p>Para especiales, chefs invitados o lanzamientos donde la marca necesita una presentación más premium.</p>
+                        <ul>
+                            <li>Ideal para storytelling de producto</li>
+                            <li>Mayor peso visual en catálogo</li>
+                            <li>Útil para campañas o gifting</li>
+                        </ul>
+                    </div>
+                </article>
             </div>
         </div>
     </section>
@@ -201,6 +208,33 @@ $menu_url     = home_url( '/menu/' );
                     <strong>1 sistema</strong>
                     <span>Marca, catálogo y cuenta conectados</span>
                 </div>
+            </div>
+
+            <div class="future-dish-row">
+                <article class="future-dish-card glass-card">
+                    <div class="future-dish-card__visual">Chef selection</div>
+                    <span class="future-dish-card__tag">Destacado</span>
+                    <h3>Plato destacado</h3>
+                    <p>Espacio para un hero dish o receta insignia con foco editorial.</p>
+                </article>
+                <article class="future-dish-card glass-card">
+                    <div class="future-dish-card__visual">Favorito</div>
+                    <span class="future-dish-card__tag">Popular</span>
+                    <h3>Favorito recurrente</h3>
+                    <p>Bloque pensado para prueba social, repetición o producto más pedido.</p>
+                </article>
+                <article class="future-dish-card glass-card">
+                    <div class="future-dish-card__visual">Nueva edición</div>
+                    <span class="future-dish-card__tag">Nuevo</span>
+                    <h3>Nueva incorporación</h3>
+                    <p>Espacio para novedades, temporada o lanzamiento de chef invitado.</p>
+                </article>
+                <article class="future-dish-card glass-card">
+                    <div class="future-dish-card__visual">Colección</div>
+                    <span class="future-dish-card__tag">Colección</span>
+                    <h3>Serie curada</h3>
+                    <p>Útil para agrupar recetas, campañas o categorías comerciales.</p>
+                </article>
             </div>
 
             <div class="steps-grid" style="margin-top: 1.5rem;">

@@ -2055,7 +2055,8 @@ a:hover {
 }
 
 .future-plan-grid,
-.future-menu-grid {
+.future-menu-grid,
+.future-kit-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
@@ -2147,6 +2148,76 @@ a:hover {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
   margin-top: 1.25rem;
+}
+.future-dish-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+.future-dish-card,
+.future-kit-card {
+  overflow: hidden;
+  border-radius: 22px;
+}
+.future-dish-card__visual,
+.future-kit-card__visual {
+  min-height: 180px;
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+  color: #fff;
+  font-weight: var(--weight-semibold);
+  background:
+    linear-gradient(180deg, rgba(17, 24, 39, 0.04), rgba(17, 24, 39, 0.56)),
+    radial-gradient(circle at top right, rgba(229,145,98,0.42), transparent 30%),
+    linear-gradient(135deg, #7d8f6f 0%, #b6734e 100%);
+}
+.future-dish-card {
+  padding: 0;
+}
+.future-dish-card__tag,
+.future-kit-card__kicker {
+  display: inline-flex;
+  margin: 1rem 1rem 0;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(229, 145, 98, 0.12);
+  color: var(--brand-primary-strong);
+  font-size: 0.76rem;
+  font-weight: var(--weight-semibold);
+}
+.future-dish-card h3,
+.future-dish-card p {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.future-dish-card h3,
+.future-kit-card__body h3 {
+  margin-top: 0.8rem;
+  margin-bottom: 0.45rem;
+  font-size: 1.16rem;
+}
+.future-dish-card p,
+.future-kit-card__body p {
+  margin-top: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+.future-dish-card p {
+  margin-bottom: 1.1rem;
+}
+.future-kit-card__body {
+  padding: 0 1rem 1rem;
+}
+.future-kit-card__body ul {
+  margin: 1rem 0 0;
+  padding-left: 1.1rem;
+  line-height: 1.7;
+}
+.future-kit-card--featured {
+  border: 1px solid rgba(229, 145, 98, 0.25);
+  box-shadow: 0 20px 48px rgba(229,145,98,0.12);
 }
 .future-benefit-pill {
   display: grid;
@@ -2316,7 +2387,9 @@ a:hover {
   .future-site-hero__grid,
   .future-plan-grid,
   .future-menu-grid,
-  .future-benefit-strip {
+  .future-kit-grid,
+  .future-benefit-strip,
+  .future-dish-row {
     grid-template-columns: 1fr;
   }
 
