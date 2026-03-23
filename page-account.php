@@ -15,9 +15,9 @@ get_header();
         'templates/components/editorial-page-hero',
         null,
         array(
-            'eyebrow'  => __( 'My Account', 'ogape-child' ),
-            'title'    => __( 'Your future Ogape account area.', 'ogape-child' ),
-            'subtitle' => __( 'This shell defines the structure for account overview, orders, subscriptions, addresses, preferences, and support.', 'ogape-child' ),
+            'eyebrow'  => __( 'Mi cuenta', 'ogape-child' ),
+            'title'    => __( 'Tu futura área de cuenta Ogape.', 'ogape-child' ),
+            'subtitle' => __( 'Este shell define la estructura para resumen de cuenta, pedidos, suscripciones, direcciones, preferencias y soporte.', 'ogape-child' ),
         )
     );
     ?>
@@ -26,13 +26,13 @@ get_header();
         <div class="container">
             <div class="account-dashboard-shell glass-card">
                 <aside class="account-dashboard-shell__sidebar">
-                    <p class="section__label"><?php esc_html_e( 'Account navigation', 'ogape-child' ); ?></p>
+                    <p class="section__label"><?php esc_html_e( 'Navegación de cuenta', 'ogape-child' ); ?></p>
                     <ul class="account-dashboard-shell__nav">
-                        <li><a href="#"><?php esc_html_e( 'Overview', 'ogape-child' ); ?></a></li>
-                        <li><a href="#"><?php esc_html_e( 'Orders', 'ogape-child' ); ?></a></li>
-                        <li><a href="#"><?php esc_html_e( 'Subscriptions', 'ogape-child' ); ?></a></li>
-                        <li><a href="#"><?php esc_html_e( 'Addresses', 'ogape-child' ); ?></a></li>
-                        <li><a href="#"><?php esc_html_e( 'Preferences', 'ogape-child' ); ?></a></li>
+                        <li><a href="#"><?php esc_html_e( 'Resumen', 'ogape-child' ); ?></a></li>
+                        <li><a href="#"><?php esc_html_e( 'Pedidos', 'ogape-child' ); ?></a></li>
+                        <li><a href="#"><?php esc_html_e( 'Suscripciones', 'ogape-child' ); ?></a></li>
+                        <li><a href="#"><?php esc_html_e( 'Direcciones', 'ogape-child' ); ?></a></li>
+                        <li><a href="#"><?php esc_html_e( 'Preferencias', 'ogape-child' ); ?></a></li>
                         <li><a href="#"><?php esc_html_e( 'Gift Cards', 'ogape-child' ); ?></a></li>
                     </ul>
                 </aside>
@@ -40,22 +40,22 @@ get_header();
                 <div class="account-dashboard-shell__content">
                     <div class="account-stat-grid">
                         <div class="account-stat-card">
-                            <span><?php esc_html_e( 'Next delivery', 'ogape-child' ); ?></span>
-                            <strong><?php esc_html_e( 'Not connected yet', 'ogape-child' ); ?></strong>
+                            <span><?php esc_html_e( 'Próxima entrega', 'ogape-child' ); ?></span>
+                            <strong><?php esc_html_e( 'Todavía no conectado', 'ogape-child' ); ?></strong>
                         </div>
                         <div class="account-stat-card">
-                            <span><?php esc_html_e( 'Active plan', 'ogape-child' ); ?></span>
-                            <strong><?php esc_html_e( 'Pending implementation', 'ogape-child' ); ?></strong>
+                            <span><?php esc_html_e( 'Plan activo', 'ogape-child' ); ?></span>
+                            <strong><?php esc_html_e( 'Implementación pendiente', 'ogape-child' ); ?></strong>
                         </div>
                         <div class="account-stat-card">
-                            <span><?php esc_html_e( 'Saved addresses', 'ogape-child' ); ?></span>
-                            <strong><?php esc_html_e( '0 linked', 'ogape-child' ); ?></strong>
+                            <span><?php esc_html_e( 'Direcciones guardadas', 'ogape-child' ); ?></span>
+                            <strong><?php esc_html_e( '0 vinculadas', 'ogape-child' ); ?></strong>
                         </div>
                     </div>
 
                     <div class="account-panel-card">
-                        <h2><?php esc_html_e( 'Overview panel', 'ogape-child' ); ?></h2>
-                        <p><?php esc_html_e( 'This live shell gives us a connected destination for the new Login entry point. Next steps are wiring real auth, customer profile data, and order/subscription modules.', 'ogape-child' ); ?></p>
+                        <h2><?php esc_html_e( 'Panel de resumen', 'ogape-child' ); ?></h2>
+                        <p><?php esc_html_e( 'Este shell en vivo nos da un destino conectado para el nuevo acceso de cuenta. Los próximos pasos son conectar autenticación real, datos de cliente y módulos de pedidos y suscripciones.', 'ogape-child' ); ?></p>
                     </div>
                 </div>
             </div>

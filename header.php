@@ -15,16 +15,18 @@
 <div id="page" class="site">
 
     <?php
-    $join_url    = '#waitlist-form';
-    $login_url   = home_url( '/login/' );
-    $nav_links   = array(
-        array( 'label' => 'Our Plans',      'url' => home_url( '/plans/' ) ),
-        array( 'label' => 'About Us',       'url' => home_url( '/about/' ) ),
-        array( 'label' => 'Our Menus',      'url' => home_url( '/menus/' ) ),
-        array( 'label' => 'Our Meal Kits',  'url' => home_url( '/meal-kits/' ) ),
-        array( 'label' => 'Gift Cards',     'url' => home_url( '/gift-cards/' ) ),
-        array( 'label' => 'Sustainability', 'url' => home_url( '/sustainability/' ) ),
-        array( 'label' => 'Partnerships',   'url' => home_url( '/partnerships/' ) ),
+    $join_url          = '#waitlist-form';
+    $login_url         = home_url( '/login/' );
+    $future_site_url   = home_url( '/future-site/' );
+    $official_nav_mode = is_page( 'future-site' ) || is_page( 'login' ) || is_page( 'register' ) || is_page( 'account' );
+    $nav_links         = array(
+        array( 'label' => 'Planes',          'url' => $future_site_url . '#planes' ),
+        array( 'label' => 'Nosotros',        'url' => $future_site_url . '#nosotros' ),
+        array( 'label' => 'Menús',           'url' => $future_site_url . '#menus' ),
+        array( 'label' => 'Meal Kits',       'url' => $future_site_url . '#meal-kits' ),
+        array( 'label' => 'Gift Cards',      'url' => $future_site_url . '#gift-cards' ),
+        array( 'label' => 'Sostenibilidad',  'url' => $future_site_url . '#sostenibilidad' ),
+        array( 'label' => 'Alianzas',        'url' => $future_site_url . '#alianzas' ),
     );
     ?>
 
@@ -46,36 +48,44 @@
                     <p class="nav__tagline"><?php esc_html_e( 'Comida fresca, local y bien pensada.', 'ogape-child' ); ?></p>
                 </div>
 
-                <nav class="nav__links" aria-label="Primary">
-                    <ul class="nav__menu">
-                        <?php foreach ( $nav_links as $nav_item ) : ?>
-                            <li><a href="<?php echo esc_url( $nav_item['url'] ); ?>"><?php echo esc_html( $nav_item['label'] ); ?></a></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </nav>
+                <?php if ( $official_nav_mode ) : ?>
+                    <nav class="nav__links" aria-label="Primary">
+                        <ul class="nav__menu">
+                            <?php foreach ( $nav_links as $nav_item ) : ?>
+                                <li><a href="<?php echo esc_url( $nav_item['url'] ); ?>"><?php echo esc_html( $nav_item['label'] ); ?></a></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </nav>
 
-                <div class="nav__actions">
-                    <a href="<?php echo esc_url( $login_url ); ?>" class="nav__login-link">Log in</a>
-                    <a href="<?php echo esc_url( $join_url ); ?>" class="btn btn--primary btn--sm">Unirme</a>
-                </div>
+                    <div class="nav__actions">
+                        <a href="<?php echo esc_url( $login_url ); ?>" class="nav__login-link">Iniciar sesión</a>
+                        <a href="<?php echo esc_url( $join_url ); ?>" class="btn btn--primary btn--sm">Unirme</a>
+                    </div>
 
-                <button class="nav__hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
-                    <span class="hamburger__line"></span>
-                    <span class="hamburger__line"></span>
-                    <span class="hamburger__line"></span>
-                </button>
+                    <button class="nav__hamburger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+                        <span class="hamburger__line"></span>
+                        <span class="hamburger__line"></span>
+                        <span class="hamburger__line"></span>
+                    </button>
+                <?php else : ?>
+                    <div class="nav__actions">
+                        <a href="<?php echo esc_url( $join_url ); ?>" class="btn btn--primary btn--sm">Unirme</a>
+                    </div>
+                <?php endif; ?>
 
             </div><!-- .nav__inner -->
 
-            <div id="mobile-menu" class="nav__mobile-menu" aria-hidden="true">
-                <ul class="nav__mobile-links">
-                    <?php foreach ( $nav_links as $nav_item ) : ?>
-                        <li><a href="<?php echo esc_url( $nav_item['url'] ); ?>"><?php echo esc_html( $nav_item['label'] ); ?></a></li>
-                    <?php endforeach; ?>
-                    <li><a href="<?php echo esc_url( $login_url ); ?>">Log in</a></li>
-                </ul>
-                <a href="<?php echo esc_url( $join_url ); ?>" class="btn btn--primary btn--sm nav__mobile-cta">Unirme</a>
-            </div>
+            <?php if ( $official_nav_mode ) : ?>
+                <div id="mobile-menu" class="nav__mobile-menu" aria-hidden="true">
+                    <ul class="nav__mobile-links">
+                        <?php foreach ( $nav_links as $nav_item ) : ?>
+                            <li><a href="<?php echo esc_url( $nav_item['url'] ); ?>"><?php echo esc_html( $nav_item['label'] ); ?></a></li>
+                        <?php endforeach; ?>
+                        <li><a href="<?php echo esc_url( $login_url ); ?>">Iniciar sesión</a></li>
+                    </ul>
+                    <a href="<?php echo esc_url( $join_url ); ?>" class="btn btn--primary btn--sm nav__mobile-cta">Unirme</a>
+                </div>
+            <?php endif; ?>
         </div><!-- .container -->
     </header><!-- #masthead -->
 

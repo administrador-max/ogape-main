@@ -15,6 +15,8 @@ $menu_url     = home_url( '/menu/' );
 
 <main id="main" class="site-main" role="main">
 
+    <div id="planes" aria-hidden="true"></div>
+
     <?php
     /**
      * Section 1: Hero
@@ -31,7 +33,7 @@ $menu_url     = home_url( '/menu/' );
     );
     ?>
 
-    <section class="editorial-page-section editorial-page-section--narrow">
+    <section class="editorial-page-section editorial-page-section--narrow" id="nosotros">
         <div class="container">
             <div class="editorial-page-card glass-card editorial-page-card--centered">
                 <div class="editorial-page-card__copy">
@@ -52,8 +54,12 @@ $menu_url     = home_url( '/menu/' );
      * Three-column feature highlights
      */
     ?>
-    <section class="editorial-page-section">
+    <section class="editorial-page-section" id="meal-kits">
         <div class="container">
+            <div class="section-header">
+                <p class="section__label">Meal kits Ogape</p>
+                <h2 class="section__heading">La estructura comercial empieza a tomar forma.</h2>
+            </div>
             <div class="features-grid">
                 
                 <div class="feature-item">
@@ -101,7 +107,7 @@ $menu_url     = home_url( '/menu/' );
      * Step-by-step process
      */
     ?>
-    <section class="editorial-page-section editorial-page-section--alt">
+    <section class="editorial-page-section editorial-page-section--alt" id="menus">
         <div class="container">
             <div class="section-header">
                 <p class="section__label">Cómo funciona</p>
@@ -138,19 +144,19 @@ $menu_url     = home_url( '/menu/' );
      * Teaser for full menu (links to /menu)
      */
     ?>
-    <section class="editorial-page-section">
+    <section class="editorial-page-section" id="gift-cards">
         <div class="container">
             <div class="editorial-page-card glass-card editorial-page-card--split">
                 <div class="editorial-page-card__copy">
-                    <p class="section__label">El menú</p>
-                    <h2 class="section__heading">Cocineros reales, platos reales.</h2>
+                    <p class="section__label">Gift Cards + catálogo</p>
+                    <h2 class="section__heading">Una base para menús, regalos y compra futura.</h2>
                     <p class="section__sub editorial-page-card__lead">
-                        Cada semana, un menú curado de cocineros independientes. Sin restaurantes de cadena. Sin comida de fábrica.
+                        Este bloque ya funciona como adelanto del sitio oficial: catálogo navegable, rutas de compra y un punto claro para gift cards cuando activemos la capa transaccional.
                     </p>
                     <ul class="editorial-checklist">
-                        <li>Ingredientes de productores locales</li>
-                        <li>Cocinado el mismo día de entrega</li>
-                        <li>Precio justo para cocineros y clientes</li>
+                        <li>Menús semanales y categorías visibles</li>
+                        <li>Meal kits con estructura más comercial</li>
+                        <li>Gift cards y cuenta conectados al mismo sistema</li>
                     </ul>
                     <div class="editorial-page-card__actions" style="margin-top: 1.5rem;">
                         <a href="<?php echo esc_url( $menu_url ); ?>" class="btn btn--secondary btn--md">Ver menú actual</a>
@@ -158,8 +164,49 @@ $menu_url     = home_url( '/menu/' );
                 </div>
                 <div class="editorial-page-card__visual">
                     <!-- Placeholder for menu preview image -->
-                    <div class="placeholder-visual" style="background: var(--surface-secondary); border-radius: 12px; height: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
-                        <span>Menú Preview</span>
+                    <div class="placeholder-visual" style="background: var(--surface-secondary); border-radius: 12px; height: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-align: center; padding: 1.5rem;">
+                        <span>Vista previa del sitio oficial<br>Catálogo · Gift Cards · Cuenta</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="editorial-page-section editorial-page-section--alt" id="sostenibilidad">
+        <div class="container">
+            <div class="editorial-page-card glass-card editorial-page-card--split">
+                <div class="editorial-page-card__copy">
+                    <p class="section__label">Sostenibilidad</p>
+                    <h2 class="section__heading">Crecer sin perder criterio operativo.</h2>
+                    <p class="section__sub editorial-page-card__lead">
+                        La versión oficial del sitio necesita explicar por qué Ogape no es solo delivery: sourcing más local, operación más controlada y una experiencia más pensada para Paraguay.
+                    </p>
+                    <ul class="editorial-checklist">
+                        <li>Producción más cuidada y menos improvisada</li>
+                        <li>Selección curada en vez de catálogo caótico</li>
+                        <li>Base para contenido de marca y confianza</li>
+                    </ul>
+                </div>
+                <div class="editorial-page-card__visual">
+                    <div class="placeholder-visual" style="background: var(--surface-secondary); border-radius: 12px; height: 100%; min-height: 260px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-align: center; padding: 1.5rem;">
+                        <span>Bloque de narrativa<br>Sourcing · Operación · Confianza</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="editorial-page-section" id="alianzas">
+        <div class="container">
+            <div class="editorial-page-card glass-card editorial-page-card--centered">
+                <div class="editorial-page-card__copy">
+                    <p class="section__label">Alianzas</p>
+                    <h2 class="section__heading">Chefs, marcas y aliados estratégicos.</h2>
+                    <p class="section__sub editorial-page-card__lead">
+                        Este espacio anticipa la ruta de alianzas del sitio oficial: chefs, empresas, proveedores y colaboraciones especiales, todo conectado al mismo sistema de marca y cuenta.
+                    </p>
+                    <div class="editorial-page-card__actions" style="margin-top: 1.5rem; justify-content: center;">
+                        <a href="<?php echo esc_url( home_url( '/login/' ) ); ?>" class="btn btn--secondary btn--md">Ver acceso de cuenta</a>
                     </div>
                 </div>
             </div>
