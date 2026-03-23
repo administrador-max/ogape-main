@@ -45,7 +45,7 @@ $login_demo_url      = add_query_arg( 'demo', 'login', $account_url );
 
                             <label class="account-entry-form__field">
                                 <span><?php esc_html_e( 'Contraseña', 'ogape-child' ); ?></span>
-                                <input type="password" placeholder="••••••••" disabled>
+                                <input type="password" name="password" placeholder="••••••••">
                             </label>
 
                             <button type="button" class="btn btn--primary btn--md account-entry-form__button" disabled>

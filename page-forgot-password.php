@@ -37,7 +37,7 @@ $forgot_password_demo  = add_query_arg( 'reset', 'sent', $login_url );
                             <p class="account-entry-form__demo-note"><?php esc_html_e( 'Demo interactivo: el envío real aún no está conectado, pero ya podés probar la ruta.', 'ogape-child' ); ?></p>
                             <label class="account-entry-form__field">
                                 <span><?php esc_html_e( 'Email', 'ogape-child' ); ?></span>
-                                <input type="email" placeholder="nombre@ejemplo.com" disabled>
+                                <input type="email" name="email" placeholder="nombre@ejemplo.com">
                             </label>
                             <button type="submit" class="btn btn--primary btn--md account-entry-form__button"><?php esc_html_e( 'Enviar enlace', 'ogape-child' ); ?></button>
                         </form>
@@ -52,4 +52,3 @@ $forgot_password_demo  = add_query_arg( 'reset', 'sent', $login_url );
 </main>
 
 <?php get_footer(); ?>
-footer(); ?>
