@@ -2065,12 +2065,19 @@ a:hover {
   padding: 1.15rem 1.15rem 1.2rem;
   border-radius: 22px;
 }
+.future-plan-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
 .future-plan-card--featured {
   border: 1px solid rgba(229, 145, 98, 0.25);
   box-shadow: 0 18px 44px rgba(229, 145, 98, 0.12);
+  transform: translateY(-8px);
 }
 .future-plan-card__badge,
-.future-menu-card__kicker {
+.future-menu-card__kicker,
+.future-gift-preview__eyebrow {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2088,10 +2095,18 @@ a:hover {
   font-size: 1.28rem;
 }
 .future-plan-card p,
-.future-menu-card p {
+.future-menu-card p,
+.future-gift-preview__card p {
   margin: 0;
   color: var(--color-text-secondary);
   line-height: 1.65;
+}
+.future-plan-card__meta {
+  margin-top: 0.8rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
 }
 .future-plan-card ul {
   margin: 1rem 0 0;
@@ -2101,6 +2116,83 @@ a:hover {
 }
 .future-plan-card li + li {
   margin-top: 0.35rem;
+}
+.future-plan-card__link {
+  margin-top: auto;
+  padding-top: 1rem;
+  color: var(--brand-primary-strong);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+}
+.future-menu-card--image {
+  overflow: hidden;
+}
+.future-menu-card__visual {
+  min-height: 168px;
+  border-radius: 18px;
+  margin: 0.9rem 0 1rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 1rem;
+  color: white;
+  font-weight: var(--weight-semibold);
+  background:
+    linear-gradient(180deg, rgba(20, 28, 36, 0.04), rgba(20, 28, 36, 0.5)),
+    radial-gradient(circle at top right, rgba(229,145,98,0.55), transparent 30%),
+    linear-gradient(135deg, #6e8b77 0%, #9b6d4a 100%);
+}
+.future-benefit-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+.future-benefit-pill {
+  display: grid;
+  gap: 0.2rem;
+  align-content: center;
+  min-height: 110px;
+  padding: 1rem 1.1rem;
+  border-radius: 20px;
+}
+.future-benefit-pill strong {
+  font-size: 1.4rem;
+  color: var(--brand-primary-strong);
+}
+.future-benefit-pill span {
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+.future-gift-preview {
+  position: relative;
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+}
+.future-gift-preview__card {
+  position: absolute;
+  width: min(100%, 340px);
+  min-height: 220px;
+  border-radius: 24px;
+  padding: 1.25rem;
+  border: 1px solid rgba(15,23,42,0.08);
+  box-shadow: 0 24px 60px rgba(15,23,42,0.12);
+}
+.future-gift-preview__card strong {
+  display: block;
+  margin: 0.8rem 0 0.45rem;
+  font-size: 1.2rem;
+  color: var(--color-text-primary);
+}
+.future-gift-preview__card--front {
+  background: linear-gradient(135deg, rgba(255,247,239,0.98), rgba(255,255,255,0.95));
+  transform: rotate(-5deg) translateX(-20px);
+  z-index: 2;
+}
+.future-gift-preview__card--back {
+  background: linear-gradient(135deg, rgba(245,249,252,0.98), rgba(255,255,255,0.95));
+  transform: rotate(7deg) translate(34px, 26px);
 }
 
 /* Account entry and account shell */
@@ -2223,13 +2315,34 @@ a:hover {
 @media (max-width: 860px) {
   .future-site-hero__grid,
   .future-plan-grid,
-  .future-menu-grid {
+  .future-menu-grid,
+  .future-benefit-strip {
     grid-template-columns: 1fr;
   }
 
   .future-site-hero__actions {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .future-plan-card--featured {
+    transform: none;
+  }
+
+  .future-gift-preview {
+    min-height: 420px;
+  }
+
+  .future-gift-preview__card {
+    width: min(100%, 280px);
+  }
+
+  .future-gift-preview__card--front {
+    transform: rotate(-4deg) translate(-8px, -12px);
+  }
+
+  .future-gift-preview__card--back {
+    transform: rotate(5deg) translate(12px, 72px);
   }
 
   .account-dashboard-shell {

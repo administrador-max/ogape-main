@@ -74,33 +74,39 @@ $menu_url     = home_url( '/menu/' );
                     <span class="future-plan-card__badge">Descubrimiento</span>
                     <h3>Plan Explorador</h3>
                     <p>Para quien quiere probar Ogape sin fricción: menús curados, acceso temprano y ritmo flexible.</p>
+                    <div class="future-plan-card__meta">1–2 personas · flexible</div>
                     <ul>
                         <li>Acceso temprano a lanzamientos</li>
                         <li>Selección semanal recomendada</li>
-                        <li>Ideal para 1–2 personas</li>
+                        <li>Ideal para primera compra</li>
                     </ul>
+                    <a href="#menus" class="future-plan-card__link">Ver estructura del menú</a>
                 </article>
 
                 <article class="future-plan-card glass-card future-plan-card--featured">
                     <span class="future-plan-card__badge">Prioridad</span>
                     <h3>Plan Hogar</h3>
                     <p>La opción central para familias o rutinas estables: mejor organización, más previsibilidad y relación continua con Ogape.</p>
+                    <div class="future-plan-card__meta">2–4 personas · semanal</div>
                     <ul>
                         <li>Frecuencia semanal sugerida</li>
                         <li>Preferencias y direcciones guardadas</li>
                         <li>Base para suscripción futura</li>
                     </ul>
+                    <a href="<?php echo esc_url( home_url( '/login/' ) ); ?>?fresh=1" class="future-plan-card__link">Ver acceso de cuenta</a>
                 </article>
 
                 <article class="future-plan-card glass-card">
                     <span class="future-plan-card__badge">Regalo / especial</span>
                     <h3>Plan Regalo</h3>
                     <p>Entrada pensada para obsequios, ocasiones especiales y compra con intención más premium.</p>
+                    <div class="future-plan-card__meta">ocasiones especiales · marca</div>
                     <ul>
                         <li>Tarjetas regalo conectadas al catálogo</li>
                         <li>Experiencia lista para regalar</li>
                         <li>Puente entre marca y compra</li>
                     </ul>
+                    <a href="#gift-cards" class="future-plan-card__link">Ver tarjetas regalo</a>
                 </article>
             </div>
         </div>
@@ -162,21 +168,39 @@ $menu_url     = home_url( '/menu/' );
             </div>
 
             <div class="future-menu-grid">
-                <article class="future-menu-card glass-card">
+                <article class="future-menu-card glass-card future-menu-card--image">
                     <span class="future-menu-card__kicker">Semanal</span>
+                    <div class="future-menu-card__visual">Plato destacado</div>
                     <h3>Menú curado</h3>
                     <p>Selección breve de platos destacados con prioridad editorial y mejor experiencia de descubrimiento.</p>
                 </article>
-                <article class="future-menu-card glass-card">
+                <article class="future-menu-card glass-card future-menu-card--image">
                     <span class="future-menu-card__kicker">Categorías</span>
+                    <div class="future-menu-card__visual">Colecciones</div>
                     <h3>Navegación útil</h3>
                     <p>Almuerzos, cenas, kits y opciones especiales organizadas de forma simple para decidir sin fricción.</p>
                 </article>
-                <article class="future-menu-card glass-card">
+                <article class="future-menu-card glass-card future-menu-card--image">
                     <span class="future-menu-card__kicker">Confianza</span>
+                    <div class="future-menu-card__visual">Info clara</div>
                     <h3>Información clara</h3>
                     <p>Fotos reales, disponibilidad visible, notas de preparación y contexto suficiente antes de comprar.</p>
                 </article>
+            </div>
+
+            <div class="future-benefit-strip">
+                <div class="future-benefit-pill glass-card">
+                    <strong>100%</strong>
+                    <span>Plantilla pensada para contenido propietario Ogape</span>
+                </div>
+                <div class="future-benefit-pill glass-card">
+                    <strong>3 capas</strong>
+                    <span>Descubrir · elegir · reservar</span>
+                </div>
+                <div class="future-benefit-pill glass-card">
+                    <strong>1 sistema</strong>
+                    <span>Marca, catálogo y cuenta conectados</span>
+                </div>
             </div>
 
             <div class="steps-grid" style="margin-top: 1.5rem;">
@@ -226,9 +250,17 @@ $menu_url     = home_url( '/menu/' );
                     </div>
                 </div>
                 <div class="editorial-page-card__visual">
-                    <!-- Placeholder for menu preview image -->
-                    <div class="placeholder-visual" style="background: var(--surface-secondary); border-radius: 12px; height: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-align: center; padding: 1.5rem;">
-                        <span>Vista previa del sitio oficial<br>Catálogo · Tarjetas regalo · Cuenta</span>
+                    <div class="future-gift-preview">
+                        <div class="future-gift-preview__card future-gift-preview__card--front">
+                            <span class="future-gift-preview__eyebrow">Tarjeta regalo</span>
+                            <strong>Ogape para regalar</strong>
+                            <p>Una plantilla premium para momentos, obsequios y compras con intención.</p>
+                        </div>
+                        <div class="future-gift-preview__card future-gift-preview__card--back">
+                            <span class="future-gift-preview__eyebrow">Cuenta</span>
+                            <strong>Canje + saldo + catálogo</strong>
+                            <p>Todo queda conectado al mismo sistema visual y operativo.</p>
+                        </div>
                     </div>
                 </div>
             </div>
