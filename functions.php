@@ -340,7 +340,7 @@ function ogape_redirect_non_waitlist_pages() {
         return;
     }
 
-    if ( is_front_page() || is_home() || is_page( 'waitlist' ) || is_page( 'future-site' ) || is_page( 'privacidad' ) || is_page( 'terminos' ) ) {
+    if ( is_front_page() || is_home() || is_page( 'waitlist' ) || is_page( 'future-site' ) || is_page( 'login' ) || is_page( 'register' ) || is_page( 'account' ) || is_page( 'privacidad' ) || is_page( 'terminos' ) ) {
         return;
     }
 
