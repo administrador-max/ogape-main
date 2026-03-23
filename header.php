@@ -61,8 +61,13 @@
                     </nav>
 
                     <div class="nav__actions">
-                        <a href="<?php echo esc_url( $login_url ); ?>" class="nav__login-link">Iniciar sesión</a>
-                        <a href="<?php echo esc_url( $join_url ); ?>" class="btn btn--primary btn--sm">Unirme</a>
+                        <?php if ( $account_demo_mode ) : ?>
+                            <a href="<?php echo esc_url( $account_url ); ?>?fresh=1" class="nav__login-link">Cuenta</a>
+                            <a href="<?php echo esc_url( $logout_url ); ?>?fresh=1" class="nav__logout-link">Cerrar sesión</a>
+                        <?php else : ?>
+                            <a href="<?php echo esc_url( $login_url ); ?>" class="nav__login-link">Iniciar sesión</a>
+                            <a href="<?php echo esc_url( $join_url ); ?>" class="btn btn--primary btn--sm">Unirme</a>
+                        <?php endif; ?>
                     </div>
 
                     <button class="nav__hamburger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
