@@ -81,9 +81,16 @@
                         <?php foreach ( $nav_links as $nav_item ) : ?>
                             <li><a href="<?php echo esc_url( $nav_item['url'] ); ?>"><?php echo esc_html( $nav_item['label'] ); ?></a></li>
                         <?php endforeach; ?>
-                        <li><a href="<?php echo esc_url( $login_url ); ?>">Iniciar sesión</a></li>
+                        <?php if ( $account_demo_mode ) : ?>
+                            <li><a href="<?php echo esc_url( $account_url ); ?>?fresh=1">Cuenta</a></li>
+                            <li><a href="<?php echo esc_url( $logout_url ); ?>?fresh=1">Cerrar sesión</a></li>
+                        <?php else : ?>
+                            <li><a href="<?php echo esc_url( $login_url ); ?>">Iniciar sesión</a></li>
+                        <?php endif; ?>
                     </ul>
-                    <a href="<?php echo esc_url( $join_url ); ?>" class="btn btn--primary btn--sm nav__mobile-cta">Unirme</a>
+                    <?php if ( ! $account_demo_mode ) : ?>
+                        <a href="<?php echo esc_url( $join_url ); ?>" class="btn btn--primary btn--sm nav__mobile-cta">Unirme</a>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div><!-- .container -->
