@@ -48,7 +48,7 @@ $login_demo_url      = add_query_arg( 'demo', 'login', $account_url );
                                 <input type="password" name="password" placeholder="••••••••">
                             </label>
 
-                            <button type="button" class="btn btn--primary btn--md account-entry-form__button" disabled>
+                            <button type="submit" class="btn btn--primary btn--md account-entry-form__button">
                                 <?php esc_html_e( 'Iniciar sesión', 'ogape-child' ); ?>
                             </button>
                         </form>
