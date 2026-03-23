@@ -8,7 +8,8 @@
 
 get_header();
 
-$account_url = home_url( '/account/' );
+$account_url       = home_url( '/account/' );
+$account_setup_url = add_query_arg( 'setup', 'complete', $account_url );
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -37,12 +38,13 @@ $account_url = home_url( '/account/' );
                             <h3><?php esc_html_e( 'Configurar cuenta', 'ogape-child' ); ?></h3>
                             <p><?php esc_html_e( 'Template visual de onboarding inicial.', 'ogape-child' ); ?></p>
                         </div>
-                        <form class="account-entry-form account-entry-form--setup" action="#" method="post" onsubmit="return false;">
-                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Barrio / zona', 'ogape-child' ); ?></span><input type="text" placeholder="Asunción" disabled></label>
-                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Dirección principal', 'ogape-child' ); ?></span><input type="text" placeholder="Calle, número, referencia" disabled></label>
-                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Preferencia principal', 'ogape-child' ); ?></span><input type="text" placeholder="Ej. cenas livianas" disabled></label>
-                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Notas de entrega', 'ogape-child' ); ?></span><input type="text" placeholder="Opcional" disabled></label>
-                            <button type="button" class="btn btn--primary btn--md account-entry-form__button" disabled><?php esc_html_e( 'Guardar y continuar', 'ogape-child' ); ?></button>
+                        <form class="account-entry-form account-entry-form--setup" action="<?php echo esc_url( $account_setup_url ); ?>" method="get">
+                            <p class="account-entry-form__demo-note"><?php esc_html_e( 'Demo interactivo: esta configuración aún no guarda datos, pero ya habilita la experiencia de prueba.', 'ogape-child' ); ?></p>
+                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Barrio / zona', 'ogape-child' ); ?></span><input type="text" name="zone" placeholder="Asunción"></label>
+                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Dirección principal', 'ogape-child' ); ?></span><input type="text" name="address" placeholder="Calle, número, referencia"></label>
+                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Preferencia principal', 'ogape-child' ); ?></span><input type="text" name="preference" placeholder="Ej. cenas livianas"></label>
+                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Notas de entrega', 'ogape-child' ); ?></span><input type="text" name="notes" placeholder="Opcional"></label>
+                            <button type="submit" class="btn btn--primary btn--md account-entry-form__button"><?php esc_html_e( 'Guardar y continuar', 'ogape-child' ); ?></button>
                         </form>
                         <div class="account-entry-shell__actions">
                             <a href="<?php echo esc_url( $account_url ); ?>?fresh=1"><?php esc_html_e( 'Ver dashboard', 'ogape-child' ); ?></a>

@@ -11,6 +11,7 @@ get_header();
 $register_url        = home_url( '/register/' );
 $account_url         = home_url( '/account/' );
 $forgot_password_url = home_url( '/forgot-password/' );
+$login_demo_url      = add_query_arg( 'demo', 'login', $account_url );
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -35,10 +36,11 @@ $forgot_password_url = home_url( '/forgot-password/' );
                             <p><?php esc_html_e( 'Template visual de inicio de sesión.', 'ogape-child' ); ?></p>
                         </div>
 
-                        <form class="account-entry-form" action="#" method="post" onsubmit="return false;">
+                        <form class="account-entry-form" action="<?php echo esc_url( $login_demo_url ); ?>" method="get">
+                            <p class="account-entry-form__demo-note"><?php esc_html_e( 'Demo interactivo: este acceso todavía no autentica, pero ya te deja probar el recorrido.', 'ogape-child' ); ?></p>
                             <label class="account-entry-form__field">
                                 <span><?php esc_html_e( 'Email', 'ogape-child' ); ?></span>
-                                <input type="email" placeholder="nombre@ejemplo.com" disabled>
+                                <input type="email" name="email" placeholder="nombre@ejemplo.com">
                             </label>
 
                             <label class="account-entry-form__field">
@@ -64,3 +66,4 @@ $forgot_password_url = home_url( '/forgot-password/' );
 </main>
 
 <?php get_footer(); ?>
+?>

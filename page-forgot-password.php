@@ -8,7 +8,8 @@
 
 get_header();
 
-$login_url = home_url( '/login/' );
+$login_url             = home_url( '/login/' );
+$forgot_password_demo  = add_query_arg( 'reset', 'sent', $login_url );
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -32,12 +33,13 @@ $login_url = home_url( '/login/' );
                             <h3><?php esc_html_e( 'Recuperar contraseña', 'ogape-child' ); ?></h3>
                             <p><?php esc_html_e( 'Template visual de recuperación.', 'ogape-child' ); ?></p>
                         </div>
-                        <form class="account-entry-form" action="#" method="post" onsubmit="return false;">
+                        <form class="account-entry-form" action="<?php echo esc_url( $forgot_password_demo ); ?>" method="get">
+                            <p class="account-entry-form__demo-note"><?php esc_html_e( 'Demo interactivo: el envío real aún no está conectado, pero ya podés probar la ruta.', 'ogape-child' ); ?></p>
                             <label class="account-entry-form__field">
                                 <span><?php esc_html_e( 'Email', 'ogape-child' ); ?></span>
                                 <input type="email" placeholder="nombre@ejemplo.com" disabled>
                             </label>
-                            <button type="button" class="btn btn--primary btn--md account-entry-form__button" disabled><?php esc_html_e( 'Enviar enlace', 'ogape-child' ); ?></button>
+                            <button type="submit" class="btn btn--primary btn--md account-entry-form__button"><?php esc_html_e( 'Enviar enlace', 'ogape-child' ); ?></button>
                         </form>
                         <div class="account-entry-shell__actions">
                             <a href="<?php echo esc_url( $login_url ); ?>?fresh=1"><?php esc_html_e( 'Volver a iniciar sesión', 'ogape-child' ); ?></a>
@@ -50,3 +52,4 @@ $login_url = home_url( '/login/' );
 </main>
 
 <?php get_footer(); ?>
+footer(); ?>

@@ -10,6 +10,7 @@ get_header();
 
 $login_url         = home_url( '/login/' );
 $account_setup_url = home_url( '/account-setup/' );
+$register_demo_url = add_query_arg( 'demo', 'register', $account_setup_url );
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -33,12 +34,13 @@ $account_setup_url = home_url( '/account-setup/' );
                             <h3><?php esc_html_e( 'Crear cuenta', 'ogape-child' ); ?></h3>
                             <p><?php esc_html_e( 'Template visual de registro.', 'ogape-child' ); ?></p>
                         </div>
-                        <form class="account-entry-form" action="#" method="post" onsubmit="return false;">
-                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Nombre', 'ogape-child' ); ?></span><input type="text" placeholder="Tu nombre" disabled></label>
-                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Email', 'ogape-child' ); ?></span><input type="email" placeholder="nombre@ejemplo.com" disabled></label>
-                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Teléfono', 'ogape-child' ); ?></span><input type="text" placeholder="09xx xxx xxx" disabled></label>
-                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Contraseña', 'ogape-child' ); ?></span><input type="password" placeholder="••••••••" disabled></label>
-                            <button type="button" class="btn btn--primary btn--md account-entry-form__button" disabled><?php esc_html_e( 'Crear cuenta', 'ogape-child' ); ?></button>
+                        <form class="account-entry-form" action="<?php echo esc_url( $register_demo_url ); ?>" method="get">
+                            <p class="account-entry-form__demo-note"><?php esc_html_e( 'Demo interactivo: este registro todavía no crea cuenta real, pero ya permite probar el onboarding.', 'ogape-child' ); ?></p>
+                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Nombre', 'ogape-child' ); ?></span><input type="text" name="name" placeholder="Tu nombre"></label>
+                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Email', 'ogape-child' ); ?></span><input type="email" name="email" placeholder="nombre@ejemplo.com"></label>
+                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Teléfono', 'ogape-child' ); ?></span><input type="text" name="phone" placeholder="09xx xxx xxx"></label>
+                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Contraseña', 'ogape-child' ); ?></span><input type="password" name="password" placeholder="••••••••"></label>
+                            <button type="submit" class="btn btn--primary btn--md account-entry-form__button"><?php esc_html_e( 'Crear cuenta', 'ogape-child' ); ?></button>
                         </form>
                         <div class="account-entry-shell__actions">
                             <a href="<?php echo esc_url( $login_url ); ?>?fresh=1"><?php esc_html_e( 'Ya tengo cuenta', 'ogape-child' ); ?></a>

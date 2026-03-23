@@ -26,6 +26,9 @@ get_header();
 
                 <div class="future-site-hero__panel glass-card">
                     <div class="account-overview-preview">
+                        <?php if ( $demo_message ) : ?>
+                            <p class="account-demo-banner"><?php echo esc_html( $demo_message ); ?></p>
+                        <?php endif; ?>
                         <div class="account-overview-preview__top">
                             <span class="future-plan-card__badge"><?php esc_html_e( 'Resumen', 'ogape-child' ); ?></span>
                             <strong><?php esc_html_e( 'Hola, cliente Ogape', 'ogape-child' ); ?></strong>
@@ -88,6 +91,16 @@ get_header();
                         <div class="account-panel-card account-panel-card--wide">
                             <h2><?php esc_html_e( 'Base para suscripciones y gifting', 'ogape-child' ); ?></h2>
                             <p><?php esc_html_e( 'Este shell ya deja espacio para conectar plan activo, frecuencia, saldo de tarjetas regalo y continuidad de compra dentro de la misma cuenta.', 'ogape-child' ); ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<?php get_footer(); ?>
+e compra dentro de la misma cuenta.', 'ogape-child' ); ?></p>
                         </div>
                     </div>
                 </div>
