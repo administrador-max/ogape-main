@@ -17,8 +17,11 @@
     <?php
     $join_url          = '#waitlist-form';
     $login_url         = home_url( '/login/' );
+    $account_url       = home_url( '/account/' );
+    $logout_url        = home_url( '/login/' );
     $future_site_url   = home_url( '/future-site/' );
-    $official_nav_mode = is_page( 'future-site' ) || is_page( 'login' ) || is_page( 'register' ) || is_page( 'account' );
+    $official_nav_mode = is_page( 'future-site' ) || is_page( 'login' ) || is_page( 'register' ) || is_page( 'forgot-password' ) || is_page( 'account-setup' ) || is_page( 'account' );
+    $account_demo_mode = is_page( 'account' ) || is_page( 'account-setup' );
     $nav_links         = array(
         array( 'label' => 'Planes',          'url' => $future_site_url . '#planes' ),
         array( 'label' => 'Nosotros',        'url' => $future_site_url . '#nosotros' ),
