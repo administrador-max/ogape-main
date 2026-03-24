@@ -52,13 +52,6 @@ get_header();
             <div class="editorial-page-hero__content">
                 <p class="editorial-page-hero__eyebrow"><?php esc_html_e( 'Lista de espera', 'ogape-child' ); ?></p>
                 <h1 class="editorial-page-hero__title"><?php esc_html_e( 'Entrá temprano y seguí el lanzamiento desde adentro.', 'ogape-child' ); ?></h1>
-                <?php if ( is_page_template( 'page-waitlist.php' ) ) : ?>
-                    <?php // TEMP SIGN (easy revert): remove this block only. ?>
-                    <p class="editorial-page-hero__eyebrow" style="margin-top: 10px; margin-bottom: 12px; color: #fff; background: rgba(0, 0, 0, 0.35); display: inline-block; padding: 6px 10px; border-radius: 999px;">
-                        <?php esc_html_e( 'hello Genia', 'ogape-child' ); ?>
-                    </p>
-                    <?php // END TEMP SIGN. ?>
-                <?php endif; ?>
                 <p class="editorial-page-hero__subtitle"><?php esc_html_e( 'Ogape está armando una apertura cuidada en Asunción. Sumate hoy para enterarte primero cuándo abrimos tu zona, qué entra al piloto y cómo acceder antes que el resto.', 'ogape-child' ); ?></p>
                 <div class="editorial-inline-actions editorial-inline-actions--hero">
                     <a href="#waitlist-form-section" class="btn btn--primary btn--lg"><?php esc_html_e( 'Unirme a la lista', 'ogape-child' ); ?></a>
