@@ -52,7 +52,7 @@ get_header();
             <div class="editorial-page-hero__content">
                 <p class="editorial-page-hero__eyebrow"><?php esc_html_e( 'Lista de espera', 'ogape-child' ); ?></p>
                 <h1 class="editorial-page-hero__title"><?php esc_html_e( 'Entrá temprano y seguí el lanzamiento desde adentro.', 'ogape-child' ); ?></h1>
-                <?php if ( is_page_template( 'page-waitlist.php' ) ) : ?>
+                <?php if ( is_front_page() || is_page_template( 'page-waitlist.php' ) ) : ?>
                     <?php // TEMP SIGN (easy revert): remove this block only. ?>
                     <p class="editorial-page-hero__eyebrow" style="margin-top: 10px; margin-bottom: 12px; color: #fff; background: rgba(0, 0, 0, 0.35); display: inline-block; padding: 6px 10px; border-radius: 999px;">
                         <?php esc_html_e( 'hello Genia', 'ogape-child' ); ?>
