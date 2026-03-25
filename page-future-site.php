@@ -24,8 +24,8 @@ $register_url = home_url( '/register/' );
             <div class="future-site-hero__grid">
                 <div class="future-site-hero__content glass-card">
                     <p class="future-site-hero__eyebrow">Ogape</p>
-                    <h1 class="future-site-hero__title">Comidas y kits para que comer mejor en casa sea mucho más fácil.</h1>
-                    <p class="future-site-hero__subtitle">Elegí recetas, platos listos y formatos pensados para tu semana. Menos tiempo resolviendo qué comer, más tiempo disfrutando una experiencia práctica, rica y bien presentada.</p>
+                    <h1 class="future-site-hero__title">Comé mejor en casa con kits, platos y una experiencia hecha para simplificar tu semana.</h1>
+                    <p class="future-site-hero__subtitle">Elegí entre comidas listas, kits para cocinar y formatos pensados para hogares reales. Más variedad, menos fricción y una página que se sienta como una marca de producto de verdad.</p>
 
                     <div class="future-site-hero__actions">
                         <a href="#como-funciona" class="btn btn--primary btn--lg">Cómo funciona</a>
@@ -33,29 +33,29 @@ $register_url = home_url( '/register/' );
                     </div>
 
                     <ul class="future-site-hero__trust">
-                        <li>Más simple que planificar toda tu semana solo</li>
-                        <li>Formatos para cocinar o resolver rápido</li>
+                        <li>Kits y comidas pensadas para la semana real</li>
+                        <li>Más fácil que planificar todo desde cero</li>
                         <li>Diseñado para crecer como experiencia Ogape completa</li>
                     </ul>
                 </div>
 
                 <div class="future-site-hero__panel glass-card">
-                    <p class="future-site-hero__panel-label">La promesa Ogape</p>
+                    <p class="future-site-hero__panel-label">Explorá el universo Ogape</p>
                     <div class="future-site-stack">
                         <div class="future-site-stack__item future-site-stack__item--primary">
-                            <span class="future-site-stack__kicker">Elegí</span>
-                            <strong>Menús que sí invitan a comprar</strong>
-                            <p>Una página más abundante, más visual y más comercial para que elegir se sienta fácil.</p>
+                            <span class="future-site-stack__kicker">Plato destacado</span>
+                            <strong>Milanesa con papas</strong>
+                            <p>Comidas pensadas para verse, elegirse y repetirse.</p>
                         </div>
                         <div class="future-site-stack__item">
-                            <span class="future-site-stack__kicker">Recibí</span>
-                            <strong>Tu semana mejor resuelta</strong>
-                            <p>Ingredientes porcionados, opciones listas y una estructura que reduce fricción.</p>
+                            <span class="future-site-stack__kicker">Kit semanal</span>
+                            <strong>Pollo al horno con vegetales</strong>
+                            <p>Ingredientes organizados para cocinar con menos esfuerzo.</p>
                         </div>
                         <div class="future-site-stack__item">
-                            <span class="future-site-stack__kicker">Repetí</span>
-                            <strong>Cuenta, preferencias y continuidad</strong>
-                            <p>La experiencia futura apunta a convertir la primera compra en una rutina sostenible.</p>
+                            <span class="future-site-stack__kicker">Favorito del hogar</span>
+                            <strong>Pasta cremosa con proteína</strong>
+                            <p>Una oferta más abundante y comercial desde el primer scroll.</p>
                         </div>
                     </div>
                 </div>
@@ -67,114 +67,114 @@ $register_url = home_url( '/register/' );
         <div class="container">
             <div class="section-header">
                 <p class="section__label">Cómo funciona</p>
-                <h2 class="section__heading">Ogape te ayuda a comer bien sin cargar con toda la planificación.</h2>
-                <p class="section__sub">Tomamos el patrón de homepage que convierte mejor: explicar rápido, mostrar valor pronto y dejar claro por qué el producto mejora la semana real de la gente.</p>
+                <h2 class="section__heading">Elegí. Recibí. Disfrutá.</h2>
+                <p class="section__sub">La experiencia tiene que explicarse rápido y vender conveniencia desde arriba, como una homepage comercial real.</p>
             </div>
 
             <div class="steps-grid">
                 <div class="step-item">
                     <span class="step-item__number">01</span>
-                    <h3 class="step-item__title">Elegís tus comidas</h3>
-                    <p class="step-item__text">Explorás recetas, platos listos y kits organizados para decidir sin perder tiempo.</p>
+                    <h3 class="step-item__title">Elegí tus platos</h3>
+                    <p class="step-item__text">Explorá menús y kits organizados para decidir sin perder tiempo.</p>
                 </div>
 
                 <div class="step-item">
                     <span class="step-item__number">02</span>
-                    <h3 class="step-item__title">Recibís todo más claro</h3>
-                    <p class="step-item__text">Tu pedido llega pensado para que la experiencia se sienta limpia, ordenada y confiable.</p>
+                    <h3 class="step-item__title">Recibí tu pedido</h3>
+                    <p class="step-item__text">Todo llega más claro, mejor presentado y listo para entrar en tu rutina.</p>
                 </div>
 
                 <div class="step-item">
                     <span class="step-item__number">03</span>
-                    <h3 class="step-item__title">Cocinás o resolvés rápido</h3>
-                    <p class="step-item__text">Usás lo que recibiste para comer mejor durante la semana sin improvisación constante.</p>
+                    <h3 class="step-item__title">Resolvé tu semana</h3>
+                    <p class="step-item__text">Cociná o terminá tu comida en minutos, con menos fricción y más control.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="editorial-page-section editorial-page-section--alt" id="meal-kits">
-        <div class="container">
-            <div class="editorial-page-card glass-card editorial-page-card--split">
-                <div class="editorial-page-card__copy">
-                    <p class="section__label">Lo mejor de ambos mundos</p>
-                    <h2 class="section__heading">Más conveniencia, más variedad, menos desgaste mental.</h2>
-                    <p class="section__sub editorial-page-card__lead">La página necesita sentirse rica en opciones desde arriba: no una maqueta vacía, sino una propuesta clara de producto para distintos tipos de cliente.</p>
-                    <ul class="editorial-checklist">
-                        <li>Recetas y kits para cocinar en casa</li>
-                        <li>Opciones listas para semanas más pesadas</li>
-                        <li>Mayor percepción de catálogo y abundancia</li>
-                    </ul>
-                    <div class="editorial-page-card__actions" style="margin-top: 1.5rem;">
-                        <a href="#planes" class="btn btn--primary btn--md">Elegir plan</a>
-                        <a href="<?php echo esc_url( $menu_url ); ?>" class="btn btn--secondary btn--md">Explorar platos</a>
-                    </div>
-                </div>
-                <div class="editorial-page-card__visual">
-                    <div class="future-gift-preview">
-                        <div class="future-gift-preview__card future-gift-preview__card--front">
-                            <span class="future-gift-preview__eyebrow">Kits</span>
-                            <strong>Cociná con menos esfuerzo</strong>
-                            <p>Ingredientes organizados y una experiencia más predecible para la semana.</p>
-                        </div>
-                        <div class="future-gift-preview__card future-gift-preview__card--back">
-                            <span class="future-gift-preview__eyebrow">Ready meals</span>
-                            <strong>Resolvé rápido</strong>
-                            <p>Opciones pensadas para cuando el tiempo es corto, pero el estándar sigue alto.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="editorial-page-section" id="menus">
+    <section class="editorial-page-section editorial-page-section--alt" id="menus">
         <div class="container">
             <div class="section-header">
-                <p class="section__label">Más para amar en cada semana</p>
-                <h2 class="section__heading">Una página de producto real necesita variedad visible desde el primer scroll.</h2>
-                <p class="section__sub">Acá es donde el sitio tiene que sentirse mucho más como una marca comercial viva: platos atractivos, categorías claras y razones concretas para seguir explorando.</p>
+                <p class="section__label">Más para descubrir</p>
+                <h2 class="section__heading">Una oferta que se ve más rica, más clara y más fácil de comprar.</h2>
+                <p class="section__sub">La página debe sentirse viva: platos visibles, categorías claras y razones concretas para seguir bajando.</p>
             </div>
 
             <div class="future-dish-row">
                 <article class="future-dish-card glass-card">
-                    <div class="future-dish-card__visual">Pollo al horno</div>
-                    <span class="future-dish-card__tag">Más pedido</span>
-                    <h3>Favoritos semanales</h3>
-                    <p>Platos recurrentes para clientes que quieren algo confiable, rico y fácil de volver a elegir.</p>
-                </article>
-                <article class="future-dish-card glass-card">
-                    <div class="future-dish-card__visual">Pasta fresca</div>
-                    <span class="future-dish-card__tag">Nuevo</span>
-                    <h3>Novedades que mantienen vivo el menú</h3>
-                    <p>Nuevas incorporaciones para que el catálogo no se sienta repetitivo o estático.</p>
-                </article>
-                <article class="future-dish-card glass-card">
-                    <div class="future-dish-card__visual">Bowl saludable</div>
-                    <span class="future-dish-card__tag">Balanceado</span>
-                    <h3>Opciones para distintos estilos de vida</h3>
-                    <p>Bloques que ayudan a ordenar el menú por necesidad, no solo por receta aislada.</p>
-                </article>
-                <article class="future-dish-card glass-card">
                     <div class="future-dish-card__visual">Burger premium</div>
-                    <span class="future-dish-card__tag">Signature</span>
-                    <h3>Platos con mayor valor percibido</h3>
-                    <p>La capa más aspiracional de la oferta, útil para marca, ticket y diferenciación.</p>
+                    <span class="future-dish-card__tag">Popular</span>
+                    <h3>Favoritos de la semana</h3>
+                    <p>Platos que generan repetición, antojo y sensación de catálogo real.</p>
+                </article>
+                <article class="future-dish-card glass-card">
+                    <div class="future-dish-card__visual">Pasta casera</div>
+                    <span class="future-dish-card__tag">Nuevo</span>
+                    <h3>Novedades continuas</h3>
+                    <p>Bloques para sostener frescura y una propuesta siempre activa.</p>
+                </article>
+                <article class="future-dish-card glass-card">
+                    <div class="future-dish-card__visual">Bowl fresco</div>
+                    <span class="future-dish-card__tag">Ligero</span>
+                    <h3>Opciones por estilo</h3>
+                    <p>Más claridad para distintos momentos, necesidades y preferencias.</p>
+                </article>
+                <article class="future-dish-card glass-card">
+                    <div class="future-dish-card__visual">Pollo grillado</div>
+                    <span class="future-dish-card__tag">Hogar</span>
+                    <h3>Comidas para todos los días</h3>
+                    <p>La base de una relación más práctica y repetible con la marca.</p>
                 </article>
             </div>
 
             <div class="future-benefit-strip">
                 <div class="future-benefit-pill glass-card">
                     <strong>100+</strong>
-                    <span>Combinaciones y recetas como aspiración de catálogo completo</span>
+                    <span>Combinaciones como aspiración de catálogo</span>
                 </div>
                 <div class="future-benefit-pill glass-card">
-                    <strong>15 min</strong>
-                    <span>Opciones pensadas para resolver muy rápido cuando hace falta</span>
+                    <strong>15–30 min</strong>
+                    <span>Formatos para cocinar o resolver rápido</span>
                 </div>
                 <div class="future-benefit-pill glass-card">
-                    <strong>1 clic más cerca</strong>
-                    <span>De pasar de descubrir a repetir sin fricción</span>
+                    <strong>1 cuenta</strong>
+                    <span>Pedidos, preferencias y continuidad conectados</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="editorial-page-section" id="meal-kits">
+        <div class="container">
+            <div class="editorial-page-card glass-card editorial-page-card--split">
+                <div class="editorial-page-card__copy">
+                    <p class="section__label">Formats that fit your life — en versión Ogape</p>
+                    <h2 class="section__heading">Kits para cocinar, comidas listas y opciones para distintos ritmos de vida.</h2>
+                    <p class="section__sub editorial-page-card__lead">En vez de una página abstracta, esta sección tiene que vender formatos concretos y fáciles de entender.</p>
+                    <ul class="editorial-checklist">
+                        <li>Kits con ingredientes organizados</li>
+                        <li>Opciones listas para días más pesados</li>
+                        <li>Más control sobre cómo querés comer</li>
+                    </ul>
+                    <div class="editorial-page-card__actions" style="margin-top: 1.5rem;">
+                        <a href="<?php echo esc_url( $menu_url ); ?>" class="btn btn--primary btn--md">Explorar formatos</a>
+                        <a href="#planes" class="btn btn--secondary btn--md">Ver planes</a>
+                    </div>
+                </div>
+                <div class="editorial-page-card__visual">
+                    <div class="future-gift-preview">
+                        <div class="future-gift-preview__card future-gift-preview__card--front">
+                            <span class="future-gift-preview__eyebrow">Meal kits</span>
+                            <strong>Cociná con menos esfuerzo</strong>
+                            <p>Ingredientes porcionados y pasos más claros para que cocinar se sienta accesible.</p>
+                        </div>
+                        <div class="future-gift-preview__card future-gift-preview__card--back">
+                            <span class="future-gift-preview__eyebrow">Ready meals</span>
+                            <strong>Comé bien más rápido</strong>
+                            <p>La parte más práctica de la propuesta, ideal para días de menos tiempo.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -183,49 +183,49 @@ $register_url = home_url( '/register/' );
     <section class="editorial-page-section editorial-page-section--alt" id="planes">
         <div class="container">
             <div class="section-header">
-                <p class="section__label">Planes y formatos</p>
-                <h2 class="section__heading">Eligiendo bien el plan, Ogape se adapta mejor a tu realidad.</h2>
-                <p class="section__sub">Esta sección tiene que hacer el trabajo comercial fuerte: dejar claro qué le conviene a cada tipo de cliente y por qué vale la pena entrar.</p>
+                <p class="section__label">Planes</p>
+                <h2 class="section__heading">Elegí la forma de entrar a Ogape que mejor encaje con tu semana.</h2>
+                <p class="section__sub">La lógica comercial tiene que sentirse clara: empezar, consolidar o regalar una experiencia más premium.</p>
             </div>
 
             <div class="future-plan-grid">
                 <article class="future-plan-card glass-card">
                     <span class="future-plan-card__badge">Empezar</span>
                     <h3>Plan Básico</h3>
-                    <p>La mejor puerta de entrada para probar la experiencia Ogape sin complicarte ni sobrecomprar.</p>
+                    <p>La puerta de entrada perfecta para probar Ogape sin complicarte.</p>
                     <div class="future-plan-card__meta">1–2 personas · simple</div>
                     <ul>
-                        <li>Menú más acotado y claro</li>
-                        <li>Ideal para probar la propuesta</li>
-                        <li>Buena relación entre conveniencia y costo</li>
+                        <li>Selección clara</li>
+                        <li>Entrada con menos fricción</li>
+                        <li>Ideal para primera compra</li>
                     </ul>
-                    <a href="<?php echo esc_url( $waitlist_url ); ?>" class="future-plan-card__link">Empezar con Ogape</a>
+                    <a href="<?php echo esc_url( $waitlist_url ); ?>" class="future-plan-card__link">Empezar</a>
                 </article>
 
                 <article class="future-plan-card glass-card future-plan-card--featured">
-                    <span class="future-plan-card__badge">Más valor</span>
+                    <span class="future-plan-card__badge">Más elegido</span>
                     <h3>Plan Hogar</h3>
-                    <p>La propuesta central para quienes quieren convertir la experiencia en una rutina semanal estable.</p>
+                    <p>El centro de la propuesta: más variedad, más orden y mejor continuidad semanal.</p>
                     <div class="future-plan-card__meta">2–4 personas · semanal</div>
                     <ul>
-                        <li>Más variedad en platos y kits</li>
-                        <li>Base perfecta para recurrencia</li>
-                        <li>Cuenta, preferencias y continuidad</li>
+                        <li>Más valor para repetir</li>
+                        <li>Mejor para la rutina del hogar</li>
+                        <li>Cuenta y preferencias conectadas</li>
                     </ul>
-                    <a href="<?php echo esc_url( $register_url ); ?>?fresh=1" class="future-plan-card__link">Preparar mi cuenta</a>
+                    <a href="<?php echo esc_url( $register_url ); ?>?fresh=1" class="future-plan-card__link">Crear cuenta</a>
                 </article>
 
                 <article class="future-plan-card glass-card">
-                    <span class="future-plan-card__badge">Especial</span>
+                    <span class="future-plan-card__badge">Premium</span>
                     <h3>Plan Signature</h3>
-                    <p>Para propuestas premium, regalos, momentos especiales y una experiencia más cuidada de punta a punta.</p>
-                    <div class="future-plan-card__meta">premium · gifting</div>
+                    <p>Para regalos, ocasiones especiales y una experiencia más cuidada de punta a punta.</p>
+                    <div class="future-plan-card__meta">especial · gifting</div>
                     <ul>
-                        <li>Mayor peso visual y de marca</li>
-                        <li>Ideal para lanzamientos o regalo</li>
-                        <li>Más espacio para valor percibido</li>
+                        <li>Mayor peso de marca</li>
+                        <li>Presentación más premium</li>
+                        <li>Ideal para campañas o regalo</li>
                     </ul>
-                    <a href="#gift-cards" class="future-plan-card__link">Ver opción regalo</a>
+                    <a href="#gift-cards" class="future-plan-card__link">Ver regalo</a>
                 </article>
             </div>
         </div>
@@ -235,18 +235,18 @@ $register_url = home_url( '/register/' );
         <div class="container">
             <div class="editorial-page-card glass-card editorial-page-card--split">
                 <div class="editorial-page-card__copy">
-                    <p class="section__label">Por qué elegir Ogape</p>
-                    <h2 class="section__heading">No es solo comida: es una mejor manera de resolver tu semana.</h2>
-                    <p class="section__sub editorial-page-card__lead">Lo que esta página tiene que vender no es solo un plato. Tiene que vender alivio, orden, variedad y una experiencia que se sienta más pensada.</p>
+                    <p class="section__label">Por qué Ogape</p>
+                    <h2 class="section__heading">No se trata solo de qué comés. Se trata de cómo se siente tu semana.</h2>
+                    <p class="section__sub editorial-page-card__lead">El objetivo de esta página es vender alivio, orden, variedad y una experiencia que se vea más confiable y mejor pensada.</p>
                     <ul class="editorial-checklist">
-                        <li>Menos decisiones repetitivas cada semana</li>
-                        <li>Más claridad para elegir y volver a pedir</li>
-                        <li>Una marca paraguaya con ambición de producto premium</li>
+                        <li>Menos decisiones repetitivas</li>
+                        <li>Más claridad para elegir y repetir</li>
+                        <li>Una experiencia paraguaya con ambición premium</li>
                     </ul>
                 </div>
                 <div class="editorial-page-card__visual">
                     <div class="placeholder-visual" style="background: var(--surface-secondary); border-radius: 12px; height: 100%; min-height: 260px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-align: center; padding: 1.5rem;">
-                        <span>Más sabor · menos fricción<br>más control semanal</span>
+                        <span>Más conveniencia<br>más variedad<br>menos estrés semanal</span>
                     </div>
                 </div>
             </div>
@@ -258,12 +258,12 @@ $register_url = home_url( '/register/' );
             <div class="editorial-page-card glass-card editorial-page-card--split">
                 <div class="editorial-page-card__copy">
                     <p class="section__label">Regalos</p>
-                    <h2 class="section__heading">Regalar Ogape también tiene que sentirse bien armado.</h2>
-                    <p class="section__sub editorial-page-card__lead">Este bloque suma otra razón comercial para entrar al sitio: no solo comprar para uno mismo, sino regalar una experiencia de conveniencia y buena comida.</p>
+                    <h2 class="section__heading">También podés regalar Ogape.</h2>
+                    <p class="section__sub editorial-page-card__lead">Este bloque suma otra razón comercial para explorar la marca: conveniencia y comida como experiencia para compartir.</p>
                     <ul class="editorial-checklist">
-                        <li>Tarjetas regalo conectadas a cuenta y saldo</li>
-                        <li>Formato útil para campañas y ocasiones especiales</li>
-                        <li>Una entrada premium al ecosistema Ogape</li>
+                        <li>Tarjetas regalo integradas a cuenta</li>
+                        <li>Ideal para ocasiones especiales</li>
+                        <li>Otra entrada premium al ecosistema</li>
                     </ul>
                 </div>
                 <div class="editorial-page-card__visual">
@@ -271,12 +271,12 @@ $register_url = home_url( '/register/' );
                         <div class="future-gift-preview__card future-gift-preview__card--front">
                             <span class="future-gift-preview__eyebrow">Gift card</span>
                             <strong>Regalá Ogape</strong>
-                            <p>Una manera elegante de regalar comida, conveniencia y una experiencia mejor pensada.</p>
+                            <p>Una forma clara y atractiva de convertir comida en un regalo útil.</p>
                         </div>
                         <div class="future-gift-preview__card future-gift-preview__card--back">
-                            <span class="future-gift-preview__eyebrow">Canje</span>
-                            <strong>Simple y claro</strong>
-                            <p>Todo integrado para que regalar no se sienta como un parche, sino como parte real del producto.</p>
+                            <span class="future-gift-preview__eyebrow">Simple</span>
+                            <strong>Canje fácil</strong>
+                            <p>Integrado al mismo sistema visual y comercial del sitio.</p>
                         </div>
                     </div>
                 </div>
@@ -288,9 +288,9 @@ $register_url = home_url( '/register/' );
         <div class="container">
             <div class="editorial-page-card glass-card editorial-page-card--centered">
                 <div class="editorial-page-card__copy">
-                    <p class="section__label">CTA final</p>
-                    <h2 class="section__heading">Explorá el menú, prepará tu cuenta y empezá a construir una semana mejor con Ogape.</h2>
-                    <p class="section__sub editorial-page-card__lead">La página tiene que cerrar como una homepage real: con una llamada clara a avanzar y no con una simple maqueta de arquitectura.</p>
+                    <p class="section__label">Empezá</p>
+                    <h2 class="section__heading">Explorá el menú, prepará tu cuenta y hacé que Ogape entre de verdad en tu rutina.</h2>
+                    <p class="section__sub editorial-page-card__lead">La página cierra como una homepage comercial real: con una invitación clara a avanzar, no solo a leer.</p>
                     <div class="editorial-page-card__actions" style="margin-top: 1.5rem; justify-content: center;">
                         <a href="<?php echo esc_url( $menu_url ); ?>" class="btn btn--primary btn--md">Ver menú</a>
                         <a href="<?php echo esc_url( $waitlist_url ); ?>" class="btn btn--secondary btn--md">Unirme a la lista de espera</a>
@@ -305,8 +305,8 @@ $register_url = home_url( '/register/' );
             <div class="future-site-footer-shell glass-card">
                 <div class="future-site-footer-shell__intro">
                     <p class="section__label">Mapa del sitio</p>
-                    <h2 class="section__heading">Ahora sí con una lógica más parecida a una homepage comercial completa.</h2>
-                    <p class="section__sub">Reordenamos la página para priorizar descubrimiento, producto, variedad, planes y conversión en una secuencia mucho más cercana a una landing meal-kit real.</p>
+                    <h2 class="section__heading">Ahora más cerca de una landing meal-kit real y menos de una plantilla vacía.</h2>
+                    <p class="section__sub">Reordenamos la página para que se sienta más comercial, más escaneable y más visual desde el primer scroll.</p>
                 </div>
 
                 <div class="future-site-footer-grid">
@@ -315,15 +315,15 @@ $register_url = home_url( '/register/' );
                         <ul>
                             <li><a href="#como-funciona">Cómo funciona</a></li>
                             <li><a href="#menus">Menús</a></li>
-                            <li><a href="#meal-kits">Kits</a></li>
+                            <li><a href="#meal-kits">Formatos</a></li>
                             <li><a href="#planes">Planes</a></li>
                         </ul>
                     </div>
 
                     <div class="future-site-footer-column">
-                        <h3>Marca</h3>
+                        <h3>Ogape</h3>
                         <ul>
-                            <li><a href="#nosotros">Ogape</a></li>
+                            <li><a href="#nosotros">La propuesta</a></li>
                             <li><a href="#por-que-ogape">Por qué Ogape</a></li>
                             <li><a href="#gift-cards">Regalos</a></li>
                         </ul>
