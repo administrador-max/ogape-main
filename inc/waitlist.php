@@ -286,16 +286,54 @@ if ( ! function_exists( 'ogape_send_waitlist_confirmation_email' ) ) {
             return;
         }
 
-        $name = sanitize_text_field( $entry['first_name'] ?? '' );
+        $name          = sanitize_text_field( $entry['first_name'] ?? '' );
+        $name          = $name ? $name : __( 'Hola', 'ogape-child' );
+        $subject       = __( 'Lista confirmada · Ogape', 'ogape-child' );
+        $privacy_url   = home_url( '/privacidad/' );
+        $waitlist_url  = home_url( '/waitlist/' );
+        $menu_url      = home_url( '/menu/' );
+        $instagram_url = 'https://www.instagram.com/ogape.py';
+        $facebook_url  = 'https://www.facebook.com/ogape.py';
+        $whatsapp_url  = 'https://wa.me/595000000000';
+        $year          = gmdate( 'Y' );
 
-        $subject = __( 'Estás en la lista de espera de Ogape', 'ogape-child' );
-        $message = sprintf(
-            "Hola %s,\n\nTe anotamos en la lista de espera de Ogape.\n\nEstamos preparando el lanzamiento piloto en Asunción y te avisaremos cuando lleguemos a tu zona.\n\nMientras tanto, podés ver los platos piloto aquí:\nhttps://ogape.com.py/menu\n\nGracias por tu interés,\nEquipo Ogape\nhola@ogape.com.py",
-            $name
+        // Keep PDF placeholder structure until referral backend is implemented.
+        $referral_code = '{{REFERRAL_CODE}}';
+        if ( ! empty( $entry['referral_code'] ) ) {
+            $referral_code = sanitize_text_field( $entry['referral_code'] );
+        }
+        $referral_url = home_url( '/ref/' . rawurlencode( $referral_code ) );
+
+        $plain_message = sprintf(
+            "OGAPE\nTU CHEF EN CASA\nLISTA CONFIRMADA\n\nHola %1$s,\n\nYa sos parte de lo que viene.\n\nGracias por anotarte. Estamos preparando algo cuidado — y vas a ser de los primeros en probarlo.\n\nLo que sigue\n01 Te avisamos cuando esté listo\nEl acceso se abre por etapas. Te escribimos a %2$s cuando llegue tu turno.\n\n02 Avanzá en la lista\nInvitá a alguien usando tu enlace y subís posiciones automáticamente.\n%3$s\n\n03 Acceso anticipado\nLos primeros en entrar tienen condiciones especiales del lanzamiento piloto.\n\nINGREDIENTES FRESCOS\nCocina de calidad, en tu casa.\nIdentidad paraguaya. Presentación contemporánea. Conveniente por diseño.\n\nSeguinos mientras esperás\nInstagram · Facebook · WhatsApp\n\nCancelar suscripción · Política de privacidad: %4$s\n© %5$s Ogape Paraguay. Todos los derechos reservados.",
+            $name,
+            $email,
+            $referral_url,
+            $privacy_url,
+            $year
         );
 
+        $html_message = sprintf(
+            '<!doctype html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;padding:0;background:#f5f4ef;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;color:#1f1f1f;"><table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="background:#f5f4ef;padding:24px 0;"><tr><td align="center"><table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="max-width:680px;background:#ffffff;border:1px solid #e9e6dd;border-radius:18px;overflow:hidden;"><tr><td style="padding:26px 28px;background:#191919;color:#ffffff;"><p style="margin:0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;">OGAPE · TU CHEF EN CASA</p><p style="margin:10px 0 0;font-size:12px;letter-spacing:.10em;text-transform:uppercase;opacity:.85;">LISTA CONFIRMADA</p><h1 style="margin:10px 0 0;font-size:34px;line-height:1.2;">Ya sos parte de lo que viene.</h1></td></tr><tr><td style="padding:28px;"><p style="margin:0 0 14px;font-size:16px;line-height:1.55;">Hola %1$s,</p><p style="margin:0 0 16px;font-size:16px;line-height:1.55;">Gracias por anotarte. Estamos preparando algo cuidado — y vas a ser de los primeros en probarlo.</p><div style="margin:20px 0;padding:16px;background:#f8f7f2;border:1px solid #ece8dc;border-radius:12px;"><p style="margin:0 0 10px;font-size:14px;font-weight:700;">Lo que sigue</p><p style="margin:0 0 10px;font-size:14px;line-height:1.7;"><strong>01 Te avisamos cuando esté listo</strong><br>El acceso se abre por etapas. Te escribimos a %2$s cuando llegue tu turno.</p><p style="margin:0 0 10px;font-size:14px;line-height:1.7;"><strong>02 Avanzá en la lista</strong><br>Invitá a alguien usando tu enlace y subís posiciones automáticamente.</p><p style="margin:0;font-size:14px;line-height:1.7;"><strong>03 Acceso anticipado</strong><br>Los primeros en entrar tienen condiciones especiales del lanzamiento piloto.</p></div><p style="margin:18px 0 8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5d5d5d;">SUMÁ GENTE, AVANZÁS VOS</p><p style="margin:0 0 8px;font-size:16px;font-weight:600;">Compartí tu lugar</p><p style="margin:0 0 14px;font-size:14px;line-height:1.6;">Cada persona que se anote con tu enlace te acerca más al acceso.</p><p style="margin:0 0 16px;padding:10px 12px;background:#f5f3ec;border:1px dashed #c8c2b2;border-radius:10px;font-size:14px;word-break:break-all;">%3$s</p><p style="margin:0 0 18px;"><a href="%3$s" style="display:inline-block;background:#1f1f1f;color:#ffffff;text-decoration:none;padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;">Copiar mi enlace</a></p><p style="margin:0 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5d5d5d;">INGREDIENTES FRESCOS</p><p style="margin:0 0 16px;font-size:14px;line-height:1.6;">Cocina de calidad, en tu casa.<br>Identidad paraguaya. Presentación contemporánea. Conveniente por diseño.</p><p style="margin:0 0 10px;font-size:14px;">Seguinos mientras esperás</p><p style="margin:0 0 20px;font-size:14px;"><a href="%4$s" style="color:#1f1f1f;">Instagram</a> · <a href="%5$s" style="color:#1f1f1f;">Facebook</a> · <a href="%6$s" style="color:#1f1f1f;">WhatsApp</a></p><p style="margin:0;font-size:13px;color:#5d5d5d;line-height:1.6;">Recibiste este correo porque te anotaste en la lista de espera de Ogape con la dirección %2$s.</p></td></tr><tr><td style="padding:18px 28px;border-top:1px solid #efece3;background:#fcfbf8;"><p style="margin:0 0 8px;font-size:12px;color:#777;"><a href="%7$s" style="color:#777;">Cancelar suscripción</a> · <a href="%8$s" style="color:#777;">Política de privacidad</a></p><p style="margin:0;font-size:12px;color:#777;">© %9$s Ogape Paraguay. Todos los derechos reservados.<br>{{COMPANY_ADDRESS}}</p></td></tr></table></td></tr></table></body></html>',
+            esc_html( $name ),
+            esc_html( $email ),
+            esc_url( $referral_url ),
+            esc_url( $instagram_url ),
+            esc_url( $facebook_url ),
+            esc_url( $whatsapp_url ),
+            esc_url( $waitlist_url ),
+            esc_url( $privacy_url ),
+            esc_html( $year )
+        );
+
+        $headers = array( 'Content-Type: text/html; charset=UTF-8' );
+
         // Confirmation mail should never break the signup flow.
-        wp_mail( $email, $subject, $message );
+        $sent = wp_mail( $email, $subject, $html_message, $headers );
+
+        if ( ! $sent ) {
+            wp_mail( $email, $subject, $plain_message );
+        }
     }
 }
 
