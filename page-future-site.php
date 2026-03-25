@@ -104,32 +104,32 @@ $register_url = home_url( '/register/' );
                     <div class="future-dish-card__visual">Burger premium</div>
                     <span class="future-dish-card__tag">Popular</span>
                     <h3>Favoritos de la semana</h3>
-                    <p>Platos que generan repetición, antojo y sensación de catálogo real.</p>
+                    <p>Los más pedidos de la semana. Siempre hay uno que se convierte en favorito.</p>
                 </article>
                 <article class="future-dish-card glass-card">
                     <div class="future-dish-card__visual">Pasta casera</div>
                     <span class="future-dish-card__tag">Nuevo</span>
                     <h3>Novedades continuas</h3>
-                    <p>Bloques para sostener frescura y una propuesta siempre activa.</p>
+                    <p>Algo nuevo que probar cada semana. La propuesta nunca se repite.</p>
                 </article>
                 <article class="future-dish-card glass-card">
                     <div class="future-dish-card__visual">Bowl fresco</div>
                     <span class="future-dish-card__tag">Ligero</span>
                     <h3>Opciones por estilo</h3>
-                    <p>Más claridad para distintos momentos, necesidades y preferencias.</p>
+                    <p>Para los que cuidan lo que comen sin complicarse la vida.</p>
                 </article>
                 <article class="future-dish-card glass-card">
                     <div class="future-dish-card__visual">Pollo grillado</div>
                     <span class="future-dish-card__tag">Hogar</span>
                     <h3>Comidas para todos los días</h3>
-                    <p>La base de una relación más práctica y repetible con la marca.</p>
+                    <p>De lunes a viernes, siempre hay algo rico para resolver el día.</p>
                 </article>
             </div>
 
             <div class="future-benefit-strip">
                 <div class="future-benefit-pill glass-card">
                     <strong>100+</strong>
-                    <span>Combinaciones como aspiración de catálogo</span>
+                    <span>Combinaciones posibles en el menú</span>
                 </div>
                 <div class="future-benefit-pill glass-card">
                     <strong>15–30 min</strong>
@@ -305,7 +305,7 @@ $register_url = home_url( '/register/' );
                 <div class="editorial-page-card__copy">
                     <p class="section__label">Empezá</p>
                     <h2 class="section__heading">Explorá el menú, prepará tu cuenta y hacé que Ogape entre de verdad en tu rutina.</h2>
-                    <p class="section__sub editorial-page-card__lead">Empezá esta semana. Explorá el menú, elegí tu formato y hacé que Ogape entre de verdad en tu rutina.</p>
+                    <p class="section__sub editorial-page-card__lead">El menú se actualiza cada semana. Cuanto antes entrás, antes encontrás lo tuyo.</p>
                     <div class="editorial-page-card__actions" style="margin-top: 1.5rem; justify-content: center;">
                         <a href="<?php echo esc_url( $menu_url ); ?>" class="btn btn--primary btn--md">Ver menú</a>
                         <a href="<?php echo esc_url( $waitlist_url ); ?>" class="btn btn--secondary btn--md">Unirme a la lista de espera</a>
