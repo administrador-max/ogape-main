@@ -1,53 +1,42 @@
 # Asset Build Instructions
 
-Local tooling was not available in this environment:
+SVG optimization and PNG generation have been completed. All output files are committed to the repo.
 
-- `svgo` not found
-- `inkscape` not found
-- `node` not found
-- `npm` not found
+## Generated files
 
-The source SVG was copied into the theme as-is:
+| File | Size | Notes |
+|---|---|---|
+| `assets/img/ogape-logo.svg` | 5.5 KB | Optimized with svgo (−38% from 8.8 KB) |
+| `assets/img/favicon.svg` | 5.5 KB | Optimized with svgo (−38% from 8.8 KB) |
+| `assets/img/ogape-logo.png` | 16 KB | 240 px wide, rendered with @resvg/resvg-js |
+| `assets/img/ogape-logo@2x.png` | 33 KB | 480 px wide (retina), rendered with @resvg/resvg-js |
+| `assets/img/favicon-32.png` | 1.8 KB | 32×32 px, rendered with @resvg/resvg-js |
 
-- `assets/img/ogape-logo.svg`
-- `assets/img/favicon.svg`
+## How to regenerate
 
-To finish optimization locally or in CI, run:
-
-```bash
-cp "/Users/ogape/My Drive/07 — Brand/Logos/Ogape Logos/Logo Only/Web/SVG/Logo.svg" \
-  wp-content/themes/ogape-child-theme/assets/img/ogape-logo.svg
-```
+Requires Node 18+ (available at `/opt/node22/bin/node`).
 
 ```bash
-cp "/Users/ogape/My Drive/07 — Brand/Logos/Ogape Logos/Logo Only/Web/SVG/Logo.svg" \
-  wp-content/themes/ogape-child-theme/assets/img/favicon.svg
+# Optimize SVGs
+npx svgo assets/img/ogape-logo.svg -o assets/img/ogape-logo.svg --multipass
+npx svgo assets/img/favicon.svg    -o assets/img/favicon.svg    --multipass
+
+# Generate PNGs (run from project root after npm install)
+node -e "
+const { Resvg } = require('@resvg/resvg-js');
+const { readFileSync, writeFileSync } = require('fs');
+const logo = readFileSync('./assets/img/ogape-logo.svg');
+const fav  = readFileSync('./assets/img/favicon.svg');
+const render = (svg, w, out) => writeFileSync(out, new Resvg(svg, { fitTo: { mode: 'width', value: w } }).render().asPng());
+render(logo, 240, './assets/img/ogape-logo.png');
+render(logo, 480, './assets/img/ogape-logo@2x.png');
+render(fav,   32, './assets/img/favicon-32.png');
+console.log('Done');
+"
 ```
 
-```bash
-svgo wp-content/themes/ogape-child-theme/assets/img/ogape-logo.svg \
-  -o wp-content/themes/ogape-child-theme/assets/img/ogape-logo.svg
-```
+## Source SVG
 
-```bash
-inkscape wp-content/themes/ogape-child-theme/assets/img/ogape-logo.svg \
-  --export-type=png \
-  --export-filename=wp-content/themes/ogape-child-theme/assets/img/ogape-logo.png \
-  --export-width=240
-```
+Original source: `07 — Brand/Logos/Ogape Logos/Logo Only/Web/SVG/Logo.svg` (Google Drive).
 
-```bash
-inkscape wp-content/themes/ogape-child-theme/assets/img/ogape-logo.svg \
-  --export-type=png \
-  --export-filename=wp-content/themes/ogape-child-theme/assets/img/ogape-logo@2x.png \
-  --export-width=480
-```
-
-```bash
-inkscape wp-content/themes/ogape-child-theme/assets/img/favicon.svg \
-  --export-type=png \
-  --export-filename=wp-content/themes/ogape-child-theme/assets/img/favicon-32.png \
-  --export-width=32
-```
-
-After generating the PNGs, verify the header fallback logo and favicon load without 404s on staging.
+Replace `assets/img/ogape-logo.svg` and `assets/img/favicon.svg` with the latest brand asset before regenerating.

@@ -42,13 +42,22 @@ if ( ! function_exists( 'ogape_render_logo' ) ) {
             }
         }
 
-        $logo_uri     = ogape_get_brand_asset_uri( 'ogape-logo.svg' );
+        $logo_svg_uri = ogape_get_brand_asset_uri( 'ogape-logo.svg' );
+        $logo_png_uri = ogape_get_brand_asset_uri( 'ogape-logo.png' );
+        $logo_2x_uri  = ogape_get_brand_asset_uri( 'ogape-logo@2x.png' );
 
         printf(
-            '<a class="site-logo" href="%1$s" aria-label="%2$s"><img src="%3$s" alt="%2$s" width="240" height="80"></a>',
+            '<a class="site-logo" href="%1$s" aria-label="%2$s">'
+            . '<picture>'
+            . '<source srcset="%3$s" type="image/svg+xml">'
+            . '<img src="%4$s" srcset="%4$s 1x, %5$s 2x" alt="%2$s" width="240" height="80">'
+            . '</picture>'
+            . '</a>',
             esc_url( home_url( '/' ) ),
             $logo_label,
-            esc_url( $logo_uri )
+            esc_url( $logo_svg_uri ),
+            esc_url( $logo_png_uri ),
+            esc_url( $logo_2x_uri )
         );
     }
 }

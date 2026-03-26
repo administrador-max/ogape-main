@@ -372,6 +372,23 @@ function ogape_redirect_non_waitlist_pages() {
 }
 add_action( 'template_redirect', 'ogape_redirect_non_waitlist_pages' );
 
+// ── FAVICON FALLBACK ────────────────────────────────────────
+/**
+ * Output favicon link tags when no site icon is configured in WP Customizer.
+ */
+function ogape_output_favicon_fallback() {
+    if ( (int) get_option( 'site_icon' ) > 0 ) {
+        return; // WordPress will handle it via wp_head.
+    }
+
+    $svg_uri = get_stylesheet_directory_uri() . '/assets/img/favicon.svg';
+    $png_uri = get_stylesheet_directory_uri() . '/assets/img/favicon-32.png';
+
+    echo '<link rel="icon" href="' . esc_url( $svg_uri ) . '" type="image/svg+xml">' . "\n";
+    echo '<link rel="icon" href="' . esc_url( $png_uri ) . '" type="image/png" sizes="32x32">' . "\n";
+}
+add_action( 'wp_head', 'ogape_output_favicon_fallback', 1 );
+
 // ── REMOVE UNNECESSARY WP BLOAT ─────────────────────────────
 remove_action( 'wp_head', 'wp_generator' );           // Hide WP version
 remove_action( 'wp_head', 'wlwmanifest_link' );       // Remove Windows Live Writer link
