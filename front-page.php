@@ -5,12 +5,12 @@
 
 $hero_slides = array(
     array(
-        'label' => 'Milanesa signature',
-        'image' => get_stylesheet_directory_uri() . '/assets/images/homepage/ogape_web_product_milanesa_v1.jpg',
+        'label' => 'Cazuela de Tilapia',
+        'image' => get_stylesheet_directory_uri() . '/assets/img/hero-drive/cazuela-de-tilapia.jpg',
     ),
     array(
-        'label' => 'Burger Ogape',
-        'image' => get_stylesheet_directory_uri() . '/assets/images/homepage/ogape_web_product_burger_v1.jpg',
+        'label' => 'Ensalada de Salmón',
+        'image' => get_stylesheet_directory_uri() . '/assets/img/hero-drive/ensalada-de-salmon.jpg',
     ),
     array(
         'label' => 'Linguini con Camarón',
