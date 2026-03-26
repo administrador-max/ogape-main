@@ -357,11 +357,11 @@ function ogape_redirect_non_waitlist_pages() {
         'terminos',
     );
 
-    if ( in_array( $request_path, $allowed_paths, true ) ) {
+    if ( is_front_page() || is_home() || is_page( 'future-site' ) ) {
         return;
     }
 
-    if ( is_front_page() || is_home() ) {
+    if ( in_array( $request_path, $allowed_paths, true ) ) {
         return;
     }
 
