@@ -24,12 +24,12 @@
     $account_demo_mode = is_page( 'account' ) || is_page( 'account-setup' );
     $nav_links         = array(
         array( 'label' => 'Planes',          'url' => $future_site_url . '#planes' ),
-        array( 'label' => 'Nosotros',        'url' => $future_site_url . '#nosotros' ),
-        array( 'label' => 'Menús',           'url' => $future_site_url . '#menus' ),
-        array( 'label' => 'Kits',            'url' => $future_site_url . '#meal-kits' ),
+        array( 'label' => 'Nosotros',        'url' => home_url( '/nosotros/' ) ),
+        array( 'label' => 'Menús',           'url' => home_url( '/menu/' ) ),
+        array( 'label' => 'Kits',            'url' => home_url( '/como-funciona/' ) ),
         array( 'label' => 'Tarjetas regalo', 'url' => $future_site_url . '#gift-cards' ),
-        array( 'label' => 'Sostenibilidad',  'url' => $future_site_url . '#sostenibilidad' ),
-        array( 'label' => 'Alianzas',        'url' => $future_site_url . '#alianzas' ),
+        array( 'label' => 'Sostenibilidad',  'url' => home_url( '/sostenibilidad/' ) ),
+        array( 'label' => 'Alianzas',        'url' => home_url( '/alianzas/' ) ),
     );
     ?>
 
