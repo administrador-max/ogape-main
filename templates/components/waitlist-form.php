@@ -9,6 +9,15 @@
   <div class="container">
     <div class="waitlist-card glass-card">
 
+      <div class="waitlist-card__visuals" aria-label="Presentación del empaque Ogape">
+        <figure class="waitlist-card__visual waitlist-card__visual--berry">
+          <img src="<?php echo esc_url( trailingslashit( get_stylesheet_directory_uri() ) . 'assets/images/homepage/ogape_web_pack_berry_v1.jpg' ); ?>" alt="Pack Ogape con berries como referencia visual de producto" loading="lazy" decoding="async" width="896" height="1088">
+        </figure>
+        <figure class="waitlist-card__visual waitlist-card__visual--box">
+          <img src="<?php echo esc_url( trailingslashit( get_stylesheet_directory_uri() ) . 'assets/images/homepage/ogape_web_pack_box_v1.jpg' ); ?>" alt="Caja de Ogape como señal de empaque y confianza de marca" loading="lazy" decoding="async" width="1024" height="1024">
+        </figure>
+      </div>
+
       <div class="waitlist-card__header">
         <h2 class="waitlist-card__title" id="waitlist-title">Entrá primero al lanzamiento piloto</h2>
         <p class="waitlist-card__subtitle">
