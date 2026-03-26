@@ -422,6 +422,101 @@ function ogape_render_virtual_theme_page() {
 }
 add_action( 'template_redirect', 'ogape_render_virtual_theme_page', 0 );
 
+
+/**
+ * Demo account helpers for test-ready future-site account flow.
+ */
+function ogape_get_demo_account_key() {
+    return 'ogape_demo_account';
+}
+
+function ogape_get_demo_account_state() {
+    $state = isset( $_COOKIE[ ogape_get_demo_account_key() ] ) ? wp_unslash( $_COOKIE[ ogape_get_demo_account_key() ] ) : '';
+    if ( ! is_string( $state ) || '' === $state ) {
+        return array();
+    }
+
+    $decoded = json_decode( base64_decode( $state ), true );
+    return is_array( $decoded ) ? $decoded : array();
+}
+
+function ogape_set_demo_account_state( $state ) {
+    if ( ! is_array( $state ) ) {
+        $state = array();
+    }
+
+    $encoded = base64_encode( wp_json_encode( $state ) );
+    setcookie( ogape_get_demo_account_key(), $encoded, time() + DAY_IN_SECONDS, COOKIEPATH ?: '/', COOKIE_DOMAIN, is_ssl(), true );
+    $_COOKIE[ ogape_get_demo_account_key() ] = $encoded;
+}
+
+function ogape_clear_demo_account_state() {
+    setcookie( ogape_get_demo_account_key(), '', time() - HOUR_IN_SECONDS, COOKIEPATH ?: '/', COOKIE_DOMAIN, is_ssl(), true );
+    unset( $_COOKIE[ ogape_get_demo_account_key() ] );
+}
+
+function ogape_handle_demo_account_flow() {
+    if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
+        return;
+    }
+
+    $request_path = isset( $_SERVER['REQUEST_URI'] ) ? wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ) : '';
+    $request_path = is_string( $request_path ) ? trim( $request_path, '/' ) : '';
+
+    $handled_paths = array( 'register', 'login', 'account-setup' );
+    if ( ! in_array( $request_path, $handled_paths, true ) ) {
+        return;
+    }
+
+    if ( ! isset( $_POST['ogape_demo_action'], $_POST['ogape_demo_nonce'] ) ) {
+        return;
+    }
+
+    if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ogape_demo_nonce'] ) ), 'ogape_demo_account_flow' ) ) {
+        return;
+    }
+
+    $action = sanitize_text_field( wp_unslash( $_POST['ogape_demo_action'] ) );
+    $state  = ogape_get_demo_account_state();
+
+    if ( 'register' === $action ) {
+        $state['name']  = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
+        $state['email'] = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
+        $state['phone'] = sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) );
+        $state['plan']  = __( 'Plan Hogar', 'ogape-child' );
+        ogape_set_demo_account_state( $state );
+        wp_safe_redirect( add_query_arg( array( 'demo' => 'register', 'source' => 'register' ), home_url( '/account-setup/' ) ) );
+        exit;
+    }
+
+    if ( 'login' === $action ) {
+        $email = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
+        if ( $email ) {
+            $state['email'] = $email;
+        }
+        if ( empty( $state['name'] ) ) {
+            $state['name'] = __( 'Cliente de prueba', 'ogape-child' );
+        }
+        if ( empty( $state['plan'] ) ) {
+            $state['plan'] = __( 'Plan Hogar', 'ogape-child' );
+        }
+        ogape_set_demo_account_state( $state );
+        wp_safe_redirect( add_query_arg( array( 'demo' => 'login', 'source' => 'login' ), home_url( '/account/' ) ) );
+        exit;
+    }
+
+    if ( 'account-setup' === $action ) {
+        $state['zone']       = sanitize_text_field( wp_unslash( $_POST['zone'] ?? '' ) );
+        $state['address']    = sanitize_text_field( wp_unslash( $_POST['address'] ?? '' ) );
+        $state['preference'] = sanitize_text_field( wp_unslash( $_POST['preference'] ?? '' ) );
+        $state['notes']      = sanitize_text_field( wp_unslash( $_POST['notes'] ?? '' ) );
+        ogape_set_demo_account_state( $state );
+        wp_safe_redirect( add_query_arg( array( 'setup' => 'complete', 'source' => 'account-setup' ), home_url( '/account/' ) ) );
+        exit;
+    }
+}
+add_action( 'template_redirect', 'ogape_handle_demo_account_flow', 1 );
+
 // ── REMOVE UNNECESSARY WP BLOAT ─────────────────────────────
 remove_action( 'wp_head', 'wp_generator' );           // Hide WP version
 remove_action( 'wp_head', 'wlwmanifest_link' );       // Remove Windows Live Writer link

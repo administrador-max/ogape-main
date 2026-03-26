@@ -8,6 +8,13 @@
 
 get_header();
 
+$demo_state   = ogape_get_demo_account_state();
+$demo_name    = ! empty( $demo_state['name'] ) ? $demo_state['name'] : __( 'Cliente de prueba', 'ogape-child' );
+$demo_email   = ! empty( $demo_state['email'] ) ? $demo_state['email'] : 'cliente@demo.ogape';
+$demo_plan    = ! empty( $demo_state['plan'] ) ? $demo_state['plan'] : __( 'Plan Hogar', 'ogape-child' );
+$demo_zone    = ! empty( $demo_state['zone'] ) ? $demo_state['zone'] : __( 'Pendiente de definir', 'ogape-child' );
+$demo_address = ! empty( $demo_state['address'] ) ? $demo_state['address'] : __( 'Sin dirección cargada', 'ogape-child' );
+$demo_pref    = ! empty( $demo_state['preference'] ) ? $demo_state['preference'] : __( 'Sin preferencia cargada', 'ogape-child' );
 $demo_message = '';
 if ( isset( $_GET['demo'] ) ) {
     $demo_value = sanitize_text_field( wp_unslash( $_GET['demo'] ) );
@@ -47,7 +54,7 @@ if ( isset( $_GET['fresh'] ) ) {
                         <?php endif; ?>
                         <div class="account-overview-preview__top">
                             <span class="future-plan-card__badge"><?php esc_html_e( 'Resumen', 'ogape-child' ); ?></span>
-                            <strong><?php esc_html_e( 'Hola, cliente de prueba', 'ogape-child' ); ?></strong>
+                            <strong><?php echo esc_html( sprintf( __( 'Hola, %s', 'ogape-child' ), $demo_name ) ); ?></strong>
                             <p><?php esc_html_e( 'Un vistazo rápido a lo que más importa dentro de la cuenta.', 'ogape-child' ); ?></p>
                         </div>
                         <div class="account-stat-grid">
@@ -57,7 +64,7 @@ if ( isset( $_GET['fresh'] ) ) {
                             </div>
                             <div class="account-stat-card">
                                 <span><?php esc_html_e( 'Plan activo', 'ogape-child' ); ?></span>
-                                <strong><?php esc_html_e( 'Kit Hogar', 'ogape-child' ); ?></strong>
+                                <strong><?php echo esc_html( $demo_plan ); ?></strong>
                             </div>
                             <div class="account-stat-card">
                                 <span><?php esc_html_e( 'Saldo regalo', 'ogape-child' ); ?></span>
@@ -94,15 +101,15 @@ if ( isset( $_GET['fresh'] ) ) {
                         </div>
                         <div class="account-panel-card">
                             <h2><?php esc_html_e( 'Direcciones y preferencias', 'ogape-child' ); ?></h2>
-                            <p><?php esc_html_e( 'Bloque preparado para dirección principal, notas de entrega y perfil alimentario.', 'ogape-child' ); ?></p>
+                            <p><?php echo esc_html( sprintf( __( 'Zona: %1$s · Dirección: %2$s', 'ogape-child' ), $demo_zone, $demo_address ) ); ?></p>
                         </div>
                         <div class="account-panel-card">
                             <h2><?php esc_html_e( 'Onboarding pendiente', 'ogape-child' ); ?></h2>
-                            <p><?php esc_html_e( 'Este módulo sirve para empujar la configuración inicial: dirección, preferencias, zona y señales para personalización futura.', 'ogape-child' ); ?></p>
+                            <p><?php echo esc_html( sprintf( __( 'Preferencia principal registrada: %s', 'ogape-child' ), $demo_pref ) ); ?></p>
                         </div>
                         <div class="account-panel-card">
                             <h2><?php esc_html_e( 'Acciones rápidas', 'ogape-child' ); ?></h2>
-                            <p><?php esc_html_e( 'Espacio para reordenar, editar dirección principal, revisar saldo regalo o retomar una compra.', 'ogape-child' ); ?></p>
+                            <p><?php echo esc_html( sprintf( __( 'Email de prueba activo: %s', 'ogape-child' ), $demo_email ) ); ?></p>
                         </div>
                         <div class="account-panel-card account-panel-card--wide">
                             <h2><?php esc_html_e( 'Base para suscripciones y gifting', 'ogape-child' ); ?></h2>

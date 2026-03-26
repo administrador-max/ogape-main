@@ -47,7 +47,9 @@ if ( isset( $_GET['reset'] ) ) {
                             <p><?php esc_html_e( 'Acceso de prueba conectado al dashboard demo.', 'ogape-child' ); ?></p>
                         </div>
 
-                        <form class="account-entry-form" action="<?php echo esc_url( $login_demo_url ); ?>" method="get">
+                        <form class="account-entry-form" action="<?php echo esc_url( home_url( '/login/' ) ); ?>" method="post">
+                            <input type="hidden" name="ogape_demo_action" value="login">
+                            <input type="hidden" name="ogape_demo_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ogape_demo_account_flow' ) ); ?>">
                             <p class="account-entry-form__demo-note"><?php esc_html_e( 'Flujo de prueba: iniciar sesión te lleva directo al dashboard demo.', 'ogape-child' ); ?></p>
                             <?php if ( $login_notice ) : ?>
                                 <p class="account-entry-form__demo-note"><?php echo esc_html( $login_notice ); ?></p>

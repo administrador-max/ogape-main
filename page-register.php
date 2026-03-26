@@ -41,7 +41,9 @@ $register_demo_url = add_query_arg(
                             <h3><?php esc_html_e( 'Crear cuenta', 'ogape-child' ); ?></h3>
                             <p><?php esc_html_e( 'Registro de prueba listo para validar el recorrido hacia cuenta y dashboard.', 'ogape-child' ); ?></p>
                         </div>
-                        <form class="account-entry-form" action="<?php echo esc_url( $register_demo_url ); ?>" method="get">
+                        <form class="account-entry-form" action="<?php echo esc_url( home_url( '/register/' ) ); ?>" method="post">
+                            <input type="hidden" name="ogape_demo_action" value="register">
+                            <input type="hidden" name="ogape_demo_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ogape_demo_account_flow' ) ); ?>">
                             <p class="account-entry-form__demo-note"><?php esc_html_e( 'Flujo de prueba: al crear cuenta vas a configuración inicial y luego al dashboard.', 'ogape-child' ); ?></p>
                             <label class="account-entry-form__field"><span><?php esc_html_e( 'Nombre', 'ogape-child' ); ?></span><input type="text" name="name" placeholder="Tu nombre"></label>
                             <label class="account-entry-form__field"><span><?php esc_html_e( 'Email', 'ogape-child' ); ?></span><input type="email" name="email" placeholder="nombre@ejemplo.com"></label>
