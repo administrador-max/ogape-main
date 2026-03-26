@@ -14,6 +14,46 @@ require get_stylesheet_directory() . '/inc/mail.php';
 require get_stylesheet_directory() . '/inc/waitlist.php';
 require get_stylesheet_directory() . '/inc/auth.php';
 
+// ── AUTO-CREATE REQUIRED PAGES ──────────────────────────────
+/**
+ * Create the auth/account pages if they don't exist yet.
+ * Runs once after the theme is activated, and again on init
+ * if the flag was never set (e.g. fresh install or DB reset).
+ */
+function ogape_ensure_required_pages() {
+    if ( get_option( '_ogape_pages_created' ) ) {
+        return;
+    }
+
+    $pages = array(
+        array( 'slug' => 'login',            'title' => 'Login',            'template' => 'page-login.php' ),
+        array( 'slug' => 'register',         'title' => 'Registro',         'template' => 'page-register.php' ),
+        array( 'slug' => 'forgot-password',  'title' => 'Olvidé mi contraseña', 'template' => 'page-forgot-password.php' ),
+        array( 'slug' => 'reset-password',   'title' => 'Restablecer contraseña', 'template' => 'page-reset-password.php' ),
+        array( 'slug' => 'account',          'title' => 'Mi cuenta',        'template' => 'page-account.php' ),
+        array( 'slug' => 'account-setup',    'title' => 'Configuración inicial', 'template' => 'page-account-setup.php' ),
+    );
+
+    foreach ( $pages as $page ) {
+        if ( ! get_page_by_path( $page['slug'] ) ) {
+            $id = wp_insert_post( array(
+                'post_title'  => $page['title'],
+                'post_name'   => $page['slug'],
+                'post_status' => 'publish',
+                'post_type'   => 'page',
+                'post_author' => 1,
+            ) );
+            if ( $id && ! is_wp_error( $id ) ) {
+                update_post_meta( $id, '_wp_page_template', $page['template'] );
+            }
+        }
+    }
+
+    update_option( '_ogape_pages_created', '1' );
+}
+add_action( 'after_switch_theme', 'ogape_ensure_required_pages' );
+add_action( 'init', 'ogape_ensure_required_pages' );
+
 /**
  * Theme contact helpers.
  */
