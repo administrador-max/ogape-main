@@ -382,6 +382,46 @@ function ogape_redirect_non_waitlist_pages() {
 }
 add_action( 'template_redirect', 'ogape_redirect_non_waitlist_pages' );
 
+
+/**
+ * Force specific public slugs to render known page templates even if WP pages are missing.
+ * Temporary bridge for production while content-layer pages are not registered.
+ */
+function ogape_render_virtual_theme_page() {
+    if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+        return;
+    }
+
+    $request_path = isset( $_SERVER['REQUEST_URI'] ) ? wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ) : '';
+    $request_path = is_string( $request_path ) ? trim( $request_path, '/' ) : '';
+
+    $virtual_templates = array(
+        'planes'           => 'page-planes.php',
+        'tarjetas-regalo'  => 'page-tarjetas-regalo.php',
+        'sostenibilidad'   => 'page-sostenibilidad.php',
+        'alianzas'         => 'page-alianzas.php',
+    );
+
+    if ( ! isset( $virtual_templates[ $request_path ] ) ) {
+        return;
+    }
+
+    if ( is_page() || is_singular() ) {
+        return;
+    }
+
+    $template = locate_template( $virtual_templates[ $request_path ] );
+    if ( ! $template ) {
+        return;
+    }
+
+    status_header( 200 );
+    nocache_headers();
+    include $template;
+    exit;
+}
+add_action( 'template_redirect', 'ogape_render_virtual_theme_page', 0 );
+
 // ── REMOVE UNNECESSARY WP BLOAT ─────────────────────────────
 remove_action( 'wp_head', 'wp_generator' );           // Hide WP version
 remove_action( 'wp_head', 'wlwmanifest_link' );       // Remove Windows Live Writer link
