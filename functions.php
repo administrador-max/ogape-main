@@ -351,6 +351,7 @@ function ogape_redirect_non_waitlist_pages() {
         'login',
         'register',
         'forgot-password',
+        'reset-password',
         'account',
         'account-setup',
         'faq',

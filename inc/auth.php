@@ -117,9 +117,12 @@ function ogape_process_forgot_password() {
     if ( $user ) {
         $key = get_password_reset_key( $user );
         if ( ! is_wp_error( $key ) ) {
-            $reset_url = network_site_url(
-                'wp-login.php?action=rp&key=' . rawurlencode( $key ) . '&login=' . rawurlencode( $user->user_login ),
-                'login'
+            $reset_url = add_query_arg(
+                array(
+                    'key'   => rawurlencode( $key ),
+                    'login' => rawurlencode( $user->user_login ),
+                ),
+                home_url( '/reset-password/' )
             );
             $message = sprintf(
                 /* translators: %s: password reset URL */
@@ -168,6 +171,64 @@ function ogape_process_account_setup() {
     update_user_meta( $user_id, 'ogape_address', $address );
     update_user_meta( $user_id, 'ogape_preference', $preference );
     update_user_meta( $user_id, 'ogape_delivery_notes', $notes );
+
+    return true;
+}
+
+/**
+ * Validate a password reset key from the URL.
+ *
+ * @param string $key   Raw key from query string.
+ * @param string $login Raw login from query string.
+ * @return WP_User|WP_Error
+ */
+function ogape_check_reset_key( $key, $login ) {
+    $key   = sanitize_text_field( wp_unslash( $key ) );
+    $login = sanitize_user( wp_unslash( $login ) );
+
+    if ( ! $key || ! $login ) {
+        return new WP_Error( 'invalid_key', __( 'El enlace de restablecimiento no es válido o ya fue usado.', 'ogape-child' ) );
+    }
+
+    $user = check_password_reset_key( $key, $login );
+
+    if ( is_wp_error( $user ) ) {
+        return new WP_Error( 'invalid_key', __( 'El enlace de restablecimiento no es válido o ya expiró. Solicitá uno nuevo.', 'ogape-child' ) );
+    }
+
+    return $user;
+}
+
+/**
+ * Process a reset-password POST submission.
+ *
+ * @param WP_User $user The user object returned by ogape_check_reset_key().
+ * @return true|WP_Error
+ */
+function ogape_process_reset_password( $user ) {
+    if (
+        ! isset( $_POST['ogape_reset_nonce'] ) ||
+        ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ogape_reset_nonce'] ) ), 'ogape_reset' )
+    ) {
+        return new WP_Error( 'invalid_nonce', __( 'Error de seguridad. Por favor, recargá la página.', 'ogape-child' ) );
+    }
+
+    $password = wp_unslash( $_POST['password'] ?? '' );
+    $confirm  = wp_unslash( $_POST['password_confirm'] ?? '' );
+
+    if ( ! $password ) {
+        return new WP_Error( 'missing_password', __( 'Ingresá una nueva contraseña.', 'ogape-child' ) );
+    }
+
+    if ( strlen( $password ) < 8 ) {
+        return new WP_Error( 'weak_password', __( 'La contraseña debe tener al menos 8 caracteres.', 'ogape-child' ) );
+    }
+
+    if ( $password !== $confirm ) {
+        return new WP_Error( 'password_mismatch', __( 'Las contraseñas no coinciden.', 'ogape-child' ) );
+    }
+
+    reset_password( $user, $password );
 
     return true;
 }
