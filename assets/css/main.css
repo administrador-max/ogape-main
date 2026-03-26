@@ -2410,6 +2410,47 @@ a:hover {
   line-height: 1.55;
   color: var(--color-text-secondary);
 }
+.account-entry-form__error {
+  grid-column: 1 / -1;
+  margin: 0 0 0.6rem;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  background: rgba(232, 107, 154, 0.12);
+  border: 1px solid rgba(232, 107, 154, 0.35);
+  color: #e86b9a;
+}
+.account-entry-form__success {
+  grid-column: 1 / -1;
+  margin: 0 0 1rem;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  background: rgba(164, 222, 20, 0.1);
+  border: 1px solid rgba(164, 222, 20, 0.3);
+  color: #a4de14;
+}
+.account-setup-prompt {
+  margin: 0 0 1.2rem;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  background: rgba(232, 160, 69, 0.1);
+  border: 1px solid rgba(232, 160, 69, 0.3);
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.account-setup-prompt a {
+  color: var(--color-accent-warm);
+  text-decoration: underline;
+  white-space: nowrap;
+}
 .account-entry-shell__actions {
   display: flex;
   flex-wrap: wrap;

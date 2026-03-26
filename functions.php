@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Security: prevent direct access
 require get_stylesheet_directory() . '/inc/branding.php';
 require get_stylesheet_directory() . '/inc/mail.php';
 require get_stylesheet_directory() . '/inc/waitlist.php';
+require get_stylesheet_directory() . '/inc/auth.php';
 
 /**
  * Theme contact helpers.
