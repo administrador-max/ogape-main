@@ -23,11 +23,11 @@
     $official_nav_mode = is_page( 'future-site' ) || is_page( 'login' ) || is_page( 'register' ) || is_page( 'forgot-password' ) || is_page( 'account-setup' ) || is_page( 'account' );
     $account_demo_mode = is_page( 'account' ) || is_page( 'account-setup' );
     $nav_links         = array(
-        array( 'label' => 'Planes',          'url' => $future_site_url . '#planes' ),
+        array( 'label' => 'Planes',          'url' => home_url( '/planes/' ) ),
         array( 'label' => 'Nosotros',        'url' => home_url( '/nosotros/' ) ),
         array( 'label' => 'Menús',           'url' => home_url( '/menu/' ) ),
         array( 'label' => 'Kits',            'url' => home_url( '/como-funciona/' ) ),
-        array( 'label' => 'Tarjetas regalo', 'url' => $future_site_url . '#gift-cards' ),
+        array( 'label' => 'Tarjetas regalo', 'url' => home_url( '/tarjetas-regalo/' ) ),
         array( 'label' => 'Sostenibilidad',  'url' => home_url( '/sostenibilidad/' ) ),
         array( 'label' => 'Alianzas',        'url' => home_url( '/alianzas/' ) ),
     );
