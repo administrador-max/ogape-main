@@ -9,7 +9,13 @@
 get_header();
 
 $login_url             = home_url( '/login/' );
-$forgot_password_demo  = add_query_arg( 'reset', 'sent', $login_url );
+$forgot_password_demo  = add_query_arg(
+    array(
+        'reset'  => 'sent',
+        'source' => 'forgot-password',
+    ),
+    $login_url
+);
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -31,7 +37,7 @@ $forgot_password_demo  = add_query_arg( 'reset', 'sent', $login_url );
                     <div class="account-entry-shell">
                         <div class="account-entry-shell__header">
                             <h3><?php esc_html_e( 'Recuperar contraseña', 'ogape-child' ); ?></h3>
-                            <p><?php esc_html_e( 'Template visual de recuperación.', 'ogape-child' ); ?></p>
+                            <p><?php esc_html_e( 'Recuperación de prueba lista para validar el retorno al login.', 'ogape-child' ); ?></p>
                         </div>
                         <form class="account-entry-form" action="<?php echo esc_url( $forgot_password_demo ); ?>" method="get">
                             <p class="account-entry-form__demo-note"><?php esc_html_e( 'Demo interactivo: el envío real aún no está conectado, pero ya podés probar la ruta.', 'ogape-child' ); ?></p>

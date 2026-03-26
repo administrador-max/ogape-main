@@ -12,13 +12,16 @@ $demo_message = '';
 if ( isset( $_GET['demo'] ) ) {
     $demo_value = sanitize_text_field( wp_unslash( $_GET['demo'] ) );
     if ( 'login' === $demo_value ) {
-        $demo_message = __( 'Ingreso de demo completado. Ya podés recorrer el dashboard visual.', 'ogape-child' );
+        $demo_message = __( 'Inicio de sesión de prueba completado. Ya estás dentro del dashboard.', 'ogape-child' );
     } elseif ( 'register' === $demo_value ) {
-        $demo_message = __( 'Registro de demo completado. Ya podés explorar el dashboard y después pasar por la configuración inicial si querés probar ese paso también.', 'ogape-child' );
+        $demo_message = __( 'Registro de prueba completado. El dashboard ya quedó listo para revisar el recorrido completo.', 'ogape-child' );
     }
 }
 if ( isset( $_GET['setup'] ) ) {
-    $demo_message = __( 'Configuración inicial de demo completada. El dashboard queda listo para seguir explorando.', 'ogape-child' );
+    $demo_message = __( 'Configuración inicial completada. El dashboard queda listo para seguir probando.', 'ogape-child' );
+}
+if ( isset( $_GET['fresh'] ) ) {
+    $demo_message = __( 'Dashboard demo listo para prueba manual.', 'ogape-child' );
 }
 ?>
 
@@ -44,7 +47,7 @@ if ( isset( $_GET['setup'] ) ) {
                         <?php endif; ?>
                         <div class="account-overview-preview__top">
                             <span class="future-plan-card__badge"><?php esc_html_e( 'Resumen', 'ogape-child' ); ?></span>
-                            <strong><?php esc_html_e( 'Hola, cliente Ogape', 'ogape-child' ); ?></strong>
+                            <strong><?php esc_html_e( 'Hola, cliente de prueba', 'ogape-child' ); ?></strong>
                             <p><?php esc_html_e( 'Un vistazo rápido a lo que más importa dentro de la cuenta.', 'ogape-child' ); ?></p>
                         </div>
                         <div class="account-stat-grid">

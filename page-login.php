@@ -11,7 +11,18 @@ get_header();
 $register_url        = home_url( '/register/' );
 $account_url         = home_url( '/account/' );
 $forgot_password_url = home_url( '/forgot-password/' );
-$login_demo_url      = add_query_arg( 'demo', 'login', $account_url );
+$login_demo_url      = add_query_arg(
+    array(
+        'demo'   => 'login',
+        'source' => 'login',
+    ),
+    $account_url
+);
+
+$login_notice = '';
+if ( isset( $_GET['reset'] ) ) {
+    $login_notice = __( 'Enlace de recuperación enviado en modo prueba. Ya podés volver a ingresar al dashboard demo.', 'ogape-child' );
+}
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -33,11 +44,14 @@ $login_demo_url      = add_query_arg( 'demo', 'login', $account_url );
                     <div class="account-entry-shell account-entry-shell--login">
                         <div class="account-entry-shell__header">
                             <h3><?php esc_html_e( 'Acceso a cuenta', 'ogape-child' ); ?></h3>
-                            <p><?php esc_html_e( 'Template visual de inicio de sesión.', 'ogape-child' ); ?></p>
+                            <p><?php esc_html_e( 'Acceso de prueba conectado al dashboard demo.', 'ogape-child' ); ?></p>
                         </div>
 
                         <form class="account-entry-form" action="<?php echo esc_url( $login_demo_url ); ?>" method="get">
-                            <p class="account-entry-form__demo-note"><?php esc_html_e( 'Demo interactivo: este acceso todavía no autentica, pero ya te deja probar el recorrido.', 'ogape-child' ); ?></p>
+                            <p class="account-entry-form__demo-note"><?php esc_html_e( 'Flujo de prueba: iniciar sesión te lleva directo al dashboard demo.', 'ogape-child' ); ?></p>
+                            <?php if ( $login_notice ) : ?>
+                                <p class="account-entry-form__demo-note"><?php echo esc_html( $login_notice ); ?></p>
+                            <?php endif; ?>
                             <label class="account-entry-form__field">
                                 <span><?php esc_html_e( 'Email', 'ogape-child' ); ?></span>
                                 <input type="email" name="email" placeholder="nombre@ejemplo.com">

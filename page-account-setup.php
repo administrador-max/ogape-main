@@ -9,7 +9,18 @@
 get_header();
 
 $account_url       = home_url( '/account/' );
-$account_setup_url = add_query_arg( 'setup', 'complete', $account_url );
+$account_setup_url = add_query_arg(
+    array(
+        'setup'  => 'complete',
+        'source' => 'account-setup',
+    ),
+    $account_url
+);
+
+$setup_source = isset( $_GET['source'] ) ? sanitize_text_field( wp_unslash( $_GET['source'] ) ) : '';
+$setup_notice = 'register' === $setup_source
+    ? __( 'Cuenta creada en modo prueba. Completá estos datos para entrar al dashboard.', 'ogape-child' )
+    : __( 'Completá este onboarding corto para dejar el dashboard listo para la prueba.', 'ogape-child' );
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -36,10 +47,10 @@ $account_setup_url = add_query_arg( 'setup', 'complete', $account_url );
                         </div>
                         <div class="account-entry-shell__header">
                             <h3><?php esc_html_e( 'Configurar cuenta', 'ogape-child' ); ?></h3>
-                            <p><?php esc_html_e( 'Template visual de onboarding inicial.', 'ogape-child' ); ?></p>
+                            <p><?php esc_html_e( 'Onboarding de prueba antes del dashboard.', 'ogape-child' ); ?></p>
                         </div>
                         <form class="account-entry-form account-entry-form--setup" action="<?php echo esc_url( $account_setup_url ); ?>" method="get">
-                            <p class="account-entry-form__demo-note"><?php esc_html_e( 'Demo interactivo: esta configuración aún no guarda datos, pero ya habilita la experiencia de prueba.', 'ogape-child' ); ?></p>
+                            <p class="account-entry-form__demo-note"><?php echo esc_html( $setup_notice ); ?></p>
                             <label class="account-entry-form__field"><span><?php esc_html_e( 'Barrio / zona', 'ogape-child' ); ?></span><input type="text" name="zone" placeholder="Asunción"></label>
                             <label class="account-entry-form__field"><span><?php esc_html_e( 'Dirección principal', 'ogape-child' ); ?></span><input type="text" name="address" placeholder="Calle, número, referencia"></label>
                             <label class="account-entry-form__field"><span><?php esc_html_e( 'Preferencia principal', 'ogape-child' ); ?></span><input type="text" name="preference" placeholder="Ej. cenas livianas"></label>

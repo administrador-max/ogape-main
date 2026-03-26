@@ -9,8 +9,15 @@
 get_header();
 
 $login_url         = home_url( '/login/' );
+$account_url       = home_url( '/account/' );
 $account_setup_url = home_url( '/account-setup/' );
-$register_demo_url = add_query_arg( 'demo', 'register', $account_setup_url );
+$register_demo_url = add_query_arg(
+    array(
+        'demo'   => 'register',
+        'source' => 'register',
+    ),
+    $account_setup_url
+);
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -32,10 +39,10 @@ $register_demo_url = add_query_arg( 'demo', 'register', $account_setup_url );
                     <div class="account-entry-shell account-entry-shell--register">
                         <div class="account-entry-shell__header">
                             <h3><?php esc_html_e( 'Crear cuenta', 'ogape-child' ); ?></h3>
-                            <p><?php esc_html_e( 'Template visual de registro.', 'ogape-child' ); ?></p>
+                            <p><?php esc_html_e( 'Registro de prueba listo para validar el recorrido hacia cuenta y dashboard.', 'ogape-child' ); ?></p>
                         </div>
                         <form class="account-entry-form" action="<?php echo esc_url( $register_demo_url ); ?>" method="get">
-                            <p class="account-entry-form__demo-note"><?php esc_html_e( 'Demo interactivo: este registro todavía no crea cuenta real, pero ya permite probar el onboarding.', 'ogape-child' ); ?></p>
+                            <p class="account-entry-form__demo-note"><?php esc_html_e( 'Flujo de prueba: al crear cuenta vas a configuración inicial y luego al dashboard.', 'ogape-child' ); ?></p>
                             <label class="account-entry-form__field"><span><?php esc_html_e( 'Nombre', 'ogape-child' ); ?></span><input type="text" name="name" placeholder="Tu nombre"></label>
                             <label class="account-entry-form__field"><span><?php esc_html_e( 'Email', 'ogape-child' ); ?></span><input type="email" name="email" placeholder="nombre@ejemplo.com"></label>
                             <label class="account-entry-form__field"><span><?php esc_html_e( 'Teléfono', 'ogape-child' ); ?></span><input type="text" name="phone" placeholder="09xx xxx xxx"></label>
