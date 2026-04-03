@@ -243,29 +243,37 @@ if ( ! function_exists( 'ogape_handle_waitlist_submission' ) ) {
         update_post_meta( $entry_id, 'ogape_waitlist_internal_notes', '' );
         update_post_meta( $entry_id, 'ogape_waitlist_created_at', $created_at );
 
-        ogape_send_waitlist_notification(
-            array(
-                'first_name'    => $first_name,
-                'email'         => $email,
-                'phone'         => $phone,
-                'neighbourhood' => $neighbourhood,
-                'city'          => $city,
-                'notes'         => $notes,
-                'source_page'   => $source_page,
-                'referrer'      => $referrer,
-                'utm_source'    => $utm_source,
-                'utm_medium'    => $utm_medium,
-                'utm_campaign'  => $utm_campaign,
-                'created_at'    => $created_at,
-            )
-        );
+        try {
+            ogape_send_waitlist_notification(
+                array(
+                    'first_name'    => $first_name,
+                    'email'         => $email,
+                    'phone'         => $phone,
+                    'neighbourhood' => $neighbourhood,
+                    'city'          => $city,
+                    'notes'         => $notes,
+                    'source_page'   => $source_page,
+                    'referrer'      => $referrer,
+                    'utm_source'    => $utm_source,
+                    'utm_medium'    => $utm_medium,
+                    'utm_campaign'  => $utm_campaign,
+                    'created_at'    => $created_at,
+                )
+            );
+        } catch ( Throwable $mail_error ) {
+            error_log( 'Ogape waitlist notification mail failed: ' . $mail_error->getMessage() );
+        }
 
-        ogape_send_waitlist_confirmation_email(
-            array(
-                'first_name' => $first_name,
-                'email'      => $email,
-            )
-        );
+        try {
+            ogape_send_waitlist_confirmation_email(
+                array(
+                    'first_name' => $first_name,
+                    'email'      => $email,
+                )
+            );
+        } catch ( Throwable $mail_error ) {
+            error_log( 'Ogape waitlist confirmation mail failed: ' . $mail_error->getMessage() );
+        }
 
         wp_send_json_success(
             array(
