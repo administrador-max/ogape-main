@@ -50,6 +50,8 @@ function ogape_enqueue_assets() {
     $patterns_version = filemtime( get_stylesheet_directory() . '/assets/css/components/patterns.css' );
     $script_version   = filemtime( get_stylesheet_directory() . '/assets/js/main.js' );
 
+    $is_future_site = is_page( 'future-site' );
+
     // 1. Design tokens (must load first — all other CSS depends on these)
     wp_enqueue_style(
         'ogape-tokens',
@@ -58,33 +60,37 @@ function ogape_enqueue_assets() {
         $tokens_version
     );
 
-    // 2. Main stylesheet
-    wp_enqueue_style(
-        'ogape-main',
-        get_stylesheet_directory_uri() . '/assets/css/main.css',
-        array( 'ogape-tokens' ),
-        $main_version
-    );
+    // On future-site we render a self-contained design (Website-handoff bundle)
+    // and skip the theme chrome stylesheets to avoid conflicts.
+    if ( ! $is_future_site ) {
+        // 2. Main stylesheet
+        wp_enqueue_style(
+            'ogape-main',
+            get_stylesheet_directory_uri() . '/assets/css/main.css',
+            array( 'ogape-tokens' ),
+            $main_version
+        );
 
-    wp_enqueue_style(
-        'ogape-patterns',
-        get_stylesheet_directory_uri() . '/assets/css/components/patterns.css',
-        array( 'ogape-main' ),
-        $patterns_version
-    );
+        wp_enqueue_style(
+            'ogape-patterns',
+            get_stylesheet_directory_uri() . '/assets/css/components/patterns.css',
+            array( 'ogape-main' ),
+            $patterns_version
+        );
 
-    wp_enqueue_style(
-        'ogape-production-polish',
-        get_stylesheet_directory_uri() . '/assets/css/production-polish.css',
-        array( 'ogape-patterns' ),
-        filemtime( get_stylesheet_directory() . '/assets/css/production-polish.css' )
-    );
+        wp_enqueue_style(
+            'ogape-production-polish',
+            get_stylesheet_directory_uri() . '/assets/css/production-polish.css',
+            array( 'ogape-patterns' ),
+            filemtime( get_stylesheet_directory() . '/assets/css/production-polish.css' )
+        );
+    }
 
-    if ( is_page( 'future-site' ) ) {
+    if ( $is_future_site ) {
         wp_enqueue_style(
             'ogape-future-site',
             get_stylesheet_directory_uri() . '/assets/css/future-site.css',
-            array( 'ogape-production-polish' ),
+            array( 'ogape-tokens' ),
             filemtime( get_stylesheet_directory() . '/assets/css/future-site.css' )
         );
     }
