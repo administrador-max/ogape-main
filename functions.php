@@ -80,6 +80,15 @@ function ogape_enqueue_assets() {
         filemtime( get_stylesheet_directory() . '/assets/css/production-polish.css' )
     );
 
+    if ( is_page( 'future-site' ) ) {
+        wp_enqueue_style(
+            'ogape-future-site',
+            get_stylesheet_directory_uri() . '/assets/css/future-site.css',
+            array( 'ogape-production-polish' ),
+            filemtime( get_stylesheet_directory() . '/assets/css/future-site.css' )
+        );
+    }
+
     // 3. Main JavaScript (loaded in footer, deferred)
     wp_enqueue_script(
         'ogape-main',
@@ -116,6 +125,21 @@ function ogape_enqueue_assets() {
 
 }
 add_action( 'wp_enqueue_scripts', 'ogape_enqueue_assets' );
+
+/**
+ * Add stable body classes for special page shells.
+ *
+ * @param array $classes Existing body classes.
+ * @return array
+ */
+function ogape_body_classes( $classes ) {
+    if ( is_page( 'future-site' ) ) {
+        $classes[] = 'ogape-future-site-page';
+    }
+
+    return $classes;
+}
+add_filter( 'body_class', 'ogape_body_classes' );
 
 // ── THEME SUPPORT ───────────────────────────────────────────
 function ogape_theme_setup() {

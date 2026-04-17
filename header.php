@@ -15,7 +15,7 @@
 <div id="page" class="site">
 
     <?php
-    $join_url          = '#waitlist-form';
+    $join_url          = is_front_page() ? '#waitlist-form' : ogape_get_waitlist_url();
     $login_url         = home_url( '/login/' );
     $account_url       = home_url( '/account/' );
     $logout_url        = home_url( '/login/' );
