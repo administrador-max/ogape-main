@@ -51,6 +51,8 @@ function ogape_enqueue_assets() {
     $script_version   = filemtime( get_stylesheet_directory() . '/assets/js/main.js' );
 
     $is_future_site = is_page( 'future-site' );
+    $is_menu_page   = is_page( 'menu' );
+    $is_handoff_design = $is_future_site || $is_menu_page;
 
     // 1. Design tokens (must load first — all other CSS depends on these)
     wp_enqueue_style(
@@ -60,9 +62,9 @@ function ogape_enqueue_assets() {
         $tokens_version
     );
 
-    // On future-site we render a self-contained design (Website-handoff bundle)
-    // and skip the theme chrome stylesheets to avoid conflicts.
-    if ( ! $is_future_site ) {
+    // On handoff-design pages we render a self-contained design (Website-handoff
+    // bundle) and skip the theme chrome stylesheets to avoid conflicts.
+    if ( ! $is_handoff_design ) {
         // 2. Main stylesheet
         wp_enqueue_style(
             'ogape-main',
@@ -92,6 +94,15 @@ function ogape_enqueue_assets() {
             get_stylesheet_directory_uri() . '/assets/css/future-site.css',
             array( 'ogape-tokens' ),
             filemtime( get_stylesheet_directory() . '/assets/css/future-site.css' )
+        );
+    }
+
+    if ( $is_menu_page ) {
+        wp_enqueue_style(
+            'ogape-menu-page',
+            get_stylesheet_directory_uri() . '/assets/css/menu-page.css',
+            array( 'ogape-tokens' ),
+            filemtime( get_stylesheet_directory() . '/assets/css/menu-page.css' )
         );
     }
 
@@ -141,6 +152,10 @@ add_action( 'wp_enqueue_scripts', 'ogape_enqueue_assets' );
 function ogape_body_classes( $classes ) {
     if ( is_page( 'future-site' ) ) {
         $classes[] = 'ogape-future-site-page';
+    }
+
+    if ( is_page( 'menu' ) ) {
+        $classes[] = 'ogape-menu-page';
     }
 
     return $classes;
