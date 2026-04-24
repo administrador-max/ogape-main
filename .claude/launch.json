@@ -1,4 +1,17 @@
 {
   "version": "0.0.1",
-  "configurations": []
+  "configurations": [
+    {
+      "name": "wp-env",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["wp-env", "start"],
+      "port": 8888
+    },
+    {
+      "name": "handoff-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "serve", "-l", "4321", ".claude/handoff-preview/website/project"],
+      "port": 4321
+    }
+  ]
 }

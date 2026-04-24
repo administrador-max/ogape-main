@@ -1,0 +1,16 @@
+{
+  "name": "ogape-child-theme",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local dev harness for the Ogape WordPress child theme. See .wp-env.json for the WP environment.",
+  "scripts": {
+    "start": "wp-env start",
+    "stop": "wp-env stop",
+    "destroy": "wp-env destroy",
+    "logs": "wp-env logs",
+    "cli": "wp-env run cli wp"
+  },
+  "devDependencies": {
+    "@wordpress/env": "^10.0.0"
+  }
+}
