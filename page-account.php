@@ -50,6 +50,15 @@ $cutoff_label          = $demo_schedule['cutoff_label'] ?? 'martes previo';
 $cutoff_time           = $demo_schedule['cutoff_time'] ?? '23:59';
 $logo_url = get_stylesheet_directory_uri() . '/assets/img/ogape-logo.svg';
 
+// Derive window key (am / pm / any) from the stored label for select default.
+if ( false !== strpos( $demo_window, 'Mañana' ) || false !== strpos( $demo_window, 'mañana' ) ) {
+    $demo_window_key = 'am';
+} elseif ( false !== strpos( $demo_window, 'Tarde' ) || false !== strpos( $demo_window, 'tarde' ) ) {
+    $demo_window_key = 'pm';
+} else {
+    $demo_window_key = 'any';
+}
+
 // Post-flow messages
 $demo_message = '';
 if ( isset( $_GET['demo'] ) ) {
@@ -353,8 +362,8 @@ if ( isset( $_GET['setup'] ) ) {
             <div class="next-week-inner">
               <div class="next-week-info">
                 <div class="week-num">02</div>
-                <h3>Caja N.º 02 · Jueves 1 de mayo</h3>
-                <p>Tu próxima entrega está programada. Cierre de pedidos: martes 29 a las 23:59. Podés pausar, cambiar el tamaño o elegir recetas antes de esa hora.</p>
+                <h3>Caja N.º 02 · <?php echo esc_html( ucfirst( $next_label_year ) ); ?></h3>
+                <p>Tu próxima entrega está programada. Cierre de pedidos: <?php echo esc_html( $cutoff_label ); ?> a las <?php echo esc_html( $cutoff_time ); ?>. Podés pausar, cambiar el tamaño o elegir recetas antes de esa hora.</p>
               </div>
               <div class="next-week-actions">
                 <button class="btn btn--outline btn--sm">
@@ -378,28 +387,28 @@ if ( isset( $_GET['setup'] ) ) {
               <div class="history-item" style="align-items:flex-start;flex-wrap:wrap;gap:var(--space-3)">
                 <div class="history-num" style="padding-top:2px">02</div>
                 <div class="history-info" style="flex:1;min-width:0">
-                  <div class="date">Jueves 1 de mayo · 2026</div>
-                  <div class="plan">Para 2 · 3 recetas</div>
+                  <div class="date"><?php echo esc_html( ucfirst( $next_label_year ) ); ?></div>
+                  <div class="plan">Para <?php echo esc_html( $demo_people ); ?> · <?php echo esc_html( $demo_recipes ); ?> recetas</div>
                   <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap;margin-top:.35rem">
                     <span style="display:inline-flex;align-items:center;gap:.3rem;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--radius-pill);background:#E8F5E9;color:#2E7D32">
                       <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg>
                       Entregada
                     </span>
-                    <button class="open-factura" data-num="02" data-date="1 de mayo de 2026" data-desc="Caja N.º 02 · Para 2 · 3 recetas" data-amount="285.000" style="display:inline-flex;align-items:center;gap:.4rem;font-size:12px;font-weight:600;color:var(--brand-primary-strong);background:none;border:none;padding:0;cursor:pointer;border-bottom:1px solid rgba(154,90,8,.3);white-space:nowrap">
+                    <button class="open-factura" data-num="02" data-date="<?php echo esc_attr( $next_label_year ); ?>" data-desc="Caja N.º 02 · Para <?php echo esc_attr( $demo_people ); ?> · <?php echo esc_attr( $demo_recipes ); ?> recetas" data-amount="<?php echo esc_attr( $demo_price_plain ); ?>" style="display:inline-flex;align-items:center;gap:.4rem;font-size:12px;font-weight:600;color:var(--brand-primary-strong);background:none;border:none;padding:0;cursor:pointer;border-bottom:1px solid rgba(154,90,8,.3);white-space:nowrap">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                       Ver factura
                     </button>
                   </div>
                 </div>
                 <div style="text-align:right;flex-shrink:0">
-                  <div class="history-price" style="white-space:nowrap">Gs 285.000</div>
+                  <div class="history-price" style="white-space:nowrap"><?php echo esc_html( $demo_price_display ); ?></div>
                 </div>
               </div>
               <div class="history-item" style="align-items:flex-start;flex-wrap:wrap;gap:var(--space-3)">
                 <div class="history-num" style="padding-top:2px">01</div>
                 <div class="history-info" style="flex:1;min-width:180px">
-                  <div class="date">Jueves 24 de abril · 2026</div>
-                  <div class="plan">Para 2 · 3 recetas</div>
+                  <div class="date"><?php echo esc_html( ucfirst( $delivery_label_year ) ); ?></div>
+                  <div class="plan">Para <?php echo esc_html( $demo_people ); ?> · <?php echo esc_html( $demo_recipes ); ?> recetas</div>
                   <span class="history-info .status status--delivered" style="display:inline-flex;align-items:center;gap:.3rem;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--radius-pill);margin-top:.3rem;background:#FFF8E1;color:#8A6308">
                     <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                     En camino
@@ -411,7 +420,7 @@ if ( isset( $_GET['setup'] ) ) {
                   </div>
                 </div>
                 <div style="text-align:right;flex-shrink:0">
-                  <div class="history-price">Gs 285.000</div>
+                  <div class="history-price"><?php echo esc_html( $demo_price_display ); ?></div>
                 </div>
               </div>
             </div>
@@ -427,13 +436,13 @@ if ( isset( $_GET['setup'] ) ) {
         <!-- PLAN CARD -->
         <div class="card plan-card" aria-label="Mi suscripción">
           <div class="card__eyebrow"><span class="dot"></span>Mi plan activo</div>
-          <div class="plan-title">Para 2 · <em>3 recetas</em></div>
-          <div class="plan-price">Gs 285.000<small>/ sem</small></div>
+          <div class="plan-title">Para <?php echo esc_html( $demo_people ); ?> · <em><?php echo esc_html( $demo_recipes ); ?> recetas</em></div>
+          <div class="plan-price"><?php echo esc_html( $demo_price_display ); ?><small>/ sem</small></div>
           <div class="plan-details">
-            <div class="plan-detail"><span class="k">Porciones</span><span class="v">2 personas</span></div>
-            <div class="plan-detail"><span class="k">Recetas</span><span class="v">3 por semana</span></div>
+            <div class="plan-detail"><span class="k">Porciones</span><span class="v"><?php echo esc_html( $demo_people ); ?> personas</span></div>
+            <div class="plan-detail"><span class="k">Recetas</span><span class="v"><?php echo esc_html( $demo_recipes ); ?> por semana</span></div>
             <div class="plan-detail"><span class="k">Entrega</span><span class="v">Jueves · tarde</span></div>
-            <div class="plan-detail"><span class="k">Barrio</span><span class="v">Villa Morra</span></div>
+            <div class="plan-detail"><span class="k">Barrio</span><span class="v"><?php echo esc_html( $demo_zone ); ?></span></div>
           </div>
           <div class="plan-actions">
             <button class="btn btn--kraft btn--sm">Cambiar plan</button>
@@ -458,7 +467,7 @@ if ( isset( $_GET['setup'] ) ) {
               <div class="k">Semanas pausadas</div>
             </div>
             <div class="stat">
-              <div class="v" style="font-size:22px;color:var(--brand-primary-strong)">Villa<br>Morra</div>
+              <div class="v" style="font-size:22px;color:var(--brand-primary-strong)"><?php echo esc_html( $demo_zone ); ?></div>
               <div class="k">Zona de entrega</div>
             </div>
           </div>
@@ -470,7 +479,7 @@ if ( isset( $_GET['setup'] ) ) {
           <h3 class="card__h" style="font-size:17px;margin-bottom:.4rem">Un mes, cada una cocina más rico.</h3>
           <p class="card__sub" style="font-size:12.5px">Compartí tu código y cuando tu amiga haga su primera caja, ambas reciben Gs 50.000 de descuento.</p>
           <div class="referral-code">
-            <span class="code" id="refCode">MARIA-2026</span>
+            <span class="code" id="refCode"><?php echo esc_html( $demo_referral_code ); ?></span>
             <button class="copy-btn" id="copyBtn">Copiar</button>
           </div>
           <p class="referral-note">El descuento se aplica automáticamente en la siguiente semana.</p>
@@ -533,20 +542,20 @@ if ( isset( $_GET['setup'] ) ) {
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-bottom:var(--space-4)">
           <div>
             <label class="modal-lbl" for="pfNombre">Nombre</label>
-            <input class="modal-input" id="pfNombre" type="text" value="María" autocomplete="given-name">
+            <input class="modal-input" id="pfNombre" type="text" value="<?php echo esc_attr( $demo_first_name ); ?>" autocomplete="given-name">
           </div>
           <div>
             <label class="modal-lbl" for="pfApellido">Apellido</label>
-            <input class="modal-input" id="pfApellido" type="text" value="Benítez" autocomplete="family-name">
+            <input class="modal-input" id="pfApellido" type="text" value="<?php echo esc_attr( $demo_last_name ); ?>" autocomplete="family-name">
           </div>
         </div>
         <div style="margin-bottom:var(--space-4)">
           <label class="modal-lbl" for="pfEmail">Email</label>
-          <input class="modal-input" id="pfEmail" type="email" value="maria@correo.com.py" autocomplete="email">
+          <input class="modal-input" id="pfEmail" type="email" value="<?php echo esc_attr( $demo_email ); ?>" autocomplete="email">
         </div>
         <div style="margin-bottom:var(--space-4)">
           <label class="modal-lbl" for="pfTel">Teléfono (WhatsApp)</label>
-          <input class="modal-input" id="pfTel" type="tel" value="+595 981 000 000" autocomplete="tel">
+          <input class="modal-input" id="pfTel" type="tel" value="<?php echo esc_attr( $demo_phone ); ?>" autocomplete="tel">
         </div>
         <div style="margin-bottom:var(--space-6)">
           <label class="modal-lbl" for="pfPw">Nueva contraseña <span style="font-weight:400;letter-spacing:0;text-transform:none;font-size:11px;color:var(--muted)">(dejá vacío para no cambiar)</span></label>
@@ -593,35 +602,35 @@ if ( isset( $_GET['setup'] ) ) {
           <label class="modal-lbl" for="dirZone">Barrio</label>
           <select class="modal-input modal-select" id="dirZone">
             <optgroup label="Zonas activas">
-              <option value="villa-morra" selected>Villa Morra</option>
-              <option value="recoleta">Recoleta</option>
-              <option value="las-carmelitas">Las Carmelitas</option>
-              <option value="mburucuya">Mburucuyá</option>
-              <option value="ykua-sati">Ykua Satí</option>
-              <option value="centro">Centro</option>
+              <option value="villa-morra"<?php selected( $demo_zone_key, 'villa-morra' ); ?>>Villa Morra</option>
+              <option value="recoleta"<?php selected( $demo_zone_key, 'recoleta' ); ?>>Recoleta</option>
+              <option value="las-carmelitas"<?php selected( $demo_zone_key, 'las-carmelitas' ); ?>>Las Carmelitas</option>
+              <option value="mburucuya"<?php selected( $demo_zone_key, 'mburucuya' ); ?>>Mburucuyá</option>
+              <option value="ykua-sati"<?php selected( $demo_zone_key, 'ykua-sati' ); ?>>Ykua Satí</option>
+              <option value="centro"<?php selected( $demo_zone_key, 'centro' ); ?>>Centro</option>
             </optgroup>
             <optgroup label="Próximamente">
-              <option value="san-lorenzo" data-soon="1">San Lorenzo</option>
-              <option value="lambare" data-soon="1">Lambaré</option>
+              <option value="san-lorenzo" data-soon="1"<?php selected( $demo_zone_key, 'san-lorenzo' ); ?>>San Lorenzo</option>
+              <option value="lambare" data-soon="1"<?php selected( $demo_zone_key, 'lambare' ); ?>>Lambaré</option>
             </optgroup>
           </select>
           <div id="dirZoneAlert" style="margin-top:var(--space-3)"></div>
         </div>
         <div style="margin-bottom:var(--space-4)">
           <label class="modal-lbl" for="dirAddress">Dirección</label>
-          <input class="modal-input" id="dirAddress" type="text" value="Av. Mcal. López 1234" autocomplete="street-address">
+          <input class="modal-input" id="dirAddress" type="text" value="<?php echo esc_attr( $demo_address ); ?>" autocomplete="street-address">
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-bottom:var(--space-4)">
           <div>
             <label class="modal-lbl" for="dirApt">Depto / Piso</label>
-            <input class="modal-input" id="dirApt" type="text" value="5B">
+            <input class="modal-input" id="dirApt" type="text" value="<?php echo esc_attr( $demo_apt ); ?>">
           </div>
           <div>
             <label class="modal-lbl" for="dirWindow">Horario preferido</label>
             <select class="modal-input modal-select" id="dirWindow">
-              <option value="am">Mañana · 10:00 – 13:00</option>
-              <option value="pm" selected>Tarde · 14:00 – 19:00</option>
-              <option value="any">Cualquier horario</option>
+              <option value="am"<?php selected( $demo_window_key, 'am' ); ?>>Mañana · 10:00 – 13:00</option>
+              <option value="pm"<?php selected( $demo_window_key, 'pm' ); ?>>Tarde · 14:00 – 19:00</option>
+              <option value="any"<?php selected( $demo_window_key, 'any' ); ?>>Cualquier horario</option>
             </select>
           </div>
         </div>
@@ -689,12 +698,12 @@ if ( isset( $_GET['setup'] ) ) {
         </thead>
         <tbody>
           <tr style="border-bottom:1px solid rgba(17,24,39,.06)">
-            <td style="padding:12px 16px;color:var(--text-secondary)">24 abr 2026</td>
-            <td style="padding:12px 16px;color:var(--text-primary);font-weight:500">Caja N.º 01 · Para 2 · 3 recetas</td>
-            <td style="padding:12px 16px;text-align:right;font-family:var(--font-display);font-size:15px;font-weight:500">Gs 285.000</td>
+            <td style="padding:12px 16px;color:var(--text-secondary)"><?php echo esc_html( $delivery_numeric ); ?></td>
+            <td style="padding:12px 16px;color:var(--text-primary);font-weight:500">Caja N.º 01 · Para <?php echo esc_html( $demo_people ); ?> · <?php echo esc_html( $demo_recipes ); ?> recetas</td>
+            <td style="padding:12px 16px;text-align:right;font-family:var(--font-display);font-size:15px;font-weight:500"><?php echo esc_html( $demo_price_display ); ?></td>
             <td style="padding:12px 16px;text-align:right"><span style="font-size:11px;font-weight:600;padding:3px 9px;background:#E8F5E9;color:#2E7D32;border-radius:var(--radius-pill)">Cobrado</span></td>
             <td style="padding:12px 16px;text-align:right">
-              <button class="btn btn--outline btn--sm open-factura" data-num="01" data-date="24 de abril de 2026" data-desc="Caja N.º 01 · Para 2 · 3 recetas" data-amount="285.000" style="font-size:12px;height:32px;padding:0 12px;gap:.35rem">
+              <button class="btn btn--outline btn--sm open-factura" data-num="01" data-date="<?php echo esc_attr( $delivery_label_year ); ?>" data-desc="Caja N.º 01 · Para <?php echo esc_attr( $demo_people ); ?> · <?php echo esc_attr( $demo_recipes ); ?> recetas" data-amount="<?php echo esc_attr( $demo_price_plain ); ?>" style="font-size:12px;height:32px;padding:0 12px;gap:.35rem">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                 Ver factura
               </button>
@@ -909,8 +918,8 @@ if ( isset( $_GET['setup'] ) ) {
       </div>
 
       <div class="price-preview">
-        <div class="label">Tu nuevo plan<b id="planPreviewLabel">Para 2 · 3 recetas</b></div>
-        <div class="amount" id="planPreviewPrice">Gs 285.000<small>/ sem</small></div>
+        <div class="label">Tu nuevo plan<b id="planPreviewLabel"><?php echo esc_html( $demo_plan_label ); ?></b></div>
+        <div class="amount" id="planPreviewPrice"><?php echo esc_html( $demo_price_display ); ?><small>/ sem</small></div>
       </div>
 
       <div class="modal__footer">
@@ -956,16 +965,16 @@ if ( isset( $_GET['setup'] ) ) {
           <input type="radio" name="pauseWhen" value="next" checked>
           <span class="pause-opt__dot"></span>
           <div class="pause-opt__info">
-            <div class="pause-opt__title">Próxima entrega — Jueves 1 de mayo</div>
-            <div class="pause-opt__sub">Saltamos esa semana y retomamos el 8 de mayo. No se te cobra nada.</div>
+            <div class="pause-opt__title">Próxima entrega — <?php echo esc_html( ucfirst( $next_label_year ) ); ?></div>
+            <div class="pause-opt__sub">Saltamos esa semana y retomás <?php echo esc_html( $resume_label ); ?>. No se te cobra nada.</div>
           </div>
         </label>
         <label class="pause-opt">
           <input type="radio" name="pauseWhen" value="two">
           <span class="pause-opt__dot"></span>
           <div class="pause-opt__info">
-            <div class="pause-opt__title">Dos semanas — hasta el 15 de mayo</div>
-            <div class="pause-opt__sub">Pausamos el 1 y el 8 de mayo. Volvés el 15.</div>
+            <div class="pause-opt__title">Dos semanas — <?php echo esc_html( $two_week_resume_label ); ?></div>
+            <div class="pause-opt__sub">Pausamos las próximas dos semanas. Volvés <?php echo esc_html( $two_week_resume_label ); ?>.</div>
           </div>
         </label>
         <label class="pause-opt">
@@ -999,7 +1008,7 @@ if ( isset( $_GET['setup'] ) ) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
       </div>
       <h3>Entrega pausada</h3>
-      <p id="pauseSuccessMsg">No recibís caja el jueves 1 de mayo. Podés reanudar en cualquier momento.</p>
+      <p id="pauseSuccessMsg">No recibís caja <?php echo esc_html( $next_label ); ?>. Podés reanudar en cualquier momento.</p>
       <button class="btn btn--outline" id="pauseDoneBtn">Entendido</button>
     </div>
   </div>
@@ -1013,7 +1022,7 @@ if ( isset( $_GET['setup'] ) ) {
     <div class="factura-toolbar">
       <div>
         <div class="tf-title" id="facturaTitle">Factura Caja N.º 01</div>
-        <div class="tf-sub">24 de abril de 2026 · Gs 285.000</div>
+        <div class="tf-sub"><?php echo esc_html( ucfirst( $delivery_label_year ) . ' · ' . $demo_price_display ); ?></div>
       </div>
       <div class="factura-toolbar-actions">
         <button class="btn btn--outline btn--sm" id="facturaDownloadBtn" style="gap:.4rem">
@@ -1039,7 +1048,7 @@ if ( isset( $_GET['setup'] ) ) {
           </div>
           <div>
             <div class="f-num"><small>N.º</small>001-001-0000001</div>
-            <div style="font-size:10.5px;color:#6B7280;text-align:right;margin-top:4px">Fecha: 24/04/2026</div>
+            <div style="font-size:10.5px;color:#6B7280;text-align:right;margin-top:4px">Fecha: <?php echo esc_html( $delivery_numeric ); ?></div>
             <div style="font-size:10.5px;color:#6B7280;text-align:right">Condición: Contado</div>
           </div>
         </div>
@@ -1057,12 +1066,12 @@ if ( isset( $_GET['setup'] ) ) {
           </div>
           <div>
             <div class="f-party-lbl">Cliente</div>
-            <div class="f-party-name" id="factClientName">María Benítez</div>
+            <div class="f-party-name" id="factClientName"><?php echo esc_html( $demo_name ); ?></div>
             <div class="f-party-detail">
               RUC / C.I.: 1.234.567<br>
-              Villa Morra, Asunción<br>
-              Av. Mcal. López 1234, 5B<br>
-              maria@correo.com.py
+              <?php echo esc_html( $demo_zone ); ?>, Asunción<br>
+              <?php echo esc_html( $demo_delivery_address ); ?><br>
+              <?php echo esc_html( $demo_email ); ?>
             </div>
           </div>
         </div>
@@ -1082,11 +1091,11 @@ if ( isset( $_GET['setup'] ) ) {
               <td style="text-align:center">1</td>
               <td>
                 Kit de ingredientes semanal Ogape
-                <div class="f-desc-sub">Caja N.º 01 · Para 2 personas · 3 recetas · Entrega 24/04/2026</div>
+                <div class="f-desc-sub">Caja N.º 01 · Para <?php echo esc_html( $demo_people ); ?> personas · <?php echo esc_html( $demo_recipes ); ?> recetas · Entrega <?php echo esc_html( $delivery_numeric ); ?></div>
               </td>
               <td style="text-align:center">10%</td>
-              <td style="text-align:right">Gs 285.000</td>
-              <td>Gs 285.000</td>
+              <td style="text-align:right"><?php echo esc_html( $demo_price_display ); ?></td>
+              <td><?php echo esc_html( $demo_price_display ); ?></td>
             </tr>
           </tbody>
         </table>
@@ -1094,11 +1103,11 @@ if ( isset( $_GET['setup'] ) ) {
         <div class="f-totals">
           <div class="f-total-row">
             <span class="k">Subtotal (IVA incl.)</span>
-            <span class="v">Gs 285.000</span>
+            <span class="v"><?php echo esc_html( $demo_price_display ); ?></span>
           </div>
           <div class="f-total-row">
             <span class="k">IVA 10%</span>
-            <span class="v">Gs 25.909</span>
+            <span class="v"><?php echo esc_html( $demo_iva_display ); ?></span>
           </div>
           <div class="f-total-row">
             <span class="k">Descuentos</span>
@@ -1106,7 +1115,7 @@ if ( isset( $_GET['setup'] ) ) {
           </div>
           <div class="f-total-row is-grand">
             <span class="k">Total</span>
-            <span class="v">Gs 285.000</span>
+            <span class="v"><?php echo esc_html( $demo_price_display ); ?></span>
           </div>
         </div>
 
@@ -1114,7 +1123,7 @@ if ( isset( $_GET['setup'] ) ) {
           <div>Ogape S.A. · RUC 80123456-7 · Timbrado 12345678</div>
           <div>Esta factura es válida como comprobante fiscal en la República del Paraguay.</div>
           <div>Av. Mcal. López 3794, Asunción · ogape.com.py · hola@ogape.com.py</div>
-          <div class="f-stamp">Pagado · 24/04/2026</div>
+          <div class="f-stamp">Pagado · <?php echo esc_html( $delivery_numeric ); ?></div>
         </div>
       </div>
     </div>
