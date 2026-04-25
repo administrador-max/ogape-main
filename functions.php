@@ -53,7 +53,8 @@ function ogape_enqueue_assets() {
     $is_future_site   = is_page( 'future-site' );
     $is_menu_page     = is_page( 'menu' );
     $is_register_page = is_page( 'register' );
-    $is_handoff_design = $is_future_site || $is_menu_page || $is_register_page;
+    $is_account_page  = is_page( 'account' );
+    $is_handoff_design = $is_future_site || $is_menu_page || $is_register_page || $is_account_page;
 
     // 1. Design tokens (must load first — all other CSS depends on these)
     wp_enqueue_style(
@@ -116,6 +117,25 @@ function ogape_enqueue_assets() {
         );
     }
 
+    if ( $is_account_page ) {
+        wp_enqueue_style(
+            'ogape-account-page',
+            get_stylesheet_directory_uri() . '/assets/css/account-page.css',
+            array( 'ogape-tokens' ),
+            filemtime( get_stylesheet_directory() . '/assets/css/account-page.css' )
+        );
+        wp_enqueue_script(
+            'ogape-account-page',
+            get_stylesheet_directory_uri() . '/assets/js/account-page.js',
+            array(),
+            filemtime( get_stylesheet_directory() . '/assets/js/account-page.js' ),
+            array(
+                'in_footer' => true,
+                'strategy'  => 'defer',
+            )
+        );
+    }
+
     // 3. Main JavaScript (loaded in footer, deferred)
     wp_enqueue_script(
         'ogape-main',
@@ -170,6 +190,10 @@ function ogape_body_classes( $classes ) {
 
     if ( is_page( 'register' ) ) {
         $classes[] = 'ogape-register-page';
+    }
+
+    if ( is_page( 'account' ) ) {
+        $classes[] = 'ogape-account-page';
     }
 
     return $classes;
