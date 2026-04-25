@@ -658,8 +658,107 @@ function ogape_sanitize_demo_preferences( $raw_preferences ) {
     return array_values( array_unique( $preferences ) );
 }
 
+// ── USER META HELPERS ────────────────────────────────────────────────────────
+
+function ogape_save_customer_meta( $user_id, $data ) {
+    $meta_map = array(
+        'zone'                  => 'ogape_zone',
+        'zone_key'              => 'ogape_zone_key',
+        'address'               => 'ogape_address',
+        'apt'                   => 'ogape_apt',
+        'delivery_window'       => 'ogape_delivery_window',
+        'delivery_window_label' => 'ogape_delivery_window_label',
+        'notes'                 => 'ogape_notes',
+        'people'                => 'ogape_people',
+        'recipes'               => 'ogape_recipes',
+        'plan'                  => 'ogape_plan',
+        'price'                 => 'ogape_price',
+        'preferences'           => 'ogape_preferences',
+        'preference'            => 'ogape_preference',
+        'allergies'             => 'ogape_allergies',
+        'comms'                 => 'ogape_comms',
+        'setup_complete'        => 'ogape_setup_complete',
+        'phone'                 => 'ogape_phone',
+        'registered_at'         => 'ogape_registered_at',
+    );
+    foreach ( $meta_map as $data_key => $meta_key ) {
+        if ( array_key_exists( $data_key, $data ) ) {
+            update_user_meta( $user_id, $meta_key, $data[ $data_key ] );
+        }
+    }
+}
+
+function ogape_get_customer_meta( $user_id ) {
+    $user = get_userdata( $user_id );
+    if ( ! $user ) {
+        return array();
+    }
+    $name = trim( $user->first_name . ' ' . $user->last_name );
+    if ( '' === $name ) {
+        $name = $user->display_name;
+    }
+    return array(
+        'name'                  => $name,
+        'email'                 => $user->user_email,
+        'phone'                 => (string) get_user_meta( $user_id, 'ogape_phone', true ),
+        'zone'                  => (string) get_user_meta( $user_id, 'ogape_zone', true ),
+        'zone_key'              => (string) get_user_meta( $user_id, 'ogape_zone_key', true ),
+        'address'               => (string) get_user_meta( $user_id, 'ogape_address', true ),
+        'apt'                   => (string) get_user_meta( $user_id, 'ogape_apt', true ),
+        'delivery_window'       => (string) ( get_user_meta( $user_id, 'ogape_delivery_window', true ) ?: 'pm' ),
+        'delivery_window_label' => (string) ( get_user_meta( $user_id, 'ogape_delivery_window_label', true ) ?: '' ),
+        'notes'                 => (string) get_user_meta( $user_id, 'ogape_notes', true ),
+        'people'                => (string) ( get_user_meta( $user_id, 'ogape_people', true ) ?: '2' ),
+        'recipes'               => (string) ( get_user_meta( $user_id, 'ogape_recipes', true ) ?: '3' ),
+        'plan'                  => (string) get_user_meta( $user_id, 'ogape_plan', true ),
+        'price'                 => get_user_meta( $user_id, 'ogape_price', true ) ?: 285000,
+        'preferences'           => (array) ( get_user_meta( $user_id, 'ogape_preferences', true ) ?: array() ),
+        'preference'            => (string) get_user_meta( $user_id, 'ogape_preference', true ),
+        'allergies'             => (string) get_user_meta( $user_id, 'ogape_allergies', true ),
+        'comms'                 => (bool) get_user_meta( $user_id, 'ogape_comms', true ),
+        'setup_complete'        => (bool) get_user_meta( $user_id, 'ogape_setup_complete', true ),
+        'registered_at'         => (string) get_user_meta( $user_id, 'ogape_registered_at', true ),
+    );
+}
+
+// ── AUTH GATES ───────────────────────────────────────────────────────────────
+
+function ogape_account_auth_gates() {
+    if ( is_page_template( 'page-account.php' ) || is_page_template( 'page-account-setup.php' ) ) {
+        if ( ! is_user_logged_in() ) {
+            $redirect = add_query_arg(
+                'redirect_to',
+                rawurlencode( (string) get_permalink() ),
+                home_url( '/login/' )
+            );
+            wp_safe_redirect( $redirect );
+            exit;
+        }
+    }
+    if ( is_page_template( 'page-login.php' ) || is_page_template( 'page-register.php' ) ) {
+        if ( is_user_logged_in() ) {
+            wp_safe_redirect( home_url( '/account/' ) );
+            exit;
+        }
+    }
+}
+add_action( 'template_redirect', 'ogape_account_auth_gates', 2 );
+
 function ogape_get_demo_account_context() {
-    $state    = ogape_get_demo_account_state();
+    $user_id = get_current_user_id();
+    if ( $user_id ) {
+        $meta         = ogape_get_customer_meta( $user_id );
+        $cookie_state = ogape_get_demo_account_state();
+        // Meta values win; cookie fills gaps for fields not yet saved to meta.
+        $state = $cookie_state;
+        foreach ( $meta as $key => $val ) {
+            if ( '' !== $val && array() !== $val ) {
+                $state[ $key ] = $val;
+            }
+        }
+    } else {
+        $state = ogape_get_demo_account_state();
+    }
     $plan     = ogape_demo_plan_from_state( $state );
     $schedule = ogape_demo_schedule();
 
@@ -763,59 +862,88 @@ function ogape_handle_demo_account_flow() {
         $password   = (string) wp_unslash( $_POST['password'] ?? '' );
 
         if ( '' === $first_name || '' === $last_name || '' === $email || strlen( $password ) < 8 ) {
-            wp_safe_redirect( add_query_arg( 'demo_error', 'missing', home_url( '/register/' ) ) );
+            wp_safe_redirect( add_query_arg( 'reg_error', 'missing', home_url( '/register/' ) ) );
+            exit;
+        }
+
+        if ( email_exists( $email ) ) {
+            wp_safe_redirect( add_query_arg( 'reg_error', 'email_exists', home_url( '/register/' ) ) );
             exit;
         }
 
         $people  = isset( $_POST['people'] ) ? (string) absint( wp_unslash( $_POST['people'] ) ) : '2';
         $recipes = isset( $_POST['recipes'] ) ? (string) absint( wp_unslash( $_POST['recipes'] ) ) : '3';
-        $plan    = ogape_demo_plan_from_state(
-            array(
-                'people'  => $people,
-                'recipes' => $recipes,
-            )
-        );
+        $plan    = ogape_demo_plan_from_state( array( 'people' => $people, 'recipes' => $recipes ) );
 
-        $state['name']                  = trim( $first_name . ' ' . $last_name );
-        $state['email']                 = $email;
-        $state['phone']                 = sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) );
-        $state['people']                = $plan['people'];
-        $state['recipes']               = $plan['recipes'];
-        $state['plan']                  = $plan['label'];
-        $state['price']                 = $plan['price'];
-        $state['zone_key']              = sanitize_key( wp_unslash( $_POST['zone_key'] ?? '' ) );
-        $state['zone']                  = sanitize_text_field( wp_unslash( $_POST['zone'] ?? '' ) );
-        $state['address']               = sanitize_text_field( wp_unslash( $_POST['address'] ?? '' ) );
-        $state['apt']                   = sanitize_text_field( wp_unslash( $_POST['apt'] ?? '' ) );
-        $state['delivery_window']       = sanitize_key( wp_unslash( $_POST['delivery_window'] ?? 'pm' ) );
-        $state['delivery_window_label'] = sanitize_text_field( wp_unslash( $_POST['delivery_window_label'] ?? '' ) );
-        $state['notes']                 = sanitize_text_field( wp_unslash( $_POST['notes'] ?? '' ) );
-        $state['preferences']           = ogape_sanitize_demo_preferences( $_POST['preferences'] ?? array() );
-        $state['preference']            = $state['preferences'] ? implode( ' · ', $state['preferences'] ) : '';
-        $state['allergies']             = sanitize_text_field( wp_unslash( $_POST['allergies'] ?? '' ) );
-        $state['comms']                 = isset( $_POST['comms'] );
-        $state['setup_complete']        = false;
-        $state['registered_at']         = wp_date( DATE_ATOM, null, wp_timezone() );
-        ogape_set_demo_account_state( $state );
-        wp_safe_redirect( add_query_arg( array( 'demo' => 'register', 'source' => 'register' ), home_url( '/account-setup/' ) ) );
+        $new_state = array(
+            'name'                  => trim( $first_name . ' ' . $last_name ),
+            'email'                 => $email,
+            'phone'                 => sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) ),
+            'people'                => $plan['people'],
+            'recipes'               => $plan['recipes'],
+            'plan'                  => $plan['label'],
+            'price'                 => $plan['price'],
+            'zone_key'              => sanitize_key( wp_unslash( $_POST['zone_key'] ?? '' ) ),
+            'zone'                  => sanitize_text_field( wp_unslash( $_POST['zone'] ?? '' ) ),
+            'address'               => sanitize_text_field( wp_unslash( $_POST['address'] ?? '' ) ),
+            'apt'                   => sanitize_text_field( wp_unslash( $_POST['apt'] ?? '' ) ),
+            'delivery_window'       => sanitize_key( wp_unslash( $_POST['delivery_window'] ?? 'pm' ) ),
+            'delivery_window_label' => sanitize_text_field( wp_unslash( $_POST['delivery_window_label'] ?? '' ) ),
+            'notes'                 => sanitize_text_field( wp_unslash( $_POST['notes'] ?? '' ) ),
+            'preferences'           => ogape_sanitize_demo_preferences( $_POST['preferences'] ?? array() ),
+            'preference'            => '',
+            'allergies'             => sanitize_text_field( wp_unslash( $_POST['allergies'] ?? '' ) ),
+            'comms'                 => isset( $_POST['comms'] ),
+            'setup_complete'        => false,
+            'registered_at'         => wp_date( DATE_ATOM, null, wp_timezone() ),
+        );
+        $new_state['preference'] = $new_state['preferences'] ? implode( ' · ', $new_state['preferences'] ) : '';
+
+        $user_id = wp_create_user( $email, $password, $email );
+        if ( is_wp_error( $user_id ) ) {
+            wp_safe_redirect( add_query_arg( 'reg_error', 'create_failed', home_url( '/register/' ) ) );
+            exit;
+        }
+        wp_update_user( array(
+            'ID'           => $user_id,
+            'first_name'   => $first_name,
+            'last_name'    => $last_name,
+            'display_name' => $first_name,
+        ) );
+        ogape_save_customer_meta( $user_id, $new_state );
+        ogape_set_demo_account_state( $new_state );
+        wp_set_auth_cookie( $user_id, true );
+
+        wp_safe_redirect( add_query_arg( array( 'setup' => 'new', 'source' => 'register' ), home_url( '/account-setup/' ) ) );
         exit;
     }
 
     if ( 'login' === $action ) {
-        $email = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
-        if ( $email ) {
-            $state['email'] = $email;
+        $email    = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
+        $password = (string) wp_unslash( $_POST['password'] ?? '' );
+
+        if ( ! $email || ! $password ) {
+            wp_safe_redirect( add_query_arg( 'error', 'credentials', home_url( '/login/' ) ) );
+            exit;
         }
-        if ( empty( $state['name'] ) ) {
-            $state['name'] = __( 'Cliente de prueba', 'ogape-child' );
+
+        $wp_user = get_user_by( 'email', $email );
+        if ( ! $wp_user ) {
+            wp_safe_redirect( add_query_arg( 'error', 'credentials', home_url( '/login/' ) ) );
+            exit;
         }
-        if ( empty( $state['plan'] ) ) {
-            $state['people'] = '2';
-            $state['recipes'] = '3';
-            $state['plan'] = ogape_demo_plan_from_state( $state )['label'];
+
+        $result = wp_authenticate( $wp_user->user_login, $password );
+        if ( is_wp_error( $result ) ) {
+            wp_safe_redirect( add_query_arg( 'error', 'credentials', home_url( '/login/' ) ) );
+            exit;
         }
-        ogape_set_demo_account_state( $state );
-        wp_safe_redirect( add_query_arg( array( 'demo' => 'login', 'source' => 'login' ), home_url( '/account/' ) ) );
+
+        wp_set_auth_cookie( $result->ID, true );
+        ogape_set_demo_account_state( ogape_get_customer_meta( $result->ID ) );
+
+        $redirect_to = isset( $_POST['redirect_to'] ) ? wp_validate_redirect( wp_unslash( $_POST['redirect_to'] ), '' ) : '';
+        wp_safe_redirect( $redirect_to ?: home_url( '/account/' ) );
         exit;
     }
 
@@ -829,6 +957,10 @@ function ogape_handle_demo_account_flow() {
         }
         $state['setup_complete'] = true;
         ogape_set_demo_account_state( $state );
+        $user_id = get_current_user_id();
+        if ( $user_id ) {
+            ogape_save_customer_meta( $user_id, $state );
+        }
         wp_safe_redirect( add_query_arg( array( 'setup' => 'complete', 'source' => 'account-setup' ), home_url( '/account/' ) ) );
         exit;
     }

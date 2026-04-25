@@ -11,17 +11,16 @@ get_header();
 $register_url        = home_url( '/register/' );
 $account_url         = home_url( '/account/' );
 $forgot_password_url = home_url( '/forgot-password/' );
-$login_demo_url      = add_query_arg(
-    array(
-        'demo'   => 'login',
-        'source' => 'login',
-    ),
-    $account_url
-);
 
+$redirect_to = isset( $_GET['redirect_to'] ) ? rawurldecode( sanitize_text_field( wp_unslash( $_GET['redirect_to'] ) ) ) : '';
+
+$login_error  = '';
 $login_notice = '';
+if ( isset( $_GET['error'] ) ) {
+    $login_error = __( 'Email o contraseña incorrectos. Revisá los datos e intentá de nuevo.', 'ogape-child' );
+}
 if ( isset( $_GET['reset'] ) ) {
-    $login_notice = __( 'Enlace de recuperación enviado en modo prueba. Ya podés volver a ingresar al dashboard demo.', 'ogape-child' );
+    $login_notice = __( 'Si ese email tiene una cuenta, te mandamos el enlace de recuperación.', 'ogape-child' );
 }
 ?>
 
@@ -43,25 +42,31 @@ if ( isset( $_GET['reset'] ) ) {
                 <div class="future-site-hero__panel glass-card">
                     <div class="account-entry-shell account-entry-shell--login">
                         <div class="account-entry-shell__header">
-                            <h3><?php esc_html_e( 'Acceso a cuenta', 'ogape-child' ); ?></h3>
-                            <p><?php esc_html_e( 'Acceso de prueba conectado al dashboard demo.', 'ogape-child' ); ?></p>
+                            <h3><?php esc_html_e( 'Ingresá a tu cuenta', 'ogape-child' ); ?></h3>
+                            <p><?php esc_html_e( 'Email y contraseña que usaste al registrarte.', 'ogape-child' ); ?></p>
                         </div>
+
+                        <?php if ( $login_error ) : ?>
+                            <p class="account-entry-form__error" style="color:#c0392b;font-size:13.5px;margin:0 0 .75rem;padding:.6rem .9rem;background:#fdf2f2;border-radius:6px;border:1px solid #f5c6c6"><?php echo esc_html( $login_error ); ?></p>
+                        <?php endif; ?>
+                        <?php if ( $login_notice ) : ?>
+                            <p class="account-entry-form__notice" style="font-size:13.5px;margin:0 0 .75rem;padding:.6rem .9rem;background:#f0f7ee;border-radius:6px;border:1px solid #c3dfc0"><?php echo esc_html( $login_notice ); ?></p>
+                        <?php endif; ?>
 
                         <form class="account-entry-form" action="<?php echo esc_url( home_url( '/login/' ) ); ?>" method="post">
                             <input type="hidden" name="ogape_demo_action" value="login">
                             <input type="hidden" name="ogape_demo_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ogape_demo_account_flow' ) ); ?>">
-                            <p class="account-entry-form__demo-note"><?php esc_html_e( 'Flujo de prueba: iniciar sesión te lleva directo al dashboard demo.', 'ogape-child' ); ?></p>
-                            <?php if ( $login_notice ) : ?>
-                                <p class="account-entry-form__demo-note"><?php echo esc_html( $login_notice ); ?></p>
+                            <?php if ( $redirect_to ) : ?>
+                                <input type="hidden" name="redirect_to" value="<?php echo esc_attr( $redirect_to ); ?>">
                             <?php endif; ?>
                             <label class="account-entry-form__field">
                                 <span><?php esc_html_e( 'Email', 'ogape-child' ); ?></span>
-                                <input type="email" name="email" placeholder="nombre@ejemplo.com">
+                                <input type="email" name="email" placeholder="nombre@ejemplo.com" required autocomplete="email">
                             </label>
 
                             <label class="account-entry-form__field">
                                 <span><?php esc_html_e( 'Contraseña', 'ogape-child' ); ?></span>
-                                <input type="password" name="password" placeholder="••••••••">
+                                <input type="password" name="password" placeholder="••••••••" required autocomplete="current-password">
                             </label>
 
                             <button type="submit" class="btn btn--primary btn--md account-entry-form__button">
@@ -70,9 +75,8 @@ if ( isset( $_GET['reset'] ) ) {
                         </form>
 
                         <div class="account-entry-shell__actions">
-                            <a href="<?php echo esc_url( $register_url ); ?>?fresh=1"><?php esc_html_e( 'Crear cuenta', 'ogape-child' ); ?></a>
-                            <a href="<?php echo esc_url( $forgot_password_url ); ?>?fresh=1"><?php esc_html_e( 'Olvidé mi contraseña', 'ogape-child' ); ?></a>
-                            <a href="<?php echo esc_url( $account_url ); ?>?fresh=1"><?php esc_html_e( 'Ver área de cuenta', 'ogape-child' ); ?></a>
+                            <a href="<?php echo esc_url( $register_url ); ?>"><?php esc_html_e( 'Crear cuenta', 'ogape-child' ); ?></a>
+                            <a href="<?php echo esc_url( $forgot_password_url ); ?>"><?php esc_html_e( 'Olvidé mi contraseña', 'ogape-child' ); ?></a>
                         </div>
                     </div>
                 </div>
@@ -82,4 +86,3 @@ if ( isset( $_GET['reset'] ) ) {
 </main>
 
 <?php get_footer(); ?>
-?>

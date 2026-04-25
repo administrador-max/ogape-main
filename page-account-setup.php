@@ -19,8 +19,8 @@ $account_setup_url = add_query_arg(
 
 $setup_source = isset( $_GET['source'] ) ? sanitize_text_field( wp_unslash( $_GET['source'] ) ) : '';
 $setup_notice = 'register' === $setup_source
-    ? __( 'Cuenta creada en modo prueba. Completá estos datos para entrar al dashboard.', 'ogape-child' )
-    : __( 'Completá este onboarding corto para dejar el dashboard listo para la prueba.', 'ogape-child' );
+    ? __( 'Cuenta creada. Completá estos datos para entrar al dashboard.', 'ogape-child' )
+    : __( 'Completá este onboarding corto para configurar tu cuenta.', 'ogape-child' );
 
 $demo_context = function_exists( 'ogape_get_demo_account_context' ) ? ogape_get_demo_account_context() : array();
 $demo_name    = $demo_context['name'] ?? '';
