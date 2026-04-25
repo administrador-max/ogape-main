@@ -529,13 +529,207 @@ function ogape_set_demo_account_state( $state ) {
     }
 
     $encoded = base64_encode( wp_json_encode( $state ) );
-    setcookie( ogape_get_demo_account_key(), $encoded, time() + DAY_IN_SECONDS, COOKIEPATH ?: '/', COOKIE_DOMAIN, is_ssl(), true );
+    setcookie( ogape_get_demo_account_key(), $encoded, time() + ( 30 * DAY_IN_SECONDS ), COOKIEPATH ?: '/', COOKIE_DOMAIN, is_ssl(), true );
     $_COOKIE[ ogape_get_demo_account_key() ] = $encoded;
 }
 
 function ogape_clear_demo_account_state() {
     setcookie( ogape_get_demo_account_key(), '', time() - HOUR_IN_SECONDS, COOKIEPATH ?: '/', COOKIE_DOMAIN, is_ssl(), true );
     unset( $_COOKIE[ ogape_get_demo_account_key() ] );
+}
+
+function ogape_demo_plan_prices() {
+    return array(
+        '2-2' => 195000,
+        '2-3' => 285000,
+        '2-4' => 370000,
+        '2-5' => 445000,
+        '4-2' => 360000,
+        '4-3' => 530000,
+        '4-4' => 685000,
+        '4-5' => 820000,
+    );
+}
+
+function ogape_demo_format_price( $amount ) {
+    return 'Gs ' . number_format( (int) $amount, 0, ',', '.' );
+}
+
+function ogape_demo_plan_from_state( $state ) {
+    $people  = isset( $state['people'] ) ? (string) absint( $state['people'] ) : '2';
+    $recipes = isset( $state['recipes'] ) ? (string) absint( $state['recipes'] ) : '3';
+
+    if ( ! in_array( $people, array( '2', '4' ), true ) ) {
+        $people = '2';
+    }
+    if ( ! in_array( $recipes, array( '2', '3', '4', '5' ), true ) ) {
+        $recipes = '3';
+    }
+
+    $prices = ogape_demo_plan_prices();
+    $price  = $prices[ $people . '-' . $recipes ] ?? $prices['2-3'];
+
+    return array(
+        'people'        => $people,
+        'recipes'       => $recipes,
+        'label'         => sprintf( 'Para %1$s · %2$s recetas', $people, $recipes ),
+        'people_label'  => sprintf( '%s personas', $people ),
+        'recipes_label' => sprintf( '%s por semana', $recipes ),
+        'price'         => $price,
+        'price_display' => ogape_demo_format_price( $price ),
+    );
+}
+
+function ogape_demo_date_words() {
+    return array(
+        'days'   => array( 'domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado' ),
+        'months' => array( 1 => 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre' ),
+    );
+}
+
+function ogape_demo_format_date_label( DateTimeImmutable $date, $include_year = false ) {
+    $words = ogape_demo_date_words();
+    $label = ucfirst( $words['days'][ (int) $date->format( 'w' ) ] ) . ' ' . $date->format( 'j' ) . ' de ' . $words['months'][ (int) $date->format( 'n' ) ];
+
+    if ( $include_year ) {
+        $label .= ' · ' . $date->format( 'Y' );
+    }
+
+    return $label;
+}
+
+function ogape_demo_format_short_date_label( DateTimeImmutable $date ) {
+    $words = ogape_demo_date_words();
+    return ucfirst( $words['days'][ (int) $date->format( 'w' ) ] ) . ' ' . $date->format( 'j' ) . ' · ' . ucfirst( $words['months'][ (int) $date->format( 'n' ) ] );
+}
+
+function ogape_demo_schedule() {
+    $timezone = wp_timezone();
+    $today    = new DateTimeImmutable( 'today', $timezone );
+    $delivery = $today->modify( 'next thursday' );
+    $cutoff   = $delivery->modify( '-2 days' )->setTime( 23, 59 );
+    $next     = $delivery->modify( '+7 days' );
+    $resume   = $next->modify( '+7 days' );
+    $two_week_resume = $next->modify( '+14 days' );
+
+    return array(
+        'delivery'                 => $delivery,
+        'cutoff'                   => $cutoff,
+        'next_delivery'            => $next,
+        'resume_delivery'          => $resume,
+        'two_week_resume_delivery' => $two_week_resume,
+        'delivery_label'           => ogape_demo_format_date_label( $delivery ),
+        'delivery_label_with_year' => ogape_demo_format_date_label( $delivery, true ),
+        'delivery_short_label'     => ogape_demo_format_short_date_label( $delivery ),
+        'delivery_numeric'         => $delivery->format( 'd/m/Y' ),
+        'cutoff_label'             => ogape_demo_format_date_label( $cutoff ),
+        'next_label'               => ogape_demo_format_date_label( $next ),
+        'next_label_with_year'     => ogape_demo_format_date_label( $next, true ),
+        'resume_label'             => ogape_demo_format_date_label( $resume ),
+        'two_week_resume_label'    => ogape_demo_format_date_label( $two_week_resume ),
+        'cutoff_time'              => $cutoff->format( 'H:i' ),
+    );
+}
+
+function ogape_demo_preference_labels() {
+    return array(
+        'sin-pescado'     => 'Sin pescado',
+        'sin-carne-roja'  => 'Sin carne roja',
+        'vegetariano'     => 'Vegetariano',
+        'sin-gluten'      => 'Sin gluten',
+        'sin-lacteos'     => 'Sin lácteos',
+        'picante-ok'      => 'Me gusta picante',
+        'rapido'          => 'Menos de 25 min',
+    );
+}
+
+function ogape_sanitize_demo_preferences( $raw_preferences ) {
+    $raw_preferences = is_array( $raw_preferences ) ? $raw_preferences : array();
+    $labels          = ogape_demo_preference_labels();
+    $preferences     = array();
+
+    foreach ( $raw_preferences as $raw_preference ) {
+        $key = sanitize_key( wp_unslash( $raw_preference ) );
+        if ( isset( $labels[ $key ] ) ) {
+            $preferences[] = $labels[ $key ];
+        }
+    }
+
+    return array_values( array_unique( $preferences ) );
+}
+
+function ogape_get_demo_account_context() {
+    $state    = ogape_get_demo_account_state();
+    $plan     = ogape_demo_plan_from_state( $state );
+    $schedule = ogape_demo_schedule();
+
+    $name       = ! empty( $state['name'] ) ? sanitize_text_field( $state['name'] ) : 'María Benítez';
+    $email      = ! empty( $state['email'] ) ? sanitize_email( $state['email'] ) : 'maria@correo.com.py';
+    $phone      = ! empty( $state['phone'] ) ? sanitize_text_field( $state['phone'] ) : '+595 981 000 000';
+    $zone       = ! empty( $state['zone'] ) ? sanitize_text_field( $state['zone'] ) : 'Villa Morra';
+    $address    = ! empty( $state['address'] ) ? sanitize_text_field( $state['address'] ) : 'Av. Mcal. López 1234';
+    $apt        = ! empty( $state['apt'] ) ? sanitize_text_field( $state['apt'] ) : '5B';
+    $notes      = ! empty( $state['notes'] ) ? sanitize_text_field( $state['notes'] ) : '';
+    $window     = ! empty( $state['delivery_window_label'] ) ? sanitize_text_field( $state['delivery_window_label'] ) : 'Tarde · 14:00 – 19:00';
+    $preference = ! empty( $state['preference'] ) ? sanitize_text_field( $state['preference'] ) : 'Sin preferencia cargada';
+
+    $preferences = array();
+    if ( ! empty( $state['preferences'] ) && is_array( $state['preferences'] ) ) {
+        $preferences = array_map( 'sanitize_text_field', $state['preferences'] );
+    } elseif ( ! empty( $state['preference'] ) ) {
+        $preferences = array( $preference );
+    }
+
+    $parts      = preg_split( '/\s+/', trim( $name ) );
+    $first_name = $parts[0] ?? 'María';
+    $last_name  = count( $parts ) > 1 ? implode( ' ', array_slice( $parts, 1 ) ) : '';
+    $initials   = implode(
+        '',
+        array_slice(
+            array_map(
+                static function ( $word ) {
+                    return strtoupper( mb_substr( $word, 0, 1 ) );
+                },
+                array_filter( $parts )
+            ),
+            0,
+            2
+        )
+    );
+
+    if ( '' === $initials ) {
+        $initials = 'MB';
+    }
+
+    $delivery_line_address = trim( $address . ( $apt ? ', ' . $apt : '' ) );
+    $referral_seed         = sanitize_title( $first_name ?: 'cliente' );
+    $referral_code         = strtoupper( remove_accents( $referral_seed ) ) . '-' . wp_date( 'Y', null, wp_timezone() );
+
+    return array(
+        'state'                 => $state,
+        'name'                  => $name,
+        'first_name'            => $first_name,
+        'last_name'             => $last_name,
+        'initials'              => $initials,
+        'email'                 => $email,
+        'phone'                 => $phone,
+        'zone'                  => $zone,
+        'zone_key'              => ! empty( $state['zone_key'] ) ? sanitize_key( $state['zone_key'] ) : sanitize_title( $zone ),
+        'address'               => $address,
+        'apt'                   => $apt,
+        'delivery_line_address' => $delivery_line_address,
+        'delivery_window'       => $window,
+        'notes'                 => $notes,
+        'preference'            => $preference,
+        'preferences'           => $preferences,
+        'preferences_label'     => $preferences ? implode( ' · ', $preferences ) : 'Sin preferencias marcadas',
+        'allergies'             => ! empty( $state['allergies'] ) ? sanitize_text_field( $state['allergies'] ) : '',
+        'comms'                 => ! empty( $state['comms'] ),
+        'setup_complete'        => ! empty( $state['setup_complete'] ),
+        'referral_code'         => $referral_code,
+        'plan'                  => $plan,
+        'schedule'              => $schedule,
+    );
 }
 
 function ogape_handle_demo_account_flow() {
@@ -563,10 +757,45 @@ function ogape_handle_demo_account_flow() {
     $state  = ogape_get_demo_account_state();
 
     if ( 'register' === $action ) {
-        $state['name']  = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
-        $state['email'] = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
-        $state['phone'] = sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) );
-        $state['plan']  = __( 'Plan Hogar', 'ogape-child' );
+        $first_name = sanitize_text_field( wp_unslash( $_POST['first_name'] ?? '' ) );
+        $last_name  = sanitize_text_field( wp_unslash( $_POST['last_name'] ?? '' ) );
+        $email      = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
+        $password   = (string) wp_unslash( $_POST['password'] ?? '' );
+
+        if ( '' === $first_name || '' === $last_name || '' === $email || strlen( $password ) < 8 ) {
+            wp_safe_redirect( add_query_arg( 'demo_error', 'missing', home_url( '/register/' ) ) );
+            exit;
+        }
+
+        $people  = isset( $_POST['people'] ) ? (string) absint( wp_unslash( $_POST['people'] ) ) : '2';
+        $recipes = isset( $_POST['recipes'] ) ? (string) absint( wp_unslash( $_POST['recipes'] ) ) : '3';
+        $plan    = ogape_demo_plan_from_state(
+            array(
+                'people'  => $people,
+                'recipes' => $recipes,
+            )
+        );
+
+        $state['name']                  = trim( $first_name . ' ' . $last_name );
+        $state['email']                 = $email;
+        $state['phone']                 = sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) );
+        $state['people']                = $plan['people'];
+        $state['recipes']               = $plan['recipes'];
+        $state['plan']                  = $plan['label'];
+        $state['price']                 = $plan['price'];
+        $state['zone_key']              = sanitize_key( wp_unslash( $_POST['zone_key'] ?? '' ) );
+        $state['zone']                  = sanitize_text_field( wp_unslash( $_POST['zone'] ?? '' ) );
+        $state['address']               = sanitize_text_field( wp_unslash( $_POST['address'] ?? '' ) );
+        $state['apt']                   = sanitize_text_field( wp_unslash( $_POST['apt'] ?? '' ) );
+        $state['delivery_window']       = sanitize_key( wp_unslash( $_POST['delivery_window'] ?? 'pm' ) );
+        $state['delivery_window_label'] = sanitize_text_field( wp_unslash( $_POST['delivery_window_label'] ?? '' ) );
+        $state['notes']                 = sanitize_text_field( wp_unslash( $_POST['notes'] ?? '' ) );
+        $state['preferences']           = ogape_sanitize_demo_preferences( $_POST['preferences'] ?? array() );
+        $state['preference']            = $state['preferences'] ? implode( ' · ', $state['preferences'] ) : '';
+        $state['allergies']             = sanitize_text_field( wp_unslash( $_POST['allergies'] ?? '' ) );
+        $state['comms']                 = isset( $_POST['comms'] );
+        $state['setup_complete']        = false;
+        $state['registered_at']         = wp_date( DATE_ATOM, null, wp_timezone() );
         ogape_set_demo_account_state( $state );
         wp_safe_redirect( add_query_arg( array( 'demo' => 'register', 'source' => 'register' ), home_url( '/account-setup/' ) ) );
         exit;
@@ -581,7 +810,9 @@ function ogape_handle_demo_account_flow() {
             $state['name'] = __( 'Cliente de prueba', 'ogape-child' );
         }
         if ( empty( $state['plan'] ) ) {
-            $state['plan'] = __( 'Plan Hogar', 'ogape-child' );
+            $state['people'] = '2';
+            $state['recipes'] = '3';
+            $state['plan'] = ogape_demo_plan_from_state( $state )['label'];
         }
         ogape_set_demo_account_state( $state );
         wp_safe_redirect( add_query_arg( array( 'demo' => 'login', 'source' => 'login' ), home_url( '/account/' ) ) );
@@ -593,6 +824,10 @@ function ogape_handle_demo_account_flow() {
         $state['address']    = sanitize_text_field( wp_unslash( $_POST['address'] ?? '' ) );
         $state['preference'] = sanitize_text_field( wp_unslash( $_POST['preference'] ?? '' ) );
         $state['notes']      = sanitize_text_field( wp_unslash( $_POST['notes'] ?? '' ) );
+        if ( ! empty( $state['preference'] ) ) {
+            $state['preferences'] = array( $state['preference'] );
+        }
+        $state['setup_complete'] = true;
         ogape_set_demo_account_state( $state );
         wp_safe_redirect( add_query_arg( array( 'setup' => 'complete', 'source' => 'account-setup' ), home_url( '/account/' ) ) );
         exit;

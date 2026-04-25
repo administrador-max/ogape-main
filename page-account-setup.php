@@ -21,6 +21,14 @@ $setup_source = isset( $_GET['source'] ) ? sanitize_text_field( wp_unslash( $_GE
 $setup_notice = 'register' === $setup_source
     ? __( 'Cuenta creada en modo prueba. Completá estos datos para entrar al dashboard.', 'ogape-child' )
     : __( 'Completá este onboarding corto para dejar el dashboard listo para la prueba.', 'ogape-child' );
+
+$demo_context = function_exists( 'ogape_get_demo_account_context' ) ? ogape_get_demo_account_context() : array();
+$demo_name    = $demo_context['name'] ?? '';
+$demo_email   = $demo_context['email'] ?? '';
+$demo_zone    = $demo_context['zone'] ?? '';
+$demo_address = $demo_context['address'] ?? '';
+$demo_pref    = $demo_context['preference'] ?? '';
+$demo_notes   = $demo_context['notes'] ?? '';
 ?>
 
 <main id="main" class="site-main" role="main">
@@ -50,13 +58,16 @@ $setup_notice = 'register' === $setup_source
                             <p><?php esc_html_e( 'Onboarding de prueba antes del dashboard.', 'ogape-child' ); ?></p>
                         </div>
                         <form class="account-entry-form account-entry-form--setup" action="<?php echo esc_url( home_url( '/account-setup/' ) ); ?>" method="post">
-                            <input type="hidden" name="ogape_demo_action" value="account-setup">
-                            <input type="hidden" name="ogape_demo_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ogape_demo_account_flow' ) ); ?>">
-                            <p class="account-entry-form__demo-note"><?php echo esc_html( $setup_notice ); ?></p>
-                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Barrio / zona', 'ogape-child' ); ?></span><input type="text" name="zone" placeholder="Asunción" value="<?php echo esc_attr( ogape_get_demo_account_state()['zone'] ?? "" ); ?>"></label>
-                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Dirección principal', 'ogape-child' ); ?></span><input type="text" name="address" placeholder="Calle, número, referencia" value="<?php echo esc_attr( ogape_get_demo_account_state()['address'] ?? "" ); ?>"></label>
-                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Preferencia principal', 'ogape-child' ); ?></span><input type="text" name="preference" placeholder="Ej. cenas livianas" value="<?php echo esc_attr( ogape_get_demo_account_state()['preference'] ?? "" ); ?>"></label>
-                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Notas de entrega', 'ogape-child' ); ?></span><input type="text" name="notes" placeholder="Opcional" value="<?php echo esc_attr( ogape_get_demo_account_state()['notes'] ?? "" ); ?>"></label>
+	                            <input type="hidden" name="ogape_demo_action" value="account-setup">
+	                            <input type="hidden" name="ogape_demo_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ogape_demo_account_flow' ) ); ?>">
+	                            <p class="account-entry-form__demo-note"><?php echo esc_html( $setup_notice ); ?></p>
+	                            <?php if ( $demo_name || $demo_email ) : ?>
+	                                <p class="account-entry-form__demo-note"><?php echo esc_html( trim( $demo_name . ( $demo_email ? ' · ' . $demo_email : '' ) ) ); ?></p>
+	                            <?php endif; ?>
+	                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Barrio / zona', 'ogape-child' ); ?></span><input type="text" name="zone" placeholder="Asunción" value="<?php echo esc_attr( $demo_zone ); ?>" required></label>
+	                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Dirección principal', 'ogape-child' ); ?></span><input type="text" name="address" placeholder="Calle, número, referencia" value="<?php echo esc_attr( $demo_address ); ?>" required></label>
+	                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Preferencia principal', 'ogape-child' ); ?></span><input type="text" name="preference" placeholder="Ej. cenas livianas" value="<?php echo esc_attr( $demo_pref ); ?>"></label>
+	                            <label class="account-entry-form__field"><span><?php esc_html_e( 'Notas de entrega', 'ogape-child' ); ?></span><input type="text" name="notes" placeholder="Opcional" value="<?php echo esc_attr( $demo_notes ); ?>"></label>
                             <button type="submit" class="btn btn--primary btn--md account-entry-form__button"><?php esc_html_e( 'Guardar y continuar', 'ogape-child' ); ?></button>
                         </form>
                         <div class="account-entry-shell__actions">

@@ -20,6 +20,13 @@ $privacy_url  = home_url( '/privacidad/' );
 $terms_url    = home_url( '/terminos/' );
 $logo_url     = get_stylesheet_directory_uri() . '/assets/img/ogape-logo.svg';
 $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp_url() : '#';
+$demo_context = function_exists( 'ogape_get_demo_account_context' ) ? ogape_get_demo_account_context() : array();
+$schedule     = $demo_context['schedule'] ?? array();
+
+$delivery_label       = $schedule['delivery_label'] ?? __( 'el próximo jueves', 'ogape-child' );
+$delivery_short_label = $schedule['delivery_short_label'] ?? __( 'Próximo jueves', 'ogape-child' );
+$cutoff_label         = $schedule['cutoff_label'] ?? __( 'martes previo', 'ogape-child' );
+$cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
 ?>
 
 <div class="register-design">
@@ -47,11 +54,11 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
 
     <!-- ─── FORM ─── -->
     <section class="form" aria-labelledby="form-title">
-      <div class="form__head">
-        <span class="form__eyebrow"><span class="dot"></span>Unirme · Menú piloto · Abril 2026</span>
-        <h1 class="form__title" id="form-title">Creá tu cuenta y <em>empezá a cocinar</em> el jueves.</h1>
-        <p class="form__sub">Cuatro pasos cortos. Sin suscripción rígida: pausás o cancelás la semana que necesites. La primera caja llega este jueves si confirmás antes del martes 23:59.</p>
-      </div>
+	      <div class="form__head">
+	        <span class="form__eyebrow"><span class="dot"></span>Unirme · Menú piloto</span>
+	        <h1 class="form__title" id="form-title">Creá tu cuenta y <em>empezá a cocinar</em> el jueves.</h1>
+	        <p class="form__sub">Cuatro pasos cortos. Sin suscripción rígida: pausás o cancelás la semana que necesites. La primera caja queda programada para <?php echo esc_html( $delivery_label ); ?> si confirmás antes del <?php echo esc_html( $cutoff_label ); ?> a las <?php echo esc_html( $cutoff_time ); ?>.</p>
+	      </div>
 
       <!-- STEPPER -->
       <div class="steps" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1" id="register-stepper">
@@ -73,7 +80,11 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
         </div>
       </div>
 
-      <form id="register-signup" novalidate>
+	      <form id="register-signup" action="<?php echo esc_url( home_url( '/register/' ) ); ?>" method="post" novalidate data-delivery-label="<?php echo esc_attr( $delivery_label ); ?>" data-delivery-short-label="<?php echo esc_attr( $delivery_short_label ); ?>" data-cutoff-label="<?php echo esc_attr( $cutoff_label ); ?>" data-cutoff-time="<?php echo esc_attr( $cutoff_time ); ?>">
+	        <input type="hidden" name="ogape_demo_action" value="register">
+	        <input type="hidden" name="ogape_demo_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ogape_demo_account_flow' ) ); ?>">
+	        <input type="hidden" name="zone" id="register-zoneLabel" value="">
+	        <input type="hidden" name="delivery_window_label" id="register-windowLabel" value="Tarde · 14:00 – 19:00">
 
         <!-- PANEL 1 — ACCOUNT -->
         <div class="panel is-active" data-panel="1">
@@ -83,30 +94,30 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
           <div class="field field__row field__row--2">
             <div>
               <label class="lbl" for="register-fname">Nombre</label>
-              <input class="input" id="register-fname" type="text" placeholder="María" autocomplete="given-name" required>
+	              <input class="input" id="register-fname" name="first_name" type="text" placeholder="María" autocomplete="given-name" required>
             </div>
             <div>
               <label class="lbl" for="register-lname">Apellido</label>
-              <input class="input" id="register-lname" type="text" placeholder="Benítez" autocomplete="family-name" required>
+	              <input class="input" id="register-lname" name="last_name" type="text" placeholder="Benítez" autocomplete="family-name" required>
             </div>
           </div>
 
           <div class="field">
             <label class="lbl" for="register-email">Email</label>
-            <input class="input" id="register-email" type="email" placeholder="maria@correo.com.py" autocomplete="email" required>
+	            <input class="input" id="register-email" name="email" type="email" placeholder="maria@correo.com.py" autocomplete="email" required>
             <p class="hint">Te mandamos el menú de la semana los viernes a la mañana. Nada más.</p>
           </div>
 
           <div class="field">
             <label class="lbl" for="register-phone">Teléfono (WhatsApp)</label>
-            <input class="input" id="register-phone" type="tel" placeholder="+595 981 000 000" autocomplete="tel">
+	            <input class="input" id="register-phone" name="phone" type="tel" placeholder="+595 981 000 000" autocomplete="tel">
             <p class="hint">Solo para avisarte de la entrega. Nunca para promociones.</p>
           </div>
 
           <div class="field">
             <label class="lbl" for="register-pw">Contraseña</label>
             <div class="input-wrap">
-              <input class="input input--pw" id="register-pw" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" required>
+	              <input class="input input--pw" id="register-pw" name="password" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" required>
               <button type="button" class="toggle" id="register-pwToggle" aria-label="Mostrar contraseña">
                 <svg id="register-pwEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12Z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
@@ -116,7 +127,7 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
           </div>
 
           <label class="check">
-            <input type="checkbox" id="register-terms" required>
+	            <input type="checkbox" id="register-terms" name="terms" value="1" required>
             <span class="check__box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg></span>
             <span>Al crear la cuenta acepto los <a href="<?php echo esc_url( $terms_url ); ?>">Términos</a> y la <a href="<?php echo esc_url( $privacy_url ); ?>">Política de privacidad</a> de Ogape. Puedo pausar o cancelar cuando quiera.</span>
           </label>
@@ -141,7 +152,7 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
 
           <div class="field">
             <label class="lbl" for="register-zone">Tu barrio</label>
-            <select class="select" id="register-zone" required>
+	            <select class="select" id="register-zone" name="zone_key" required>
               <option value="">Elegí tu barrio</option>
               <optgroup label="Zonas activas">
                 <option value="villa-morra">Villa Morra</option>
@@ -162,17 +173,17 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
 
           <div class="field">
             <label class="lbl" for="register-address">Dirección</label>
-            <input class="input" id="register-address" type="text" placeholder="Av. Mcal. López 1234" autocomplete="street-address">
+	            <input class="input" id="register-address" name="address" type="text" placeholder="Av. Mcal. López 1234" autocomplete="street-address" required>
           </div>
 
           <div class="field field__row field__row--2">
             <div>
               <label class="lbl" for="register-apt">Depto / Piso</label>
-              <input class="input" id="register-apt" type="text" placeholder="5B — opcional">
+	              <input class="input" id="register-apt" name="apt" type="text" placeholder="5B — opcional">
             </div>
             <div>
               <label class="lbl" for="register-window">Horario preferido</label>
-              <select class="select" id="register-window">
+	              <select class="select" id="register-window" name="delivery_window">
                 <option value="am">Mañana · 10:00 – 13:00</option>
                 <option value="pm" selected>Tarde · 14:00 – 19:00</option>
                 <option value="any">Cualquier horario del jueves</option>
@@ -182,7 +193,7 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
 
           <div class="field">
             <label class="lbl" for="register-notes">Instrucciones para el repartidor</label>
-            <input class="input" id="register-notes" type="text" placeholder="Timbre roto — llamar al WhatsApp al llegar">
+	            <input class="input" id="register-notes" name="notes" type="text" placeholder="Timbre roto — llamar al WhatsApp al llegar">
             <p class="hint">Opcional. Todo lo que ayude al repartidor a encontrarte.</p>
           </div>
         </div>
@@ -256,26 +267,26 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
 
           <label class="lbl" style="margin-bottom:var(--space-3);display:block">Preferencias — podés marcar varias</label>
           <div class="chips" style="margin-bottom:var(--space-3)">
-            <label class="chip"><input type="checkbox" name="pref" value="sin-pescado">Sin pescado</label>
-            <label class="chip"><input type="checkbox" name="pref" value="sin-carne-roja">Sin carne roja</label>
-            <label class="chip"><input type="checkbox" name="pref" value="vegetariano">Vegetariano</label>
-            <label class="chip"><input type="checkbox" name="pref" value="sin-gluten">Sin gluten</label>
-            <label class="chip"><input type="checkbox" name="pref" value="sin-lacteos">Sin lácteos</label>
-            <label class="chip"><input type="checkbox" name="pref" value="picante-ok">Me gusta picante</label>
-            <label class="chip"><input type="checkbox" name="pref" value="rapido">Menos de 25 min</label>
+	            <label class="chip"><input type="checkbox" name="preferences[]" value="sin-pescado">Sin pescado</label>
+	            <label class="chip"><input type="checkbox" name="preferences[]" value="sin-carne-roja">Sin carne roja</label>
+	            <label class="chip"><input type="checkbox" name="preferences[]" value="vegetariano">Vegetariano</label>
+	            <label class="chip"><input type="checkbox" name="preferences[]" value="sin-gluten">Sin gluten</label>
+	            <label class="chip"><input type="checkbox" name="preferences[]" value="sin-lacteos">Sin lácteos</label>
+	            <label class="chip"><input type="checkbox" name="preferences[]" value="picante-ok">Me gusta picante</label>
+	            <label class="chip"><input type="checkbox" name="preferences[]" value="rapido">Menos de 25 min</label>
           </div>
           <p class="hint">Usamos esto para sugerirte recetas. Siempre vas a poder elegir manualmente cada semana.</p>
 
           <div class="field" style="margin-top:var(--space-6)">
             <label class="lbl" for="register-allergies">Alergias o ingredientes a evitar</label>
-            <input class="input" id="register-allergies" type="text" placeholder="Maní, mariscos — opcional">
+	            <input class="input" id="register-allergies" name="allergies" type="text" placeholder="Maní, mariscos — opcional">
           </div>
         </div>
 
         <!-- PANEL 4 — CONFIRM -->
         <div class="panel" data-panel="4">
           <h2 class="panel__h">Repasemos tu caja</h2>
-          <p class="panel__p">Si todo está bien, arrancamos con tu primera entrega el <b style="color:var(--text-primary);font-weight:600">jueves 23 de abril</b>. Se cobra recién cuando sale la caja.</p>
+	          <p class="panel__p">Si todo está bien, arrancamos con tu primera entrega el <b style="color:var(--text-primary);font-weight:600"><?php echo esc_html( $delivery_label ); ?></b>. Se cobra recién cuando sale la caja.</p>
 
           <div class="price-line">
             <div class="k">Tu primera caja<b id="register-sumTitle">Para 2 · 3 recetas</b></div>
@@ -286,16 +297,16 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
             <div class="sum-row"><span class="k">Cuenta</span><span class="v" id="register-sumAccount">—<small id="register-sumAccountSub">—</small></span><button type="button" class="edit" data-goto="1">Editar</button></div>
             <div class="sum-row"><span class="k">Entrega</span><span class="v" id="register-sumDelivery">—<small id="register-sumDeliverySub">Jueves · 14:00 – 19:00</small></span><button type="button" class="edit" data-goto="2">Editar</button></div>
             <div class="sum-row"><span class="k">Caja</span><span class="v" id="register-sumBox">Para 2 · 3 recetas<small id="register-sumBoxSub">Sin preferencias marcadas</small></span><button type="button" class="edit" data-goto="3">Editar</button></div>
-            <div class="sum-row"><span class="k">Primera entrega</span><span class="v">Jueves 23 · Abril<small>Cierre de pedidos martes 23:59</small></span><span></span></div>
+	            <div class="sum-row"><span class="k">Primera entrega</span><span class="v"><?php echo esc_html( $delivery_short_label ); ?><small>Cierre de pedidos <?php echo esc_html( $cutoff_label ); ?> · <?php echo esc_html( $cutoff_time ); ?></small></span><span></span></div>
           </div>
 
           <label class="check" style="margin-bottom:var(--space-3)">
-            <input type="checkbox" id="register-comms">
+	            <input type="checkbox" id="register-comms" name="comms" value="1">
             <span class="check__box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg></span>
             <span>Quiero recibir el menú de la semana los viernes (podés darte de baja desde cualquier mail).</span>
           </label>
           <label class="check">
-            <input type="checkbox" id="register-confirm" required>
+	            <input type="checkbox" id="register-confirm" name="confirm" value="1" required>
             <span class="check__box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg></span>
             <span>Confirmo que los datos son correctos y entiendo que <b style="color:var(--text-primary)">no hay cargo hasta el jueves</b> que sale la primera caja.</span>
           </label>
@@ -308,7 +319,7 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg>
             </div>
             <h2 class="panel__h" style="font-size:36px;margin-bottom:var(--space-3)">Bienvenida a la mesa, <em id="register-wlcName" style="font-style:italic;color:var(--brand-primary-strong)">María</em>.</h2>
-            <p class="panel__p" style="max-width:48ch;margin:0 auto var(--space-8)">Tu primera caja sale el <b style="color:var(--text-primary)">jueves 23 de abril</b>. Te mandamos el menú confirmado y el tracking por WhatsApp apenas cerremos pedidos el martes.</p>
+	            <p class="panel__p" style="max-width:48ch;margin:0 auto var(--space-8)">Tu primera caja sale el <b style="color:var(--text-primary)"><?php echo esc_html( $delivery_label ); ?></b>. Te mandamos el menú confirmado y el tracking por WhatsApp apenas cerremos pedidos.</p>
             <div style="display:flex;gap:var(--space-3);justify-content:center;flex-wrap:wrap">
               <a href="<?php echo esc_url( $menu_url ); ?>" class="btn btn--warm">Ver el menú de la semana
                 <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 8h8m-3-3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -326,12 +337,13 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
           </button>
           <span class="spacer"></span>
           <span style="font-size:12px;color:var(--muted);letter-spacing:.04em" id="register-stepMeta">Paso 1 de 4</span>
-          <button type="button" class="btn btn--primary" id="register-nextBtn">
+	          <button type="button" class="btn btn--primary" id="register-nextBtn">
             Continuar
             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 8h8m-3-3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-        </div>
-      </form>
+	        </div>
+	        <p class="form-error" id="register-formError" role="alert" aria-live="polite"></p>
+	      </form>
     </section>
 
     <!-- ─── SIDEBAR ─── -->
@@ -381,21 +393,96 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
   var root = document.querySelector('.register-design');
   if (!root) return;
 
-  var $  = function (s) { return root.querySelector(s); };
-  var $$ = function (s) { return Array.prototype.slice.call(root.querySelectorAll(s)); };
+	  var $  = function (s) { return root.querySelector(s); };
+	  var $$ = function (s) { return Array.prototype.slice.call(root.querySelectorAll(s)); };
+	  var form = $('#register-signup');
+	  var errorBox = $('#register-formError');
+	  var deliveryLabel = form.dataset.deliveryLabel || 'el próximo jueves';
+	  var deliveryShortLabel = form.dataset.deliveryShortLabel || 'Próximo jueves';
 
-  // ── STATE ─────────────────────────────────────────────
-  var state = { step: 1, max: 4 };
+	  // ── STATE ─────────────────────────────────────────────
+	  var state = { step: 1, max: 4 };
 
   // Pricing matrix (Gs) — people × recipes
   var PRICE = {
     '2-2': 195000, '2-3': 285000, '2-4': 370000, '2-5': 445000,
     '4-2': 360000, '4-3': 530000, '4-4': 685000, '4-5': 820000
   };
-  var fmtGs = function (n) { return 'Gs ' + n.toLocaleString('es-PY'); };
+	  var fmtGs = function (n) { return 'Gs ' + n.toLocaleString('es-PY'); };
 
-  // ── STEP NAV ──────────────────────────────────────────
-  function goStep(n) {
+	  function selectedText(selector) {
+	    var field = $(selector);
+	    return field && field.selectedOptions[0] ? field.selectedOptions[0].text : '';
+	  }
+
+	  function updateHiddenLabels() {
+	    var zoneLabel = $('#register-zoneLabel');
+	    var windowLabel = $('#register-windowLabel');
+	    if (zoneLabel) zoneLabel.value = selectedText('#register-zone');
+	    if (windowLabel) windowLabel.value = selectedText('#register-window');
+	  }
+
+	  function clearValidation() {
+	    if (errorBox) errorBox.textContent = '';
+	    $$('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); });
+	  }
+
+	  function showValidation(message, el) {
+	    if (errorBox) errorBox.textContent = message;
+	    if (el) {
+	      var target = el.closest('.check') || el.closest('.field') || el.closest('label') || el;
+	      target.classList.add('is-invalid');
+	      el.focus({ preventScroll: true });
+	    }
+	  }
+
+	  function validateStep(step) {
+	    clearValidation();
+
+	    if (step === 1) {
+	      if (!$('#register-fname').value.trim()) {
+	        showValidation('Completá tu nombre para seguir.', $('#register-fname'));
+	        return false;
+	      }
+	      if (!$('#register-lname').value.trim()) {
+	        showValidation('Completá tu apellido para seguir.', $('#register-lname'));
+	        return false;
+	      }
+	      if (!$('#register-email').value.trim() || !$('#register-email').checkValidity()) {
+	        showValidation('Ingresá un email válido para guardar tu cuenta demo.', $('#register-email'));
+	        return false;
+	      }
+	      if ($('#register-pw').value.length < 8) {
+	        showValidation('La contraseña demo necesita al menos 8 caracteres.', $('#register-pw'));
+	        return false;
+	      }
+	      if (!$('#register-terms').checked) {
+	        showValidation('Aceptá los términos y la política de privacidad para continuar.', $('#register-terms'));
+	        return false;
+	      }
+	    }
+
+	    if (step === 2) {
+	      if (!$('#register-zone').value) {
+	        showValidation('Elegí tu barrio o zona de entrega.', $('#register-zone'));
+	        return false;
+	      }
+	      if (!$('#register-address').value.trim()) {
+	        showValidation('Agregá una dirección principal para la entrega.', $('#register-address'));
+	        return false;
+	      }
+	    }
+
+	    if (step === 4 && !$('#register-confirm').checked) {
+	      showValidation('Confirmá que los datos están correctos para crear la cuenta demo.', $('#register-confirm'));
+	      return false;
+	    }
+
+	    return true;
+	  }
+
+	  // ── STEP NAV ──────────────────────────────────────────
+	  function goStep(n) {
     state.step = n;
     $$('.panel').forEach(function (p) { p.classList.toggle('is-active', +p.dataset.panel === n); });
     $$('.step').forEach(function (s) {
@@ -417,14 +504,16 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  $('#register-nextBtn').addEventListener('click', function () {
-    if (state.step < state.max) goStep(state.step + 1);
-    else {
-      var name = $('#register-fname').value.trim() || 'vos';
-      $('#register-wlcName').textContent = name;
-      goStep(5);
-    }
-  });
+	  $('#register-nextBtn').addEventListener('click', function () {
+	    if (!validateStep(state.step)) return;
+	    if (state.step < state.max) goStep(state.step + 1);
+	    else {
+	      updateHiddenLabels();
+	      $('#register-nextBtn').disabled = true;
+	      $('#register-nextBtn').textContent = 'Guardando...';
+	      form.submit();
+	    }
+	  });
   $('#register-backBtn').addEventListener('click', function () { goStep(Math.max(1, state.step - 1)); });
   $$('.edit').forEach(function (b) { b.addEventListener('click', function () { goStep(+b.dataset.goto); }); });
 
@@ -467,16 +556,18 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
   });
 
   // ── ZONE ALERT ────────────────────────────────────────
-  $('#register-zone').addEventListener('change', function (e) {
-    var opt = e.target.selectedOptions[0];
-    var al = $('#register-zoneAlert');
-    if (!opt || !opt.value) { al.innerHTML = ''; return; }
-    if (opt.dataset.soon) {
-      al.innerHTML = '<div class="zone-alert is-soon"><div class="zone-alert__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><h4>Todavía no llegamos — pero falta poco.</h4><p>Dejanos tus datos y te avisamos apenas abramos ' + opt.text + '. No se cobra nada hasta entonces.</p></div></div>';
-    } else {
-      al.innerHTML = '<div class="zone-alert"><div class="zone-alert__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg></div><div><h4>¡Entregamos en ' + opt.text + '!</h4><p>Próxima ventana de entrega: <b>jueves 23 de abril</b> · 10:00 a 19:00.</p></div></div>';
-    }
-  });
+	  $('#register-zone').addEventListener('change', function (e) {
+	    var opt = e.target.selectedOptions[0];
+	    var al = $('#register-zoneAlert');
+	    updateHiddenLabels();
+	    if (!opt || !opt.value) { al.innerHTML = ''; return; }
+	    if (opt.dataset.soon) {
+	      al.innerHTML = '<div class="zone-alert is-soon"><div class="zone-alert__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><h4>Todavía no llegamos — pero falta poco.</h4><p>Dejanos tus datos y te avisamos apenas abramos ' + opt.text + '. No se cobra nada hasta entonces.</p></div></div>';
+	    } else {
+	      al.innerHTML = '<div class="zone-alert"><div class="zone-alert__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg></div><div><h4>¡Entregamos en ' + opt.text + '!</h4><p>Próxima ventana de entrega: <b>' + deliveryLabel + '</b> · 10:00 a 19:00.</p></div></div>';
+	    }
+	  });
+	  $('#register-window').addEventListener('change', updateHiddenLabels);
 
   // ── SIDEBAR + SUMMARY refresh ─────────────────────────
   function currentPlan() {
@@ -506,14 +597,15 @@ $wa_url       = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp
     var addr = $('#register-address').value.trim();
     var win = $('#register-window').selectedOptions[0].text;
     $('#register-sumDelivery').firstChild.textContent = addr ? (zone + ' · ' + addr) : zone;
-    $('#register-sumDeliverySub').textContent = 'Jueves · ' + win;
+	    $('#register-sumDeliverySub').textContent = deliveryShortLabel + ' · ' + win;
 
-    var prefs = $$('input[name="pref"]:checked').map(function (i) { return i.parentElement.textContent.trim(); });
-    $('#register-sumBoxSub').textContent = prefs.length ? prefs.join(' · ') : 'Sin preferencias marcadas';
-  }
+	    var prefs = $$('input[name="preferences[]"]:checked').map(function (i) { return i.parentElement.textContent.trim(); });
+	    $('#register-sumBoxSub').textContent = prefs.length ? prefs.join(' · ') : 'Sin preferencias marcadas';
+	  }
 
-  refreshAside();
-  goStep(1);
+	  updateHiddenLabels();
+	  refreshAside();
+	  goStep(1);
 })();
 </script>
 

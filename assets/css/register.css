@@ -112,6 +112,8 @@
 .register-design .input:focus,
 .register-design .select:focus { outline: none; border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(232,160,69,.18); }
 .register-design .input::placeholder { color: #9aa0a6; }
+.register-design .field.is-invalid .input,
+.register-design .field.is-invalid .select { border-color: #C62828; box-shadow: 0 0 0 3px rgba(198,40,40,.12); }
 .register-design .input--pw { padding-right: 52px; }
 .register-design .input-wrap { position: relative; }
 .register-design .input-wrap .toggle { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border: none; background: transparent; color: var(--muted); display: grid; place-items: center; border-radius: var(--radius-md); transition: color .15s, background .15s; }
@@ -158,6 +160,7 @@
 .register-design .check input { position: absolute; opacity: 0; pointer-events: none; }
 .register-design .check__box { flex: none; width: 20px; height: 20px; border-radius: 5px; border: 1.5px solid rgba(17,24,39,.2); background: #fff; display: grid; place-items: center; margin-top: 1px; color: transparent; transition: background .15s, border-color .15s, color .15s; }
 .register-design .check input:checked + .check__box { background: #1B1B1E; border-color: #1B1B1E; color: #F7EFE3; }
+.register-design .check.is-invalid .check__box { border-color: #C62828; box-shadow: 0 0 0 3px rgba(198,40,40,.12); }
 .register-design .check__box svg { width: 13px; height: 13px; }
 .register-design .check a { color: var(--text-primary); font-weight: 600; border-bottom: 1px solid rgba(154,90,8,.3); }
 
@@ -173,6 +176,7 @@
 /* Nav row */
 .register-design .form__nav { display: flex; gap: var(--space-3); align-items: center; margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid rgba(17,24,39,.08); flex-wrap: wrap; }
 .register-design .btn { display: inline-flex; align-items: center; gap: .5rem; height: 52px; padding: 0 var(--space-6); border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 14px; font-weight: 600; border: 1px solid transparent; cursor: pointer; transition: transform .15s, box-shadow .15s, background .15s, color .15s, border-color .15s; }
+.register-design .btn:disabled { cursor: wait; opacity: .72; transform: none; }
 .register-design .btn svg { width: 15px; height: 15px; }
 .register-design .btn--primary { background: var(--text-primary); color: #F7EFE3; box-shadow: 0 8px 24px rgba(17,24,39,.18); }
 .register-design .btn--primary:hover { background: #000; transform: translateY(-1px); box-shadow: 0 14px 30px rgba(17,24,39,.24); }
@@ -191,6 +195,8 @@
 .register-design .social { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
 .register-design .social .btn { width: 100%; justify-content: center; background: #fff; color: var(--text-primary); border: 1px solid rgba(17,24,39,.14); box-shadow: none; }
 .register-design .social .btn:hover { border-color: var(--text-primary); background: #fff; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(17,24,39,.08); }
+
+.register-design .form-error { min-height: 20px; margin-top: var(--space-4); font-size: 13px; color: #C62828; font-weight: 600; line-height: 1.5; }
 
 /* Summary (step 4) */
 .register-design .summary { display: grid; gap: var(--space-3); padding: var(--space-5) var(--space-6); background: #FBF6EC; border: 1px solid rgba(17,24,39,.08); border-radius: var(--radius-xl); margin-bottom: var(--space-6); }

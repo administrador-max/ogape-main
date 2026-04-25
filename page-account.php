@@ -12,25 +12,42 @@
 get_header();
 
 // ── DEMO STATE ─────────────────────────────────────────────────────
-$demo_state   = ogape_get_demo_account_state();
-$demo_name    = ! empty( $demo_state['name'] )       ? $demo_state['name']       : 'María Benítez';
-$demo_email   = ! empty( $demo_state['email'] )      ? $demo_state['email']      : 'maria@correo.com.py';
-$demo_plan    = ! empty( $demo_state['plan'] )       ? $demo_state['plan']       : 'Para 2 · 3 recetas';
-$demo_zone    = ! empty( $demo_state['zone'] )       ? $demo_state['zone']       : 'Villa Morra';
-$demo_address = ! empty( $demo_state['address'] )    ? $demo_state['address']    : 'Av. Mcal. López 1234';
-$demo_pref    = ! empty( $demo_state['preference'] ) ? $demo_state['preference'] : 'Sin preferencia cargada';
-
-// Derived display values
-$demo_parts      = explode( ' ', trim( $demo_name ) );
-$demo_first_name = $demo_parts[0];
-$demo_initials   = implode(
-    '',
-    array_slice(
-        array_map( fn( $w ) => strtoupper( mb_substr( $w, 0, 1 ) ), $demo_parts ),
-        0,
-        2
-    )
-);
+$demo_context          = function_exists( 'ogape_get_demo_account_context' ) ? ogape_get_demo_account_context() : array();
+$demo_name             = $demo_context['name'] ?? 'María Benítez';
+$demo_first_name       = $demo_context['first_name'] ?? 'María';
+$demo_last_name        = $demo_context['last_name'] ?? 'Benítez';
+$demo_initials         = $demo_context['initials'] ?? 'MB';
+$demo_email            = $demo_context['email'] ?? 'maria@correo.com.py';
+$demo_phone            = $demo_context['phone'] ?? '+595 981 000 000';
+$demo_zone             = $demo_context['zone'] ?? 'Villa Morra';
+$demo_zone_key         = $demo_context['zone_key'] ?? 'villa-morra';
+$demo_address          = $demo_context['address'] ?? 'Av. Mcal. López 1234';
+$demo_apt              = $demo_context['apt'] ?? '5B';
+$demo_delivery_address = $demo_context['delivery_line_address'] ?? $demo_address;
+$demo_window           = $demo_context['delivery_window'] ?? 'Tarde · 14:00 – 19:00';
+$demo_pref             = $demo_context['preference'] ?? 'Sin preferencia cargada';
+$demo_preferences      = $demo_context['preferences_label'] ?? 'Sin preferencias marcadas';
+$demo_notes            = $demo_context['notes'] ?? '';
+$demo_referral_code    = $demo_context['referral_code'] ?? 'MARIA-2026';
+$demo_plan             = $demo_context['plan'] ?? array();
+$demo_schedule         = $demo_context['schedule'] ?? array();
+$demo_people           = $demo_plan['people'] ?? '2';
+$demo_recipes          = $demo_plan['recipes'] ?? '3';
+$demo_plan_label       = $demo_plan['label'] ?? 'Para 2 · 3 recetas';
+$demo_price            = $demo_plan['price'] ?? 285000;
+$demo_price_display    = $demo_plan['price_display'] ?? 'Gs 285.000';
+$demo_price_plain      = number_format( (int) $demo_price, 0, ',', '.' );
+$demo_iva_display      = ogape_demo_format_price( (int) round( $demo_price / 11 ) );
+$delivery_label        = $demo_schedule['delivery_label'] ?? 'el próximo jueves';
+$delivery_label_year   = $demo_schedule['delivery_label_with_year'] ?? $delivery_label;
+$delivery_short_label  = $demo_schedule['delivery_short_label'] ?? 'Próximo jueves';
+$delivery_numeric      = $demo_schedule['delivery_numeric'] ?? wp_date( 'd/m/Y' );
+$next_label            = $demo_schedule['next_label'] ?? 'el jueves siguiente';
+$next_label_year       = $demo_schedule['next_label_with_year'] ?? $next_label;
+$resume_label          = $demo_schedule['resume_label'] ?? 'la semana siguiente';
+$two_week_resume_label = $demo_schedule['two_week_resume_label'] ?? 'la siguiente entrega';
+$cutoff_label          = $demo_schedule['cutoff_label'] ?? 'martes previo';
+$cutoff_time           = $demo_schedule['cutoff_time'] ?? '23:59';
 $logo_url = get_stylesheet_directory_uri() . '/assets/img/ogape-logo.svg';
 
 // Post-flow messages
@@ -117,9 +134,9 @@ if ( isset( $_GET['setup'] ) ) {
     <div class="page__header">
       <div class="greeting">
         <div class="greeting__text">
-          <div class="greeting__eyebrow"><span class="dot"></span>Jueves 24 de abril · Semana piloto</div>
-          <h1 class="greeting__h">Buenos días, <em><?php echo esc_html( $demo_first_name ); ?></em>.</h1>
-          <p class="greeting__sub">Tu caja está en camino. Llegá temprano a casa — el repartidor pasa por Villa Morra antes del mediodía.</p>
+	          <div class="greeting__eyebrow"><span class="dot"></span><?php echo esc_html( $delivery_short_label ); ?> · Semana piloto</div>
+	          <h1 class="greeting__h">Buenos días, <em><?php echo esc_html( $demo_first_name ); ?></em>.</h1>
+	          <p class="greeting__sub">Tu caja está en camino. Llegá temprano a casa — el repartidor pasa por <?php echo esc_html( $demo_zone ); ?> antes del mediodía.</p>
         </div>
         <div class="greeting__actions">
           <a href="<?php echo esc_url( home_url( '/menu/' ) ); ?>" class="btn btn--outline">
@@ -140,8 +157,8 @@ if ( isset( $_GET['setup'] ) ) {
           <div class="delivery-header">
             <div>
               <div class="card__eyebrow"><span class="dot"></span>Caja N.º 01</div>
-              <h2 class="card__h">En camino a Villa Morra</h2>
-              <p class="card__sub">Entrega estimada: hoy entre 10:00 y 13:00</p>
+	              <h2 class="card__h">En camino a <?php echo esc_html( $demo_zone ); ?></h2>
+	              <p class="card__sub">Entrega estimada: <?php echo esc_html( $delivery_label ); ?> entre 10:00 y 13:00</p>
             </div>
             <span class="delivery-badge"><span class="pulse"></span>En tránsito</span>
           </div>
@@ -175,7 +192,7 @@ if ( isset( $_GET['setup'] ) ) {
 
           <div class="delivery-eta">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span class="text"><b>Llegada estimada: 10:30 – 11:15</b> · Av. Mcal. López 1234, 5B — te mandamos un WhatsApp cuando estemos a 15 min.</span>
+	            <span class="text"><b>Llegada estimada: 10:30 – 11:15</b> · <?php echo esc_html( $demo_delivery_address ); ?> — te mandamos un WhatsApp cuando estemos a 15 min.</span>
           </div>
         </div>
 
