@@ -13,6 +13,7 @@ require get_stylesheet_directory() . '/inc/branding.php';
 require get_stylesheet_directory() . '/inc/mail.php';
 require get_stylesheet_directory() . '/inc/waitlist.php';
 require get_stylesheet_directory() . '/inc/ogape-ops.php';
+require get_stylesheet_directory() . '/inc/ogape-emails.php';
 
 /**
  * Theme contact helpers.
@@ -711,12 +712,21 @@ function ogape_save_customer_meta( $user_id, $data ) {
         'registered_at'         => 'ogape_registered_at',
         'pause_status'          => 'ogape_pause_status',
         'pause_until'           => 'ogape_pause_until',
+        'notif_weekly_menu'     => 'ogape_notif_weekly_menu',
+        'notif_whatsapp'        => 'ogape_notif_whatsapp',
+        'notif_cutoff'          => 'ogape_notif_cutoff',
+        'notif_promo'           => 'ogape_notif_promo',
     );
     foreach ( $meta_map as $data_key => $meta_key ) {
         if ( array_key_exists( $data_key, $data ) ) {
             update_user_meta( $user_id, $meta_key, $data[ $data_key ] );
         }
     }
+}
+
+function ogape_notif_pref( $user_id, $key, $default = true ) {
+    $val = get_user_meta( $user_id, $key, true );
+    return ( '' === $val ) ? $default : (bool) $val;
 }
 
 function ogape_get_customer_meta( $user_id ) {
@@ -751,6 +761,10 @@ function ogape_get_customer_meta( $user_id ) {
         'registered_at'         => (string) get_user_meta( $user_id, 'ogape_registered_at', true ),
         'pause_status'          => (string) get_user_meta( $user_id, 'ogape_pause_status', true ),
         'pause_until'           => (string) get_user_meta( $user_id, 'ogape_pause_until', true ),
+        'notif_weekly_menu'     => ogape_notif_pref( $user_id, 'ogape_notif_weekly_menu', true ),
+        'notif_whatsapp'        => ogape_notif_pref( $user_id, 'ogape_notif_whatsapp', true ),
+        'notif_cutoff'          => ogape_notif_pref( $user_id, 'ogape_notif_cutoff', true ),
+        'notif_promo'           => ogape_notif_pref( $user_id, 'ogape_notif_promo', false ),
     );
 }
 
@@ -947,6 +961,8 @@ function ogape_handle_demo_account_flow() {
         ogape_set_demo_account_state( $new_state );
         wp_set_auth_cookie( $user_id, true );
 
+        do_action( 'ogape_user_registered', $user_id );
+
         wp_safe_redirect( add_query_arg( 'source', 'register', home_url( '/elegir-menu/' ) ) );
         exit;
     }
@@ -1128,9 +1144,29 @@ function ogape_ajax_pause_plan() {
         'pause_until'  => wp_date( 'Y-m-d' ),
     ) );
 
+    do_action( 'ogape_plan_paused', $user_id, $pause_when );
+
     wp_send_json_success( array( 'pause_when' => $pause_when ) );
 }
 add_action( 'wp_ajax_ogape_pause_plan', 'ogape_ajax_pause_plan' );
+
+function ogape_ajax_update_notifications() {
+    check_ajax_referer( 'ogape_account_actions', 'nonce' );
+    $user_id = get_current_user_id();
+    if ( ! $user_id ) {
+        wp_send_json_error( array( 'message' => 'No autorizado.' ), 403 );
+    }
+
+    ogape_save_customer_meta( $user_id, array(
+        'notif_weekly_menu' => '1' === ( $_POST['notif_weekly_menu'] ?? '0' ) ? 1 : 0,
+        'notif_whatsapp'    => '1' === ( $_POST['notif_whatsapp'] ?? '0' ) ? 1 : 0,
+        'notif_cutoff'      => '1' === ( $_POST['notif_cutoff'] ?? '0' ) ? 1 : 0,
+        'notif_promo'       => '1' === ( $_POST['notif_promo'] ?? '0' ) ? 1 : 0,
+    ) );
+
+    wp_send_json_success();
+}
+add_action( 'wp_ajax_ogape_update_notifications', 'ogape_ajax_update_notifications' );
 
 // ── REMOVE UNNECESSARY WP BLOAT ─────────────────────────────
 remove_action( 'wp_head', 'wp_generator' );           // Hide WP version

@@ -30,12 +30,25 @@ if ( ! function_exists( 'ogape_mail_reply_to' ) ) {
     }
 }
 
+/**
+ * Only register our own SMTP hooks if WP Mail SMTP (or a compatible plugin) is NOT active.
+ * When WP Mail SMTP is active it owns phpmailer_init, wp_mail_from, and wp_mail_from_name —
+ * registering the same hooks here causes double-configuration and unpredictable behaviour.
+ */
+function ogape_mail_smtp_plugin_active() {
+    return class_exists( 'WPMailSMTP\Core' )          // WP Mail SMTP 2.x+
+        || function_exists( 'wp_mail_smtp' )           // WP Mail SMTP 1.x
+        || class_exists( 'PHPMailer\PHPMailer\Exception' ) && defined( 'WPMS_PLUGIN_VER' ); // extra guard
+}
+
 if ( ! function_exists( 'ogape_filter_mail_from' ) ) {
     function ogape_filter_mail_from( $from_email ) {
         $configured = ogape_mail_from_email();
         return $configured ? $configured : $from_email;
     }
-    add_filter( 'wp_mail_from', 'ogape_filter_mail_from' );
+    if ( ! ogape_mail_smtp_plugin_active() ) {
+        add_filter( 'wp_mail_from', 'ogape_filter_mail_from' );
+    }
 }
 
 if ( ! function_exists( 'ogape_filter_mail_from_name' ) ) {
@@ -43,7 +56,9 @@ if ( ! function_exists( 'ogape_filter_mail_from_name' ) ) {
         $configured = ogape_mail_from_name();
         return $configured ? $configured : $from_name;
     }
-    add_filter( 'wp_mail_from_name', 'ogape_filter_mail_from_name' );
+    if ( ! ogape_mail_smtp_plugin_active() ) {
+        add_filter( 'wp_mail_from_name', 'ogape_filter_mail_from_name' );
+    }
 }
 
 if ( ! function_exists( 'ogape_configure_phpmailer' ) ) {
@@ -71,5 +86,7 @@ if ( ! function_exists( 'ogape_configure_phpmailer' ) ) {
             $phpmailer->addReplyTo( $reply_to, $from_name );
         }
     }
-    add_action( 'phpmailer_init', 'ogape_configure_phpmailer' );
+    if ( ! ogape_mail_smtp_plugin_active() ) {
+        add_action( 'phpmailer_init', 'ogape_configure_phpmailer' );
+    }
 }

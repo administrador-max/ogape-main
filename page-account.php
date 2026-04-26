@@ -118,6 +118,12 @@ if ( $caja_ctx && $caja_ctx['delivery_numeric'] ) {
     $delivery_short_label  = $caja_ctx['delivery_label'];
 }
 
+// Notification preferences
+$notif_weekly_menu = $demo_context['notif_weekly_menu'] ?? true;
+$notif_whatsapp    = $demo_context['notif_whatsapp'] ?? true;
+$notif_cutoff      = $demo_context['notif_cutoff'] ?? true;
+$notif_promo       = $demo_context['notif_promo'] ?? false;
+
 // Post-flow messages
 $demo_message = '';
 if ( isset( $_GET['demo'] ) ) {
@@ -826,10 +832,10 @@ if ( isset( $_GET['setup'] ) ) {
               <div class="toggle-desc">El viernes a la mañana, las recetas de la semana que viene.</div>
             </div>
             <label class="toggle-switch">
-              <input type="checkbox" checked>
+              <input type="checkbox" id="notifWeeklyMenu" name="notif_weekly_menu"<?php checked( $notif_weekly_menu, true ); ?>>
               <span class="toggle-track"><span class="toggle-thumb"></span></span>
             </label>
-            <span class="toggle-val">Activado</span>
+            <span class="toggle-val" id="notifWeeklyMenuVal"><?php echo $notif_weekly_menu ? 'Activado' : 'Desactivado'; ?></span>
           </div>
           <div class="toggle-row" style="border-top:1px solid rgba(17,24,39,.06)">
             <div class="toggle-info">
@@ -837,10 +843,10 @@ if ( isset( $_GET['setup'] ) ) {
               <div class="toggle-desc">Te mandamos el tracking el jueves cuando salimos.</div>
             </div>
             <label class="toggle-switch">
-              <input type="checkbox" checked>
+              <input type="checkbox" id="notifWhatsapp" name="notif_whatsapp"<?php checked( $notif_whatsapp, true ); ?>>
               <span class="toggle-track"><span class="toggle-thumb"></span></span>
             </label>
-            <span class="toggle-val">Activado</span>
+            <span class="toggle-val" id="notifWhatsappVal"><?php echo $notif_whatsapp ? 'Activado' : 'Desactivado'; ?></span>
           </div>
           <div class="toggle-row" style="border-top:1px solid rgba(17,24,39,.06)">
             <div class="toggle-info">
@@ -848,10 +854,10 @@ if ( isset( $_GET['setup'] ) ) {
               <div class="toggle-desc">El martes a las 20:00, antes de que cierre a las 23:59.</div>
             </div>
             <label class="toggle-switch">
-              <input type="checkbox" checked>
+              <input type="checkbox" id="notifCutoff" name="notif_cutoff"<?php checked( $notif_cutoff, true ); ?>>
               <span class="toggle-track"><span class="toggle-thumb"></span></span>
             </label>
-            <span class="toggle-val">Activado</span>
+            <span class="toggle-val" id="notifCutoffVal"><?php echo $notif_cutoff ? 'Activado' : 'Desactivado'; ?></span>
           </div>
           <div class="toggle-row" style="border-top:1px solid rgba(17,24,39,.06)">
             <div class="toggle-info">
@@ -859,10 +865,10 @@ if ( isset( $_GET['setup'] ) ) {
               <div class="toggle-desc">Nuevos productores, recetas especiales, eventos.</div>
             </div>
             <label class="toggle-switch">
-              <input type="checkbox">
+              <input type="checkbox" id="notifPromo" name="notif_promo"<?php checked( $notif_promo, true ); ?>>
               <span class="toggle-track"><span class="toggle-thumb"></span></span>
             </label>
-            <span class="toggle-val">Desactivado</span>
+            <span class="toggle-val" id="notifPromoVal"><?php echo $notif_promo ? 'Activado' : 'Desactivado'; ?></span>
           </div>
         </div>
         <div class="modal__footer">
@@ -1360,6 +1366,44 @@ if ( isset( $_GET['setup'] ) ) {
         document.getElementById('pauseSuccess').style.display = '';
       }, function (msg) {
         setBtn(pauseConfirmBtn, false);
+        alert(msg);
+      });
+    });
+  }
+
+  // ── NOTIFICACIONES ────────────────────────────────────────────────
+  var notifsForm = document.getElementById('notifsForm');
+  if (notifsForm) {
+    // Live toggle label update
+    var togglePairs = [
+      ['notifWeeklyMenu', 'notifWeeklyMenuVal'],
+      ['notifWhatsapp',   'notifWhatsappVal'],
+      ['notifCutoff',     'notifCutoffVal'],
+      ['notifPromo',      'notifPromoVal'],
+    ];
+    togglePairs.forEach(function (pair) {
+      var inp = document.getElementById(pair[0]);
+      var lbl = document.getElementById(pair[1]);
+      if (inp && lbl) {
+        inp.addEventListener('change', function () {
+          lbl.textContent = inp.checked ? 'Activado' : 'Desactivado';
+        });
+      }
+    });
+
+    notifsForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var btn = notifsForm.querySelector('[type=submit]');
+      setBtn(btn, true);
+      post('ogape_update_notifications', {
+        notif_weekly_menu: document.getElementById('notifWeeklyMenu').checked ? '1' : '0',
+        notif_whatsapp:    document.getElementById('notifWhatsapp').checked   ? '1' : '0',
+        notif_cutoff:      document.getElementById('notifCutoff').checked     ? '1' : '0',
+        notif_promo:       document.getElementById('notifPromo').checked      ? '1' : '0',
+      }, function () {
+        showSuccess('notifsFormWrap', 'notifsSuccess');
+      }, function (msg) {
+        setBtn(btn, false);
         alert(msg);
       });
     });

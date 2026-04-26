@@ -212,6 +212,7 @@ function ogape_ops_handle_advance_status() {
     $next    = ogape_caja_status_next( $current );
     if ( $next ) {
         update_post_meta( $caja_id, '_ogape_global_status', $next );
+        do_action( 'ogape_caja_status_changed', $caja_id, $next, $current );
     }
 
     wp_safe_redirect( admin_url( 'admin.php?page=ogape-ops&updated=status' ) );
