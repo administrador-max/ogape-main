@@ -44,6 +44,26 @@ function ogape_get_waitlist_url() {
     return $waitlist_page ? get_permalink( $waitlist_page ) : home_url( '/waitlist/' );
 }
 
+/**
+ * Build a first-party logout URL that avoids wp-login.php UI screens.
+ *
+ * @param string $redirect_to Destination after logout.
+ * @return string
+ */
+function ogape_get_logout_url( $redirect_to = '' ) {
+    $fallback    = home_url( '/login/' );
+    $redirect_to = $redirect_to ? wp_validate_redirect( $redirect_to, $fallback ) : $fallback;
+
+    return add_query_arg(
+        array(
+            'ogape_action'       => 'logout',
+            'redirect_to'        => $redirect_to,
+            '_ogape_logout_nonce' => wp_create_nonce( 'ogape_logout' ),
+        ),
+        home_url( '/' )
+    );
+}
+
 // ── ENQUEUE ASSETS ─────────────────────────────────────────
 function ogape_enqueue_assets() {
 
@@ -567,6 +587,61 @@ function ogape_clear_demo_account_state() {
     setcookie( ogape_get_demo_account_key(), '', time() - HOUR_IN_SECONDS, COOKIEPATH ?: '/', COOKIE_DOMAIN, is_ssl(), true );
     unset( $_COOKIE[ ogape_get_demo_account_key() ] );
 }
+
+function ogape_handle_custom_logout() {
+    $action = isset( $_GET['ogape_action'] ) ? sanitize_key( wp_unslash( $_GET['ogape_action'] ) ) : '';
+    if ( 'logout' !== $action ) {
+        return;
+    }
+
+    $fallback    = home_url( '/login/' );
+    $redirect_to = isset( $_GET['redirect_to'] )
+        ? sanitize_text_field( wp_unslash( $_GET['redirect_to'] ) )
+        : $fallback;
+    $redirect_to = wp_validate_redirect( $redirect_to, $fallback );
+
+    $nonce = isset( $_GET['_ogape_logout_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_ogape_logout_nonce'] ) ) : '';
+    if ( ! wp_verify_nonce( $nonce, 'ogape_logout' ) ) {
+        wp_safe_redirect( $redirect_to );
+        exit;
+    }
+
+    if ( is_user_logged_in() ) {
+        wp_logout();
+    }
+    ogape_clear_demo_account_state();
+
+    wp_safe_redirect( $redirect_to );
+    exit;
+}
+add_action( 'template_redirect', 'ogape_handle_custom_logout', 0 );
+
+function ogape_bridge_wp_login_logout() {
+    global $pagenow;
+
+    if ( 'wp-login.php' !== $pagenow ) {
+        return;
+    }
+
+    $fallback = home_url( '/login/' );
+    $action   = isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
+
+    if ( 'logout' === $action ) {
+        $redirect_to = isset( $_REQUEST['redirect_to'] )
+            ? sanitize_text_field( wp_unslash( $_REQUEST['redirect_to'] ) )
+            : $fallback;
+        $redirect_to = wp_validate_redirect( $redirect_to, $fallback );
+
+        wp_safe_redirect( ogape_get_logout_url( $redirect_to ) );
+        exit;
+    }
+
+    if ( isset( $_GET['loggedout'] ) ) {
+        wp_safe_redirect( $fallback );
+        exit;
+    }
+}
+add_action( 'login_init', 'ogape_bridge_wp_login_logout' );
 
 function ogape_demo_plan_prices() {
     return array(

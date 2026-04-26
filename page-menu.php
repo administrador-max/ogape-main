@@ -34,7 +34,7 @@ $wa_display         = function_exists( 'ogape_get_whatsapp_display' ) ? ogape_ge
 $contact_email      = ogape_get_contact_email();
 $orders_email       = 'pedidos@ogape.com.py';
 $is_logged_in       = is_user_logged_in();
-$logout_url         = wp_logout_url( $menu_url );
+$logout_url         = function_exists( 'ogape_get_logout_url' ) ? ogape_get_logout_url( $menu_url ) : $menu_url;
 
 $menu_account_context = $is_logged_in && function_exists( 'ogape_get_demo_account_context' )
     ? ogape_get_demo_account_context()
