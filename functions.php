@@ -78,7 +78,7 @@ function ogape_enqueue_assets() {
     $is_account_page     = is_page( 'account' );
     $is_login_page       = is_page( 'login' );
     $is_elegir_menu_page = is_page( 'elegir-menu' );
-    $is_handoff_design   = $is_future_site || $is_menu_page || $is_register_page || $is_account_page || $is_login_page || $is_elegir_menu_page;
+    $is_handoff_design   = $is_menu_page || $is_register_page || $is_login_page || $is_elegir_menu_page;
 
     // 1. Design tokens (must load first — all other CSS depends on these)
     wp_enqueue_style(
@@ -118,7 +118,7 @@ function ogape_enqueue_assets() {
         wp_enqueue_style(
             'ogape-future-site',
             get_stylesheet_directory_uri() . '/assets/css/future-site.css',
-            array( 'ogape-tokens' ),
+            array( 'ogape-production-polish' ),
             filemtime( get_stylesheet_directory() . '/assets/css/future-site.css' )
         );
     }
@@ -163,7 +163,7 @@ function ogape_enqueue_assets() {
         wp_enqueue_style(
             'ogape-account-page',
             get_stylesheet_directory_uri() . '/assets/css/account-page.css',
-            array( 'ogape-tokens' ),
+            array( 'ogape-production-polish' ),
             filemtime( get_stylesheet_directory() . '/assets/css/account-page.css' )
         );
         wp_enqueue_script(
