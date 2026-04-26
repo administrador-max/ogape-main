@@ -2352,30 +2352,7 @@ a:hover {
   margin: 0 0 1rem;
   color: var(--color-text-secondary);
 }
-.account-setup-shell {
-  display: grid;
-  gap: 1rem;
-}
-.account-setup-stepper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-}
-.account-setup-stepper__item {
-  display: inline-flex;
-  align-items: center;
-  min-height: 34px;
-  padding: 0.35rem 0.8rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.06);
-  color: var(--color-text-secondary);
-  font-size: 0.82rem;
-  font-weight: var(--weight-semibold);
-}
-.account-setup-stepper__item--active {
-  background: rgba(229, 145, 98, 0.14);
-  color: var(--brand-primary-strong);
-}
+
 .account-entry-shell__header h3,
 .account-panel-card h2 {
   margin: 0 0 0.35rem;

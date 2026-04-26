@@ -15,7 +15,8 @@ get_header();
 
 $home_url     = home_url( '/' );
 $login_url    = home_url( '/login/' );
-$menu_url     = home_url( '/menu/' );
+$menu_url          = home_url( '/menu/' );
+$elegir_menu_url   = home_url( '/elegir-menu/' );
 $privacy_url  = home_url( '/privacidad/' );
 $terms_url    = home_url( '/terminos/' );
 $logo_url     = get_stylesheet_directory_uri() . '/assets/img/ogape-logo.svg';
@@ -319,9 +320,9 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg>
             </div>
             <h2 class="panel__h" style="font-size:36px;margin-bottom:var(--space-3)">Bienvenida a la mesa, <em id="register-wlcName" style="font-style:italic;color:var(--brand-primary-strong)">María</em>.</h2>
-	            <p class="panel__p" style="max-width:48ch;margin:0 auto var(--space-8)">Tu primera caja sale el <b style="color:var(--text-primary)"><?php echo esc_html( $delivery_label ); ?></b>. Te mandamos el menú confirmado y el tracking por WhatsApp apenas cerremos pedidos.</p>
+	            <p class="panel__p" style="max-width:48ch;margin:0 auto var(--space-8)">Tu cuenta está lista. Elegí las recetas de tu primera caja — llega el <b style="color:var(--text-primary)"><?php echo esc_html( $delivery_label ); ?></b>.</p>
             <div style="display:flex;gap:var(--space-3);justify-content:center;flex-wrap:wrap">
-              <a href="<?php echo esc_url( $menu_url ); ?>" class="btn btn--warm">Ver el menú de la semana
+              <a href="<?php echo esc_url( $elegir_menu_url ); ?>" class="btn btn--warm">Elegir menú
                 <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 8h8m-3-3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </a>
               <a href="<?php echo esc_url( $home_url ); ?>" class="btn btn--outline">Ir al inicio</a>

@@ -51,12 +51,13 @@ function ogape_enqueue_assets() {
     $patterns_version = filemtime( get_stylesheet_directory() . '/assets/css/components/patterns.css' );
     $script_version   = filemtime( get_stylesheet_directory() . '/assets/js/main.js' );
 
-    $is_future_site   = is_page( 'future-site' );
-    $is_menu_page     = is_page( 'menu' );
-    $is_register_page = is_page( 'register' );
-    $is_account_page  = is_page( 'account' );
-    $is_login_page    = is_page( 'login' );
-    $is_handoff_design = $is_future_site || $is_menu_page || $is_register_page || $is_account_page || $is_login_page;
+    $is_future_site      = is_page( 'future-site' );
+    $is_menu_page        = is_page( 'menu' );
+    $is_register_page    = is_page( 'register' );
+    $is_account_page     = is_page( 'account' );
+    $is_login_page       = is_page( 'login' );
+    $is_elegir_menu_page = is_page( 'elegir-menu' );
+    $is_handoff_design   = $is_future_site || $is_menu_page || $is_register_page || $is_account_page || $is_login_page || $is_elegir_menu_page;
 
     // 1. Design tokens (must load first — all other CSS depends on these)
     wp_enqueue_style(
@@ -125,6 +126,15 @@ function ogape_enqueue_assets() {
             get_stylesheet_directory_uri() . '/assets/css/login.css',
             array( 'ogape-tokens' ),
             filemtime( get_stylesheet_directory() . '/assets/css/login.css' )
+        );
+    }
+
+    if ( $is_elegir_menu_page ) {
+        wp_enqueue_style(
+            'ogape-elegir-menu',
+            get_stylesheet_directory_uri() . '/assets/css/elegir-menu.css',
+            array( 'ogape-tokens' ),
+            filemtime( get_stylesheet_directory() . '/assets/css/elegir-menu.css' )
         );
     }
 
@@ -209,6 +219,10 @@ function ogape_body_classes( $classes ) {
 
     if ( is_page( 'login' ) ) {
         $classes[] = 'ogape-login-page';
+    }
+
+    if ( is_page( 'elegir-menu' ) ) {
+        $classes[] = 'ogape-elegir-menu-page';
     }
 
     return $classes;
@@ -459,7 +473,7 @@ function ogape_redirect_non_waitlist_pages() {
         'register',
         'forgot-password',
         'account',
-        'account-setup',
+        'elegir-menu',
         'faq',
         'privacidad',
         'terminos',
@@ -743,7 +757,7 @@ function ogape_get_customer_meta( $user_id ) {
 // ── AUTH GATES ───────────────────────────────────────────────────────────────
 
 function ogape_account_auth_gates() {
-    if ( is_page_template( 'page-account.php' ) || is_page_template( 'page-account-setup.php' ) ) {
+    if ( is_page_template( 'page-account.php' ) || is_page_template( 'page-elegir-menu.php' ) ) {
         if ( ! is_user_logged_in() ) {
             $redirect = add_query_arg(
                 'redirect_to',
@@ -858,7 +872,7 @@ function ogape_handle_demo_account_flow() {
     $request_path = isset( $_SERVER['REQUEST_URI'] ) ? wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ) : '';
     $request_path = is_string( $request_path ) ? trim( $request_path, '/' ) : '';
 
-    $handled_paths = array( 'register', 'login', 'account-setup' );
+    $handled_paths = array( 'register', 'login' );
     if ( ! in_array( $request_path, $handled_paths, true ) ) {
         return;
     }
@@ -933,7 +947,7 @@ function ogape_handle_demo_account_flow() {
         ogape_set_demo_account_state( $new_state );
         wp_set_auth_cookie( $user_id, true );
 
-        wp_safe_redirect( add_query_arg( array( 'setup' => 'new', 'source' => 'register' ), home_url( '/account-setup/' ) ) );
+        wp_safe_redirect( add_query_arg( 'source', 'register', home_url( '/elegir-menu/' ) ) );
         exit;
     }
 
@@ -966,23 +980,6 @@ function ogape_handle_demo_account_flow() {
         exit;
     }
 
-    if ( 'account-setup' === $action ) {
-        $state['zone']       = sanitize_text_field( wp_unslash( $_POST['zone'] ?? '' ) );
-        $state['address']    = sanitize_text_field( wp_unslash( $_POST['address'] ?? '' ) );
-        $state['preference'] = sanitize_text_field( wp_unslash( $_POST['preference'] ?? '' ) );
-        $state['notes']      = sanitize_text_field( wp_unslash( $_POST['notes'] ?? '' ) );
-        if ( ! empty( $state['preference'] ) ) {
-            $state['preferences'] = array( $state['preference'] );
-        }
-        $state['setup_complete'] = true;
-        ogape_set_demo_account_state( $state );
-        $user_id = get_current_user_id();
-        if ( $user_id ) {
-            ogape_save_customer_meta( $user_id, $state );
-        }
-        wp_safe_redirect( add_query_arg( array( 'setup' => 'complete', 'source' => 'account-setup' ), home_url( '/account/' ) ) );
-        exit;
-    }
 }
 add_action( 'template_redirect', 'ogape_handle_demo_account_flow', 1 );
 
