@@ -675,6 +675,247 @@ function ogape_recipe_tag_map() {
     );
 }
 
+function ogape_default_menu_recipes() {
+    return array(
+        array(
+            'id'         => 'surubi',
+            'name'       => 'Surubí al Maracuyá',
+            'desc'       => 'Filete del río Paraná con mantequilla de maracuyá, mandioca dorada y vegetales tiernos.',
+            'tags'       => array(
+                array( 'label' => 'Plato Estrella', 'type' => 'hero' ),
+                array( 'label' => 'Local', 'type' => 'local' ),
+            ),
+            'time'       => '35 min',
+            'difficulty' => 'Media',
+            'allergens'  => 'Pescado, lácteos',
+            'isHero'     => true,
+            'photoGrad'  => 'linear-gradient(145deg,#e8d5b0 0%,#c8a05a 50%,#9a6830 100%)',
+        ),
+        array(
+            'id'         => 'bife',
+            'name'       => 'Bife Koygua Negro',
+            'desc'       => 'Costilla de res braseada con reducción de cerveza negra, cebolla asada y puré rústico.',
+            'tags'       => array(
+                array( 'label' => 'Favorito', 'type' => 'nomad' ),
+            ),
+            'time'       => '50 min',
+            'difficulty' => 'Fácil',
+            'allergens'  => 'Gluten (cerveza)',
+            'isHero'     => false,
+            'photoGrad'  => 'linear-gradient(145deg,#d4b896 0%,#a87040 50%,#7a4a20 100%)',
+        ),
+        array(
+            'id'         => 'bowl',
+            'name'       => 'Bowl Proteico Ogape',
+            'desc'       => 'Pollo grillado, arroz jazmín, hummus suave, verduras encurtidas y crocante de semillas.',
+            'tags'       => array(
+                array( 'label' => 'Favorito', 'type' => 'nomad' ),
+                array( 'label' => 'Alto en proteína', 'type' => 'protein' ),
+            ),
+            'time'       => '30 min',
+            'difficulty' => 'Fácil',
+            'allergens'  => 'Sésamo',
+            'isHero'     => false,
+            'photoGrad'  => 'linear-gradient(145deg,#c5d8a0 0%,#8aad55 50%,#5a7a30 100%)',
+        ),
+        array(
+            'id'         => 'curry',
+            'name'       => 'Pollo al Curry Suave',
+            'desc'       => 'Pollo en curry suave de coco con arroz perfumado y hierbas frescas.',
+            'tags'       => array(
+                array( 'label' => 'Internacional', 'type' => 'intl' ),
+                array( 'label' => 'Para toda la familia', 'type' => 'family' ),
+            ),
+            'time'       => '40 min',
+            'difficulty' => 'Fácil',
+            'allergens'  => 'Ninguno',
+            'isHero'     => false,
+            'photoGrad'  => 'linear-gradient(145deg,#c8d4e8 0%,#7890b0 50%,#486080 100%)',
+        ),
+        array(
+            'id'         => 'milanesa',
+            'name'       => 'Milanesa Signature',
+            'desc'       => 'Milanesa crocante de corte premium con papas rústicas, limón y alioli casero.',
+            'tags'       => array(
+                array( 'label' => 'Favorito', 'type' => 'nomad' ),
+                array( 'label' => 'Para toda la familia', 'type' => 'family' ),
+            ),
+            'time'       => '30 min',
+            'difficulty' => 'Fácil',
+            'allergens'  => 'Gluten, huevo, lácteos',
+            'isHero'     => false,
+            'photoGrad'  => 'linear-gradient(145deg,#e8c8b0 0%,#c09068 50%,#905840 100%)',
+        ),
+        array(
+            'id'         => 'risotto',
+            'name'       => 'Risotto de Mandioca',
+            'desc'       => 'Risotto cremoso con mandioca paraguaya, queso de campo y aceite de hierbas de la huerta.',
+            'tags'       => array(
+                array( 'label' => 'Local', 'type' => 'local' ),
+                array( 'label' => 'Vegetariano', 'type' => 'veg' ),
+            ),
+            'time'       => '45 min',
+            'difficulty' => 'Media',
+            'allergens'  => 'Lácteos',
+            'isHero'     => false,
+            'photoGrad'  => 'linear-gradient(145deg,#d8c8e0 0%,#9878b0 50%,#685088 100%)',
+        ),
+    );
+}
+
+function ogape_normalize_recipe_tags( $tags_raw ) {
+    if ( ! is_array( $tags_raw ) ) {
+        return array();
+    }
+
+    $tags = array();
+    foreach ( $tags_raw as $tag ) {
+        if ( ! is_array( $tag ) ) {
+            continue;
+        }
+
+        $label = sanitize_text_field( $tag['label'] ?? '' );
+        $type  = sanitize_key( $tag['type'] ?? '' );
+        if ( '' === $label || '' === $type ) {
+            continue;
+        }
+
+        $tags[] = array(
+            'label' => $label,
+            'type'  => $type,
+        );
+    }
+
+    return $tags;
+}
+
+function ogape_map_recipe_post_to_menu_item( $recipe_post ) {
+    $tags_raw = get_post_meta( $recipe_post->ID, '_ogape_recipe_tags', true );
+
+    return array(
+        'id'         => 'r' . $recipe_post->ID,
+        'name'       => $recipe_post->post_title,
+        'desc'       => get_post_meta( $recipe_post->ID, '_ogape_recipe_desc', true ) ?: get_the_excerpt( $recipe_post ),
+        'tags'       => ogape_normalize_recipe_tags( $tags_raw ),
+        'time'       => get_post_meta( $recipe_post->ID, '_ogape_recipe_time', true ) ?: '35 min',
+        'difficulty' => get_post_meta( $recipe_post->ID, '_ogape_recipe_difficulty', true ) ?: 'Fácil',
+        'allergens'  => get_post_meta( $recipe_post->ID, '_ogape_recipe_allergens', true ) ?: 'Ninguno',
+        'isHero'     => (bool) get_post_meta( $recipe_post->ID, '_ogape_recipe_hero', true ),
+        'photoGrad'  => get_post_meta( $recipe_post->ID, '_ogape_recipe_grad', true )
+            ?: 'linear-gradient(145deg,#e8d5b0 0%,#c8a05a 50%,#9a6830 100%)',
+    );
+}
+
+function ogape_get_current_menu_recipes() {
+    $fallback = ogape_default_menu_recipes();
+    $caja_obj = ogape_get_current_caja();
+
+    if ( ! $caja_obj ) {
+        return $fallback;
+    }
+
+    $caja_recipe_ids = get_post_meta( $caja_obj->ID, '_ogape_recipe_ids', true );
+    if ( empty( $caja_recipe_ids ) || ! is_array( $caja_recipe_ids ) ) {
+        return $fallback;
+    }
+
+    $recipe_posts = get_posts( array(
+        'post_type'   => 'ogape_recipe',
+        'include'     => array_map( 'absint', $caja_recipe_ids ),
+        'orderby'     => 'post__in',
+        'numberposts' => 20,
+    ) );
+
+    if ( ! $recipe_posts ) {
+        return $fallback;
+    }
+
+    $recipes = array();
+    foreach ( $recipe_posts as $recipe_post ) {
+        $recipes[] = ogape_map_recipe_post_to_menu_item( $recipe_post );
+    }
+
+    return $recipes ?: $fallback;
+}
+
+function ogape_get_user_selected_menu_recipe_ids( $user_id, $week_key = '' ) {
+    $user_id = absint( $user_id );
+    if ( ! $user_id ) {
+        return array();
+    }
+
+    $selected = array();
+    if ( $week_key ) {
+        $selected = get_user_meta( $user_id, 'ogape_menu_selection_' . sanitize_key( $week_key ), true );
+    }
+
+    if ( empty( $selected ) ) {
+        $selected = get_user_meta( $user_id, 'ogape_menu_last_selection', true );
+    }
+
+    if ( ! is_array( $selected ) ) {
+        return array();
+    }
+
+    return array_values( array_unique( array_filter( array_map( 'sanitize_key', $selected ) ) ) );
+}
+
+function ogape_get_account_selected_menu_recipes( $user_id, $week_key = '', $limit = 0 ) {
+    $recipes = ogape_get_current_menu_recipes();
+    if ( ! $recipes ) {
+        return array();
+    }
+
+    $limit        = absint( $limit );
+    $recipe_index = array();
+    foreach ( $recipes as $recipe ) {
+        if ( empty( $recipe['id'] ) ) {
+            continue;
+        }
+        $recipe_index[ $recipe['id'] ] = $recipe;
+    }
+
+    $selected_ids = ogape_get_user_selected_menu_recipe_ids( $user_id, $week_key );
+    $selected     = array();
+    $selected_map = array();
+
+    foreach ( $selected_ids as $selected_id ) {
+        if ( empty( $recipe_index[ $selected_id ] ) ) {
+            continue;
+        }
+
+        $selected[]               = $recipe_index[ $selected_id ];
+        $selected_map[ $selected_id ] = true;
+    }
+
+    if ( ! $selected ) {
+        $selected = $recipes;
+        foreach ( $selected as $recipe ) {
+            if ( ! empty( $recipe['id'] ) ) {
+                $selected_map[ $recipe['id'] ] = true;
+            }
+        }
+    }
+
+    if ( $limit && count( $selected ) < $limit ) {
+        foreach ( $recipes as $recipe ) {
+            $recipe_id = $recipe['id'] ?? '';
+            if ( ! $recipe_id || isset( $selected_map[ $recipe_id ] ) ) {
+                continue;
+            }
+
+            $selected[] = $recipe;
+            $selected_map[ $recipe_id ] = true;
+
+            if ( count( $selected ) >= $limit ) {
+                break;
+            }
+        }
+    }
+
+    return $limit ? array_slice( $selected, 0, $limit ) : $selected;
+}
+
 // ── ADMIN PAGE: CLIENTES ──────────────────────────────────────────────────────
 
 function ogape_ops_clientes_page() {

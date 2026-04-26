@@ -124,6 +124,19 @@ $notif_whatsapp    = $demo_context['notif_whatsapp'] ?? true;
 $notif_cutoff      = $demo_context['notif_cutoff'] ?? true;
 $notif_promo       = $demo_context['notif_promo'] ?? false;
 
+// Selected recipes for the current delivery week.
+$current_week_key = '';
+if ( $caja_ctx && ! empty( $caja_ctx['delivery_dt'] ) && $caja_ctx['delivery_dt'] instanceof DateTimeImmutable ) {
+    $current_week_key = $caja_ctx['delivery_dt']->format( 'Ymd' );
+} elseif ( isset( $demo_schedule['delivery'] ) && $demo_schedule['delivery'] instanceof DateTimeImmutable ) {
+    $current_week_key = $demo_schedule['delivery']->format( 'Ymd' );
+}
+
+$selected_recipe_limit = max( 1, (int) $demo_recipes );
+$selected_recipes      = function_exists( 'ogape_get_account_selected_menu_recipes' )
+    ? ogape_get_account_selected_menu_recipes( get_current_user_id(), $current_week_key, $selected_recipe_limit )
+    : array();
+
 // Post-flow messages
 $demo_message = '';
 if ( isset( $_GET['demo'] ) ) {
@@ -296,151 +309,63 @@ if ( isset( $_GET['setup'] ) ) {
 
         <!-- THIS WEEK'S RECIPES -->
         <div>
-          <div class="section-label"><span class="dot"></span>Recetas de esta semana</div>
+          <div class="section-label"><span class="dot"></span>Recetas elegidas de esta semana</div>
           <div class="recipes-grid">
+            <?php foreach ( $selected_recipes as $recipe ) : ?>
+              <?php
+              $recipe_tags = ! empty( $recipe['tags'] ) && is_array( $recipe['tags'] ) ? $recipe['tags'] : array();
+              $badge_label = '';
+              $tag_label   = '';
 
-            <!-- Recipe 1 -->
-            <div class="recipe-card">
-              <div class="recipe-img">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <linearGradient id="r1bg" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stop-color="#B5E8D0"/>
-                      <stop offset="100%" stop-color="#7EC8A0"/>
-                    </linearGradient>
-                    <linearGradient id="r1plate" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stop-color="#fff" stop-opacity=".95"/>
-                      <stop offset="100%" stop-color="#f0f0ee"/>
-                    </linearGradient>
-                  </defs>
-                  <rect width="400" height="300" fill="url(#r1bg)"/>
-                  <!-- table surface -->
-                  <ellipse cx="200" cy="260" rx="220" ry="40" fill="rgba(0,0,0,.1)"/>
-                  <!-- plate -->
-                  <ellipse cx="200" cy="185" rx="115" ry="22" fill="rgba(0,0,0,.15)"/>
-                  <ellipse cx="200" cy="168" rx="115" ry="70" fill="url(#r1plate)"/>
-                  <ellipse cx="200" cy="158" rx="88" ry="52" fill="#f5f0e8"/>
-                  <!-- fish shape -->
-                  <path d="M145 155 Q175 130 215 138 Q245 144 255 162 Q245 178 215 182 Q175 186 145 165 Z" fill="#F4A85A" opacity=".95"/>
-                  <path d="M248 160 Q268 148 280 152 Q268 162 248 162 Z" fill="#F4A85A" opacity=".85"/>
-                  <!-- grill marks -->
-                  <path d="M170 148 L180 170" stroke="rgba(139,69,19,.4)" stroke-width="2.5" stroke-linecap="round"/>
-                  <path d="M188 143 L198 168" stroke="rgba(139,69,19,.4)" stroke-width="2.5" stroke-linecap="round"/>
-                  <path d="M208 142 L216 165" stroke="rgba(139,69,19,.4)" stroke-width="2.5" stroke-linecap="round"/>
-                  <!-- maracuya sauce -->
-                  <ellipse cx="195" cy="175" rx="55" ry="8" fill="rgba(240,177,65,.45)"/>
-                  <!-- herb dots -->
-                  <circle cx="168" cy="162" r="4" fill="#5BA85A" opacity=".85"/>
-                  <circle cx="235" cy="155" r="3" fill="#5BA85A" opacity=".85"/>
-                  <circle cx="220" cy="170" r="3.5" fill="#5BA85A" opacity=".85"/>
-                </svg>
-                <span class="recipe-badge">Plato estrella</span>
-                <button class="recipe-heart" aria-label="Guardar receta">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-              </div>
-              <div class="recipe-body">
-                <div class="name">Surubí al Maracuyá</div>
-                <div class="meta">
-                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>30 min</span>
-                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>2 porciones</span>
+              if ( ! empty( $recipe['isHero'] ) ) {
+                  $badge_label = 'Plato estrella';
+              } elseif ( ! empty( $recipe_tags[0]['label'] ) ) {
+                  $badge_label = $recipe_tags[0]['label'];
+              } elseif ( ! empty( $recipe['time'] ) ) {
+                  $badge_label = $recipe['time'];
+              }
+
+              if ( ! empty( $recipe['isHero'] ) ) {
+                  foreach ( $recipe_tags as $recipe_tag ) {
+                      if ( empty( $recipe_tag['label'] ) || 'hero' === ( $recipe_tag['type'] ?? '' ) ) {
+                          continue;
+                      }
+                      $tag_label = $recipe_tag['label'];
+                      break;
+                  }
+              } elseif ( ! empty( $recipe_tags[1]['label'] ) ) {
+                  $tag_label = $recipe_tags[1]['label'];
+              } elseif ( ! empty( $recipe_tags[0]['label'] ) && $recipe_tags[0]['label'] !== $badge_label ) {
+                  $tag_label = $recipe_tags[0]['label'];
+              } elseif ( ! empty( $recipe['difficulty'] ) ) {
+                  $tag_label = $recipe['difficulty'];
+              }
+
+              $recipe_name = $recipe['name'] ?? '';
+              $photo_grad  = $recipe['photoGrad'] ?? 'linear-gradient(145deg,#d8dfe8 0%,#a6b4c6 100%)';
+              ?>
+              <article class="recipe-card">
+                <div class="recipe-img recipe-img--placeholder" style="background: <?php echo esc_attr( $photo_grad ); ?>">
+                  <?php if ( $badge_label ) : ?>
+                    <span class="recipe-badge"><?php echo esc_html( $badge_label ); ?></span>
+                  <?php endif; ?>
+                  <button class="recipe-heart" type="button" aria-label="<?php echo esc_attr( sprintf( 'Guardar receta %s', $recipe_name ) ); ?>">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  </button>
+                  <span class="recipe-photo-note">Foto próximamente</span>
                 </div>
-                <span class="recipe-tag">Del Paraná</span>
-              </div>
-            </div>
-
-            <!-- Recipe 2 -->
-            <div class="recipe-card">
-              <div class="recipe-img">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <linearGradient id="r2bg" x1="0" y1="1" x2="1" y2="0">
-                      <stop offset="0%" stop-color="#F5E6C8"/>
-                      <stop offset="100%" stop-color="#EDD5A0"/>
-                    </linearGradient>
-                  </defs>
-                  <rect width="400" height="300" fill="url(#r2bg)"/>
-                  <!-- Bowl shadow -->
-                  <ellipse cx="200" cy="230" rx="130" ry="22" fill="rgba(0,0,0,.12)"/>
-                  <!-- Bowl body -->
-                  <path d="M75 160 Q80 240 200 245 Q320 240 325 160 Z" fill="#fff" opacity=".92"/>
-                  <path d="M75 160 Q76 162 200 168 Q324 162 325 160 Z" fill="rgba(0,0,0,.06)"/>
-                  <!-- Curry base -->
-                  <ellipse cx="200" cy="200" rx="110" ry="45" fill="#E8943A" opacity=".85"/>
-                  <!-- coconut swirl -->
-                  <path d="M160 195 Q185 180 200 190 Q220 200 240 185" stroke="rgba(255,255,255,.65)" stroke-width="3" fill="none" stroke-linecap="round"/>
-                  <!-- vegs -->
-                  <circle cx="175" cy="185" r="12" fill="#C62828" opacity=".8"/>
-                  <circle cx="222" cy="178" r="9" fill="#5BA85A" opacity=".9"/>
-                  <circle cx="195" cy="208" r="8" fill="#F9A825" opacity=".85"/>
-                  <!-- herbs on top -->
-                  <ellipse cx="200" cy="175" rx="14" ry="6" fill="#4CAF50" opacity=".75" transform="rotate(-15 200 175)"/>
-                  <!-- bowl rim highlight -->
-                  <path d="M90 162 Q200 155 310 162" stroke="rgba(255,255,255,.8)" stroke-width="5" fill="none" stroke-linecap="round"/>
-                </svg>
-                <span class="recipe-badge">Vegetariano</span>
-                <button class="recipe-heart" aria-label="Guardar receta">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-              </div>
-              <div class="recipe-body">
-                <div class="name">Curry de Coco y Mandioca</div>
-                <div class="meta">
-                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>25 min</span>
-                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>2 porciones</span>
+                <div class="recipe-body">
+                  <div class="name"><?php echo esc_html( $recipe_name ); ?></div>
+                  <div class="meta">
+                    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><?php echo esc_html( $recipe['time'] ?? '35 min' ); ?></span>
+                    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><?php echo esc_html( $demo_people . ' porciones' ); ?></span>
+                  </div>
+                  <?php if ( $tag_label ) : ?>
+                    <span class="recipe-tag"><?php echo esc_html( $tag_label ); ?></span>
+                  <?php endif; ?>
                 </div>
-                <span class="recipe-tag">Huerta local</span>
-              </div>
-            </div>
-
-            <!-- Recipe 3 -->
-            <div class="recipe-card">
-              <div class="recipe-img">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <linearGradient id="r3bg" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stop-color="#D7C5A8"/>
-                      <stop offset="100%" stop-color="#C0A882"/>
-                    </linearGradient>
-                  </defs>
-                  <rect width="400" height="300" fill="url(#r3bg)"/>
-                  <!-- pan shadow -->
-                  <ellipse cx="200" cy="240" rx="140" ry="20" fill="rgba(0,0,0,.18)"/>
-                  <!-- pan -->
-                  <ellipse cx="200" cy="185" rx="135" ry="60" fill="#333" opacity=".88"/>
-                  <ellipse cx="200" cy="178" rx="120" ry="52" fill="#444"/>
-                  <!-- steak -->
-                  <ellipse cx="200" cy="172" rx="80" ry="38" fill="#8B2500" opacity=".9"/>
-                  <ellipse cx="200" cy="168" rx="70" ry="30" fill="#A33000" opacity=".95"/>
-                  <!-- sear marks -->
-                  <path d="M158 162 L178 158" stroke="rgba(50,20,5,.6)" stroke-width="5" stroke-linecap="round"/>
-                  <path d="M162 172 L182 168" stroke="rgba(50,20,5,.6)" stroke-width="5" stroke-linecap="round"/>
-                  <path d="M204 158 L224 154" stroke="rgba(50,20,5,.6)" stroke-width="5" stroke-linecap="round"/>
-                  <path d="M208 168 L228 164" stroke="rgba(50,20,5,.6)" stroke-width="5" stroke-linecap="round"/>
-                  <!-- herbs -->
-                  <path d="M230 152 Q240 140 250 148 Q240 152 230 152Z" fill="#5BA85A" opacity=".9"/>
-                  <path d="M236 162 Q248 155 256 162 Q248 166 236 162Z" fill="#5BA85A" opacity=".85"/>
-                  <!-- garlic dots -->
-                  <circle cx="165" cy="165" r="5" fill="#F5E6A0" opacity=".9"/>
-                  <circle cx="245" cy="178" r="4" fill="#F5E6A0" opacity=".85"/>
-                  <!-- handle -->
-                  <rect x="315" y="178" width="55" height="14" rx="7" fill="#222" opacity=".7"/>
-                </svg>
-                <span class="recipe-badge">25 min</span>
-                <button class="recipe-heart" aria-label="Guardar receta">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-              </div>
-              <div class="recipe-body">
-                <div class="name">Bife Koygua con Alioli de Ajo Negro</div>
-                <div class="meta">
-                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>25 min</span>
-                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>2 porciones</span>
-                </div>
-                <span class="recipe-tag">Clásico py</span>
-              </div>
-            </div>
-
+              </article>
+            <?php endforeach; ?>
           </div>
         </div>
 
