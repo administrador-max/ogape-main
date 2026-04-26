@@ -33,6 +33,25 @@
     });
   }
 
+  // ── SHARED ACCOUNT DROPDOWN ────────────────────────────
+  const siteAvatarBtn = document.getElementById('siteAvatarBtn');
+  const siteUserMenu = document.getElementById('siteUserMenu');
+
+  if (siteAvatarBtn && siteUserMenu) {
+    siteAvatarBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const isOpen = siteUserMenu.classList.toggle('is-open');
+      siteAvatarBtn.classList.toggle('is-open', isOpen);
+      siteAvatarBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', function () {
+      siteUserMenu.classList.remove('is-open');
+      siteAvatarBtn.classList.remove('is-open');
+      siteAvatarBtn.setAttribute('aria-expanded', 'false');
+    });
+  }
+
   // ── SMOOTH SCROLL for anchor links ────────────────────────
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
     anchor.addEventListener('click', function (e) {

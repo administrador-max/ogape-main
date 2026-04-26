@@ -24,6 +24,7 @@ $sustainability_url = home_url( '/sostenibilidad/' );
 $alliances_url      = home_url( '/alianzas/' );
 $coverage_url       = home_url( '/cobertura/' );
 $login_url          = home_url( '/login/' );
+$account_url        = home_url( '/account/' );
 $privacy_url        = home_url( '/privacidad/' );
 $terms_url          = home_url( '/terminos/' );
 $contact_url        = home_url( '/contacto/' );
@@ -32,6 +33,16 @@ $wa_url             = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_wh
 $wa_display         = function_exists( 'ogape_get_whatsapp_display' ) ? ogape_get_whatsapp_display() : '';
 $contact_email      = ogape_get_contact_email();
 $orders_email       = 'pedidos@ogape.com.py';
+$is_logged_in       = is_user_logged_in();
+$logout_url         = wp_logout_url( $menu_url );
+
+$menu_account_context = $is_logged_in && function_exists( 'ogape_get_demo_account_context' )
+    ? ogape_get_demo_account_context()
+    : array();
+$menu_first_name = $menu_account_context['first_name'] ?? '';
+$menu_name       = $menu_account_context['name'] ?? '';
+$menu_email      = $menu_account_context['email'] ?? '';
+$menu_initials   = $menu_account_context['initials'] ?? '';
 
 $arrow_svg = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 8h8m-3-3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 $time_svg  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 13c0-3.5 3-7 7-7s7 3.5 7 7"/></svg>';
@@ -248,8 +259,38 @@ $filters = array(
                 </ul>
             </nav>
             <div class="nav__right">
-                <a href="<?php echo esc_url( $login_url ); ?>" class="nav__signin">Iniciar sesión</a>
-                <a href="<?php echo esc_url( $waitlist_url ); ?>" class="nav__cta">Unirme</a>
+                <?php if ( $is_logged_in ) : ?>
+                    <div class="nav__user">
+                        <button class="nav__notif" aria-label="Notificaciones">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                            <span class="badge"></span>
+                        </button>
+                        <button class="avatar-btn" id="menuAvatarBtn" aria-haspopup="true" aria-expanded="false">
+                            <span class="avatar"><?php echo esc_html( $menu_initials ); ?></span>
+                            <span class="name"><?php echo esc_html( $menu_first_name ); ?></span>
+                            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+                        </button>
+
+                        <div class="user-menu" id="menuUserMenu" role="menu">
+                            <div class="user-menu__head">
+                                <div class="uname"><?php echo esc_html( $menu_name ); ?></div>
+                                <div class="email"><?php echo esc_html( $menu_email ); ?></div>
+                            </div>
+                            <a href="<?php echo esc_url( $account_url ); ?>" class="umenu-item" role="menuitem">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                                Mi caja
+                            </a>
+                            <div class="umenu-sep"></div>
+                            <a href="<?php echo esc_url( $logout_url ); ?>" class="umenu-item is-danger" role="menuitem">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                Cerrar sesión
+                            </a>
+                        </div>
+                    </div>
+                <?php else : ?>
+                    <a href="<?php echo esc_url( $login_url ); ?>" class="nav__signin">Iniciar sesión</a>
+                    <a href="<?php echo esc_url( $waitlist_url ); ?>" class="nav__cta">Unirme</a>
+                <?php endif; ?>
             </div>
         </div>
     </header>
@@ -506,6 +547,23 @@ $filters = array(
 (function () {
   var root = document.querySelector('.menu-design');
   if (!root) return;
+
+  var avatarBtn = root.querySelector('#menuAvatarBtn');
+  var userMenu = root.querySelector('#menuUserMenu');
+  if (avatarBtn && userMenu) {
+    avatarBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = userMenu.classList.toggle('is-open');
+      avatarBtn.classList.toggle('is-open', open);
+      avatarBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', function () {
+      userMenu.classList.remove('is-open');
+      avatarBtn.classList.remove('is-open');
+      avatarBtn.setAttribute('aria-expanded', 'false');
+    });
+  }
 
   // FILTER CHIPS
   var chips  = root.querySelectorAll('.chip[data-filter]');
