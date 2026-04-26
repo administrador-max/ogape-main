@@ -999,6 +999,80 @@ function ogape_handle_demo_account_flow() {
 }
 add_action( 'template_redirect', 'ogape_handle_demo_account_flow', 1 );
 
+// ── REGISTRATION AJAX HANDLER (nopriv) ───────────────────────────────────────
+
+function ogape_ajax_register() {
+    if ( ! isset( $_POST['ogape_demo_nonce'] ) ||
+         ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ogape_demo_nonce'] ) ), 'ogape_demo_account_flow' )
+    ) {
+        wp_send_json_error( array( 'code' => 'bad_nonce', 'message' => 'Sesión expirada. Recargá la página e intentá de nuevo.' ), 403 );
+    }
+
+    $first_name = sanitize_text_field( wp_unslash( $_POST['first_name'] ?? '' ) );
+    $last_name  = sanitize_text_field( wp_unslash( $_POST['last_name'] ?? '' ) );
+    $email      = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
+    $password   = (string) wp_unslash( $_POST['password'] ?? '' );
+
+    if ( '' === $first_name || '' === $last_name || '' === $email || strlen( $password ) < 8 ) {
+        wp_send_json_error( array( 'code' => 'missing', 'message' => 'Completá todos los campos obligatorios.' ) );
+    }
+
+    if ( email_exists( $email ) ) {
+        wp_send_json_error( array( 'code' => 'email_exists', 'message' => 'Ya existe una cuenta con ese email. ¿Querés iniciar sesión?' ) );
+    }
+
+    $people  = isset( $_POST['people'] ) ? (string) absint( wp_unslash( $_POST['people'] ) ) : '2';
+    $recipes = isset( $_POST['recipes'] ) ? (string) absint( wp_unslash( $_POST['recipes'] ) ) : '3';
+    $plan    = ogape_demo_plan_from_state( array( 'people' => $people, 'recipes' => $recipes ) );
+
+    $new_state = array(
+        'name'                  => trim( $first_name . ' ' . $last_name ),
+        'email'                 => $email,
+        'phone'                 => sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) ),
+        'people'                => $plan['people'],
+        'recipes'               => $plan['recipes'],
+        'plan'                  => $plan['label'],
+        'price'                 => $plan['price'],
+        'zone_key'              => sanitize_key( wp_unslash( $_POST['zone_key'] ?? '' ) ),
+        'zone'                  => sanitize_text_field( wp_unslash( $_POST['zone'] ?? '' ) ),
+        'address'               => sanitize_text_field( wp_unslash( $_POST['address'] ?? '' ) ),
+        'apt'                   => sanitize_text_field( wp_unslash( $_POST['apt'] ?? '' ) ),
+        'delivery_window'       => sanitize_key( wp_unslash( $_POST['delivery_window'] ?? 'pm' ) ),
+        'delivery_window_label' => sanitize_text_field( wp_unslash( $_POST['delivery_window_label'] ?? '' ) ),
+        'notes'                 => sanitize_text_field( wp_unslash( $_POST['notes'] ?? '' ) ),
+        'preferences'           => ogape_sanitize_demo_preferences( $_POST['preferences'] ?? array() ),
+        'preference'            => '',
+        'allergies'             => sanitize_text_field( wp_unslash( $_POST['allergies'] ?? '' ) ),
+        'comms'                 => isset( $_POST['comms'] ),
+        'setup_complete'        => false,
+        'registered_at'         => wp_date( DATE_ATOM, null, wp_timezone() ),
+    );
+    $new_state['preference'] = $new_state['preferences'] ? implode( ' · ', $new_state['preferences'] ) : '';
+
+    $user_id = wp_create_user( $email, $password, $email );
+    if ( is_wp_error( $user_id ) ) {
+        wp_send_json_error( array( 'code' => 'create_failed', 'message' => 'No se pudo crear la cuenta. ' . $user_id->get_error_message() ) );
+    }
+
+    wp_update_user( array(
+        'ID'           => $user_id,
+        'first_name'   => $first_name,
+        'last_name'    => $last_name,
+        'display_name' => $first_name,
+    ) );
+    ogape_save_customer_meta( $user_id, $new_state );
+    ogape_set_demo_account_state( $new_state );
+    wp_set_auth_cookie( $user_id, true );
+
+    do_action( 'ogape_user_registered', $user_id );
+
+    wp_send_json_success( array(
+        'redirect' => add_query_arg( 'source', 'register', home_url( '/elegir-menu/' ) ),
+        'name'     => $first_name,
+    ) );
+}
+add_action( 'wp_ajax_nopriv_ogape_register', 'ogape_ajax_register' );
+
 // ── ACCOUNT AJAX HANDLERS ────────────────────────────────────────────────────
 
 function ogape_ajax_update_profile() {

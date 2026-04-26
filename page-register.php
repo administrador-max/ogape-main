@@ -394,6 +394,8 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
   var root = document.querySelector('.register-design');
   if (!root) return;
 
+  var ajaxUrl = '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ); ?>';
+
 	  var $  = function (s) { return root.querySelector(s); };
 	  var $$ = function (s) { return Array.prototype.slice.call(root.querySelectorAll(s)); };
 	  var form = $('#register-signup');
@@ -510,9 +512,30 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
 	    if (state.step < state.max) goStep(state.step + 1);
 	    else {
 	      updateHiddenLabels();
-	      $('#register-nextBtn').disabled = true;
-	      $('#register-nextBtn').textContent = 'Guardando...';
-	      form.submit();
+	      var btn = $('#register-nextBtn');
+	      btn.disabled = true;
+	      btn.textContent = 'Guardando...';
+
+	      var data = new FormData(form);
+	      data.append('action', 'ogape_register');
+
+	      fetch(ajaxUrl, { method: 'POST', body: data, credentials: 'same-origin' })
+	        .then(function (r) { return r.json(); })
+	        .then(function (res) {
+	          if (res.success) {
+	            window.location.href = res.data.redirect;
+	          } else {
+	            var msg = (res.data && res.data.message) ? res.data.message : 'Error al crear la cuenta. Intentá de nuevo.';
+	            showValidation(msg);
+	            btn.disabled = false;
+	            btn.innerHTML = 'Crear mi cuenta <svg viewBox="0 0 16 16" fill="none"><path d="M4 8h8m-3-3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+	          }
+	        })
+	        .catch(function () {
+	          showValidation('Error de conexión. Verificá tu internet e intentá de nuevo.');
+	          btn.disabled = false;
+	          btn.innerHTML = 'Crear mi cuenta <svg viewBox="0 0 16 16" fill="none"><path d="M4 8h8m-3-3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+	        });
 	    }
 	  });
   $('#register-backBtn').addEventListener('click', function () { goStep(Math.max(1, state.step - 1)); });
