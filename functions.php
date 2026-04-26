@@ -1252,11 +1252,35 @@ function ogape_ajax_save_menu_selection() {
     $week_key    = sanitize_key( wp_unslash( $_POST['week_key'] ?? '' ) );
     $raw         = isset( $_POST['selected'] ) && is_array( $_POST['selected'] ) ? $_POST['selected'] : array();
     $selected    = array_values( array_map( 'sanitize_key', $raw ) );
+    $snapshot    = array();
+
+    if ( function_exists( 'ogape_get_current_menu_recipes' ) ) {
+        $current_menu = ogape_get_current_menu_recipes();
+        $recipe_index = array();
+        foreach ( $current_menu as $recipe ) {
+            $recipe_id = sanitize_key( $recipe['id'] ?? '' );
+            if ( '' === $recipe_id ) {
+                continue;
+            }
+
+            $recipe_index[ $recipe_id ] = function_exists( 'ogape_normalize_menu_recipe_item' )
+                ? ogape_normalize_menu_recipe_item( $recipe )
+                : $recipe;
+        }
+
+        foreach ( $selected as $selected_id ) {
+            if ( ! empty( $recipe_index[ $selected_id ] ) ) {
+                $snapshot[] = $recipe_index[ $selected_id ];
+            }
+        }
+    }
 
     if ( $week_key ) {
         update_user_meta( $user_id, 'ogape_menu_selection_' . $week_key, $selected );
+        update_user_meta( $user_id, 'ogape_menu_selection_snapshot_' . $week_key, $snapshot );
     }
     update_user_meta( $user_id, 'ogape_menu_last_selection', $selected );
+    update_user_meta( $user_id, 'ogape_menu_last_selection_snapshot', $snapshot );
     update_user_meta( $user_id, 'ogape_menu_last_week', $week_key );
 
     wp_send_json_success( array( 'count' => count( $selected ) ) );

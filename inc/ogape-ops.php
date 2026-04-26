@@ -806,6 +806,29 @@ function ogape_map_recipe_post_to_menu_item( $recipe_post ) {
     );
 }
 
+function ogape_normalize_menu_recipe_item( $recipe ) {
+    if ( ! is_array( $recipe ) ) {
+        return null;
+    }
+
+    $id = sanitize_key( $recipe['id'] ?? '' );
+    if ( '' === $id ) {
+        return null;
+    }
+
+    return array(
+        'id'         => $id,
+        'name'       => sanitize_text_field( $recipe['name'] ?? '' ),
+        'desc'       => sanitize_textarea_field( $recipe['desc'] ?? '' ),
+        'tags'       => ogape_normalize_recipe_tags( $recipe['tags'] ?? array() ),
+        'time'       => sanitize_text_field( $recipe['time'] ?? '' ),
+        'difficulty' => sanitize_text_field( $recipe['difficulty'] ?? '' ),
+        'allergens'  => sanitize_text_field( $recipe['allergens'] ?? '' ),
+        'isHero'     => ! empty( $recipe['isHero'] ),
+        'photoGrad'  => sanitize_text_field( $recipe['photoGrad'] ?? '' ),
+    );
+}
+
 function ogape_get_current_menu_recipes() {
     $fallback = ogape_default_menu_recipes();
     $caja_obj = ogape_get_current_caja();
@@ -860,7 +883,42 @@ function ogape_get_user_selected_menu_recipe_ids( $user_id, $week_key = '' ) {
     return array_values( array_unique( array_filter( array_map( 'sanitize_key', $selected ) ) ) );
 }
 
+function ogape_get_user_selected_menu_recipe_snapshot( $user_id, $week_key = '' ) {
+    $user_id = absint( $user_id );
+    if ( ! $user_id ) {
+        return array();
+    }
+
+    $snapshot = array();
+    if ( $week_key ) {
+        $snapshot = get_user_meta( $user_id, 'ogape_menu_selection_snapshot_' . sanitize_key( $week_key ), true );
+    }
+
+    if ( empty( $snapshot ) ) {
+        $snapshot = get_user_meta( $user_id, 'ogape_menu_last_selection_snapshot', true );
+    }
+
+    if ( ! is_array( $snapshot ) ) {
+        return array();
+    }
+
+    $normalized = array();
+    foreach ( $snapshot as $recipe ) {
+        $item = ogape_normalize_menu_recipe_item( $recipe );
+        if ( $item ) {
+            $normalized[] = $item;
+        }
+    }
+
+    return $normalized;
+}
+
 function ogape_get_account_selected_menu_recipes( $user_id, $week_key = '', $limit = 0 ) {
+    $snapshot = ogape_get_user_selected_menu_recipe_snapshot( $user_id, $week_key );
+    if ( $snapshot ) {
+        return $limit ? array_slice( $snapshot, 0, absint( $limit ) ) : $snapshot;
+    }
+
     $recipes = ogape_get_current_menu_recipes();
     if ( ! $recipes ) {
         return array();
@@ -868,7 +926,8 @@ function ogape_get_account_selected_menu_recipes( $user_id, $week_key = '', $lim
 
     $limit        = absint( $limit );
     $recipe_index = array();
-    foreach ( $recipes as $recipe ) {
+    $lookup_recipes = array_merge( $recipes, ogape_default_menu_recipes() );
+    foreach ( $lookup_recipes as $recipe ) {
         if ( empty( $recipe['id'] ) ) {
             continue;
         }
