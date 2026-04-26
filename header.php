@@ -18,7 +18,7 @@
     $join_url          = is_front_page() ? '#waitlist-form' : ogape_get_waitlist_url();
     $login_url         = home_url( '/login/' );
     $account_url       = home_url( '/account/' );
-    $logout_url        = function_exists( 'ogape_get_logout_url' ) ? ogape_get_logout_url( $login_url ) : $login_url;
+    $logout_url        = function_exists( 'ogape_get_logout_url' ) ? ogape_get_logout_url() : home_url( '/future-site/' );
     $future_site_url   = home_url( '/future-site/' );
     $official_nav_mode = is_page( 'future-site' ) || is_page( 'login' ) || is_page( 'register' ) || is_page( 'forgot-password' ) || is_page( 'elegir-menu' ) || is_page( 'account' );
     $is_logged_in      = is_user_logged_in();

@@ -51,7 +51,7 @@ function ogape_get_waitlist_url() {
  * @return string
  */
 function ogape_get_logout_url( $redirect_to = '' ) {
-    $fallback    = home_url( '/login/' );
+    $fallback    = home_url( '/future-site/' );
     $redirect_to = $redirect_to ? wp_validate_redirect( $redirect_to, $fallback ) : $fallback;
 
     return add_query_arg(
@@ -594,7 +594,7 @@ function ogape_handle_custom_logout() {
         return;
     }
 
-    $fallback    = home_url( '/login/' );
+    $fallback    = home_url( '/future-site/' );
     $redirect_to = isset( $_GET['redirect_to'] )
         ? sanitize_text_field( wp_unslash( $_GET['redirect_to'] ) )
         : $fallback;
@@ -623,7 +623,7 @@ function ogape_bridge_wp_login_logout() {
         return;
     }
 
-    $fallback = home_url( '/login/' );
+    $fallback = home_url( '/future-site/' );
     $action   = isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
 
     if ( 'logout' === $action ) {

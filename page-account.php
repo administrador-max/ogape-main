@@ -1157,7 +1157,7 @@ if ( isset( $_GET['setup'] ) ) {
 (function () {
   var ajaxUrl = (typeof ogapeTheme !== 'undefined') ? ogapeTheme.ajaxUrl : '/wp-admin/admin-ajax.php';
   var nonce   = '<?php echo esc_js( wp_create_nonce( 'ogape_account_actions' ) ); ?>';
-  var logoutUrl = '<?php echo esc_js( function_exists( 'ogape_get_logout_url' ) ? ogape_get_logout_url( home_url( '/login/' ) ) : home_url( '/login/' ) ); ?>';
+  var logoutUrl = '<?php echo esc_js( function_exists( 'ogape_get_logout_url' ) ? ogape_get_logout_url() : home_url( '/future-site/' ) ); ?>';
 
   function post(action, data, onSuccess, onError) {
     data.action = action;
