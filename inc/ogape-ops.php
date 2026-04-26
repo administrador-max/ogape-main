@@ -204,6 +204,8 @@ function ogape_ops_admin_menu() {
         'ogape-recetas',
         'ogape_ops_recetas_page'
     );
+    // Hidden detail page — not shown in nav, accessible via ?page=ogape-cliente&uid=X
+    add_submenu_page( null, 'Editar cliente', 'Editar cliente', 'manage_options', 'ogape-cliente', 'ogape_ops_cliente_page' );
 }
 add_action( 'admin_menu', 'ogape_ops_admin_menu' );
 
@@ -322,6 +324,50 @@ function ogape_ops_handle_create_caja() {
 }
 add_action( 'admin_post_ogape_create_caja', 'ogape_ops_handle_create_caja' );
 
+function ogape_ops_handle_edit_caja() {
+    check_admin_referer( 'ogape_edit_caja' );
+    if ( ! current_user_can( 'manage_options' ) ) wp_die( 'No autorizado.' );
+
+    $caja_id       = (int) ( $_POST['caja_id'] ?? 0 );
+    $delivery_date = sanitize_text_field( wp_unslash( $_POST['delivery_date'] ?? '' ) );
+    $week_number   = absint( $_POST['week_number'] ?? 0 );
+    $global_status = sanitize_key( $_POST['global_status'] ?? '' );
+
+    if ( ! $caja_id || ! $delivery_date || ! $week_number ) {
+        wp_safe_redirect( admin_url( 'admin.php?page=ogape-ops&error=missing' ) );
+        exit;
+    }
+
+    $dt = DateTimeImmutable::createFromFormat( 'Y-m-d', $delivery_date, wp_timezone() );
+    if ( ! $dt ) {
+        wp_safe_redirect( admin_url( 'admin.php?page=ogape-ops&error=date' ) );
+        exit;
+    }
+
+    $label      = function_exists( 'ogape_demo_format_date_label' ) ? ogape_demo_format_date_label( $dt, true ) : $delivery_date;
+    $post_title = 'Caja N.° ' . str_pad( $week_number, 2, '0', STR_PAD_LEFT ) . ' · ' . $label;
+
+    wp_update_post( array(
+        'ID'         => $caja_id,
+        'post_title' => wp_strip_all_tags( $post_title ),
+    ) );
+    update_post_meta( $caja_id, '_ogape_week_number', $week_number );
+    update_post_meta( $caja_id, '_ogape_delivery_date', $delivery_date );
+
+    $valid_statuses = array_keys( ogape_caja_statuses() );
+    if ( $global_status && in_array( $global_status, $valid_statuses, true ) ) {
+        $old_status = get_post_meta( $caja_id, '_ogape_global_status', true );
+        update_post_meta( $caja_id, '_ogape_global_status', $global_status );
+        if ( $old_status !== $global_status ) {
+            do_action( 'ogape_caja_status_changed', $caja_id, $global_status, $old_status );
+        }
+    }
+
+    wp_safe_redirect( admin_url( 'admin.php?page=ogape-ops&updated=caja' ) );
+    exit;
+}
+add_action( 'admin_post_ogape_edit_caja', 'ogape_ops_handle_edit_caja' );
+
 // ── ADMIN PAGE: SEMANA ACTUAL ─────────────────────────────────────────────────
 
 function ogape_ops_semana_page() {
@@ -333,6 +379,37 @@ function ogape_ops_semana_page() {
     $updated  = sanitize_key( $_GET['updated'] ?? '' );
     $err      = sanitize_key( $_GET['error'] ?? '' );
     $created  = (int) ( $_GET['created'] ?? 0 );
+
+    // KPI data
+    $kpi_users = get_users( array(
+        'meta_query' => array( array( 'key' => 'ogape_registered_at', 'compare' => 'EXISTS' ) ),
+        'fields'     => array( 'ID' ),
+        'number'     => -1,
+    ) );
+    $kpi_count   = count( $kpi_users );
+    $kpi_revenue = 0;
+    $kpi_zones   = array();
+    foreach ( $kpi_users as $ku ) {
+        $price = (int) get_user_meta( $ku->ID, 'ogape_price', true );
+        $kpi_revenue += $price ?: 285000;
+        $zk = get_user_meta( $ku->ID, 'ogape_zone_key', true );
+        if ( $zk ) $kpi_zones[ $zk ] = ( $kpi_zones[ $zk ] ?? 0 ) + 1;
+    }
+    $schedule    = function_exists( 'ogape_demo_schedule' ) ? ogape_demo_schedule() : array();
+    $cutoff_dt   = $schedule['cutoff'] ?? null;
+    $now         = new DateTimeImmutable( 'now', wp_timezone() );
+    $cutoff_open = $cutoff_dt instanceof DateTimeImmutable && $cutoff_dt > $now;
+    if ( $cutoff_open ) {
+        $diff             = $now->diff( $cutoff_dt );
+        $cutoff_remaining = $diff->days > 0 ? "{$diff->days}d {$diff->h}h" : "{$diff->h}h {$diff->i}m";
+    } else {
+        $cutoff_remaining = 'Cerrado';
+    }
+
+    // Edit-caja state
+    $edit_caja_id = isset( $_GET['edit_caja'] ) ? (int) $_GET['edit_caja'] : 0;
+    $edit_caja    = $edit_caja_id ? get_post( $edit_caja_id ) : null;
+    if ( $edit_caja && 'ogape_caja' !== $edit_caja->post_type ) $edit_caja = null;
 
     // Suggest values for "create next week" form.
     if ( $caja ) {
@@ -360,6 +437,34 @@ function ogape_ops_semana_page() {
             <div class="notice notice-error is-dismissible"><p>Error: <?php echo esc_html( $err ); ?>. Revisá los datos.</p></div>
         <?php endif; ?>
 
+        <!-- KPI bar -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0 24px">
+            <div style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:14px 18px">
+                <div style="font-size:11px;color:#50575e;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Clientes</div>
+                <div style="font-size:30px;font-weight:700;color:#1a1a1a;line-height:1"><?php echo $kpi_count; ?></div>
+            </div>
+            <div style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:14px 18px">
+                <div style="font-size:11px;color:#50575e;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Ingreso estimado / sem.</div>
+                <div style="font-size:20px;font-weight:700;color:#1a56db;line-height:1">Gs&nbsp;<?php echo number_format( $kpi_revenue, 0, ',', '.' ); ?></div>
+            </div>
+            <div style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:14px 18px">
+                <div style="font-size:11px;color:#50575e;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Cierre de pedidos</div>
+                <div style="font-size:20px;font-weight:700;line-height:1;color:<?php echo $cutoff_open ? '#155724' : '#721c24'; ?>"><?php echo esc_html( $cutoff_remaining ); ?></div>
+                <?php if ( ! empty( $schedule['cutoff_label'] ) ) : ?>
+                    <div style="font-size:11px;color:#888;margin-top:4px"><?php echo esc_html( $schedule['cutoff_label'] ); ?></div>
+                <?php endif; ?>
+            </div>
+            <div style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:14px 18px">
+                <div style="font-size:11px;color:#50575e;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Clientes por zona</div>
+                <?php foreach ( $zones as $zk => $zn ) : ?>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+                        <span style="color:#50575e"><?php echo esc_html( $zn ); ?></span>
+                        <strong><?php echo (int) ( $kpi_zones[ $zk ] ?? 0 ); ?></strong>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
         <?php if ( ! $caja ) : ?>
             <div class="notice notice-warning inline"><p><strong>No hay ninguna caja activa.</strong> Creá la primera semana en el formulario de abajo.</p></div>
         <?php else :
@@ -377,13 +482,14 @@ function ogape_ops_semana_page() {
             ?>
 
             <!-- Current caja summary -->
-            <div style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:20px 24px;margin:16px 0 0">
+            <div style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:20px 24px;margin:0 0 0">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
                     <div>
                         <h2 style="margin:0 0 4px;font-size:18px"><?php echo esc_html( $caja->post_title ); ?></h2>
                         <p style="margin:0;color:#50575e;font-size:13px">
                             Entrega: <strong><?php echo esc_html( $delivery_date ); ?></strong>
                             &nbsp;·&nbsp; Semana N.° <strong><?php echo (int) $week_number; ?></strong>
+                            &nbsp;·&nbsp; <a href="<?php echo esc_url( admin_url( 'admin.php?page=ogape-ops&edit_caja=' . $caja_id . '#edit-caja' ) ); ?>" style="font-size:12px">Editar datos</a>
                         </p>
                     </div>
                     <div style="display:flex;align-items:center;gap:10px">
@@ -549,6 +655,85 @@ function ogape_ops_semana_page() {
 
         <?php endif; ?>
 
+        <!-- Caja history -->
+        <?php
+        $all_cajas = get_posts( array(
+            'post_type'      => 'ogape_caja',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'orderby'        => 'meta_value',
+            'meta_key'       => '_ogape_delivery_date',
+            'order'          => 'DESC',
+        ) );
+        if ( $all_cajas ) :
+        ?>
+        <h2 style="margin-top:32px">Historial de cajas</h2>
+        <table class="widefat striped" style="margin-bottom:24px">
+            <thead><tr>
+                <th>Caja</th>
+                <th style="width:130px">Fecha entrega</th>
+                <th style="width:180px">Estado global</th>
+                <th style="width:80px">Acciones</th>
+            </tr></thead>
+            <tbody>
+            <?php foreach ( $all_cajas as $hc ) :
+                $h_status   = get_post_meta( $hc->ID, '_ogape_global_status', true ) ?: 'planning';
+                $h_date     = get_post_meta( $hc->ID, '_ogape_delivery_date', true );
+                $is_current = $caja && $hc->ID === $caja->ID;
+                ?>
+                <tr<?php echo $is_current ? ' style="background:#e8f0fe"' : ''; ?>>
+                    <td>
+                        <strong><?php echo esc_html( $hc->post_title ); ?></strong>
+                        <?php if ( $is_current ) : ?>
+                            <span style="display:inline-block;margin-left:6px;padding:1px 8px;background:#1a56db;color:#fff;border-radius:10px;font-size:10px;font-weight:600;vertical-align:middle">Activa</span>
+                        <?php endif; ?>
+                    </td>
+                    <td><?php echo esc_html( $h_date ); ?></td>
+                    <td style="font-size:12px"><?php echo esc_html( ogape_caja_status_label( $h_status ) ); ?></td>
+                    <td><a href="<?php echo esc_url( admin_url( 'admin.php?page=ogape-ops&edit_caja=' . $hc->ID . '#edit-caja' ) ); ?>" class="button button-small">Editar</a></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php endif; ?>
+
+        <!-- Edit caja form (shown when ?edit_caja=ID is in URL) -->
+        <?php if ( $edit_caja ) : ?>
+        <div id="edit-caja" style="background:#fff;border:2px solid #1a56db;border-radius:4px;padding:20px 24px;margin-bottom:24px">
+            <h2 style="margin:0 0 16px;color:#1a56db">Editando: <?php echo esc_html( $edit_caja->post_title ); ?></h2>
+            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+                <input type="hidden" name="action" value="ogape_edit_caja">
+                <input type="hidden" name="caja_id" value="<?php echo (int) $edit_caja_id; ?>">
+                <?php wp_nonce_field( 'ogape_edit_caja' ); ?>
+                <table class="form-table" role="presentation">
+                    <tr>
+                        <th><label for="edit_week_number">N.° de semana</label></th>
+                        <td><input type="number" id="edit_week_number" name="week_number" value="<?php echo (int) get_post_meta( $edit_caja_id, '_ogape_week_number', true ); ?>" min="1" max="999" class="small-text" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="edit_delivery_date">Fecha de entrega</label></th>
+                        <td><input type="date" id="edit_delivery_date" name="delivery_date" value="<?php echo esc_attr( get_post_meta( $edit_caja_id, '_ogape_delivery_date', true ) ); ?>" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="edit_global_status">Estado global</label></th>
+                        <td>
+                            <select id="edit_global_status" name="global_status">
+                                <?php foreach ( $statuses as $sk => $sl ) : ?>
+                                    <option value="<?php echo esc_attr( $sk ); ?>"<?php selected( get_post_meta( $edit_caja_id, '_ogape_global_status', true ), $sk ); ?>><?php echo esc_html( $sl ); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <p class="description">Podés retroceder o saltar estados directamente desde aquí.</p>
+                        </td>
+                    </tr>
+                </table>
+                <p class="submit">
+                    <button type="submit" class="button button-primary">Guardar cambios</button>
+                    <a href="<?php echo esc_url( admin_url( 'admin.php?page=ogape-ops' ) ); ?>" class="button">Cancelar</a>
+                </p>
+            </form>
+        </div>
+        <?php endif; ?>
+
         <!-- Create next week -->
         <div style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:20px 24px;margin-top:8px">
             <h2 style="margin:0 0 16px">Crear semana siguiente</h2>
@@ -633,13 +818,16 @@ function ogape_ops_handle_create_recipe() {
         exit;
     }
 
-    update_post_meta( $post_id, '_ogape_recipe_desc',       $desc );
-    update_post_meta( $post_id, '_ogape_recipe_time',       $time );
-    update_post_meta( $post_id, '_ogape_recipe_difficulty', $difficulty );
-    update_post_meta( $post_id, '_ogape_recipe_allergens',  $allergens );
-    update_post_meta( $post_id, '_ogape_recipe_grad',       $grad );
-    update_post_meta( $post_id, '_ogape_recipe_hero',       $is_hero );
-    update_post_meta( $post_id, '_ogape_recipe_tags',       $tags );
+    $ingredients = sanitize_textarea_field( wp_unslash( $_POST['recipe_ingredients'] ?? '' ) );
+
+    update_post_meta( $post_id, '_ogape_recipe_desc',        $desc );
+    update_post_meta( $post_id, '_ogape_recipe_time',        $time );
+    update_post_meta( $post_id, '_ogape_recipe_difficulty',  $difficulty );
+    update_post_meta( $post_id, '_ogape_recipe_allergens',   $allergens );
+    update_post_meta( $post_id, '_ogape_recipe_grad',        $grad );
+    update_post_meta( $post_id, '_ogape_recipe_hero',        $is_hero );
+    update_post_meta( $post_id, '_ogape_recipe_tags',        $tags );
+    update_post_meta( $post_id, '_ogape_recipe_ingredients', $ingredients );
 
     wp_safe_redirect( admin_url( 'admin.php?page=ogape-recetas&created=' . $post_id ) );
     exit;
@@ -660,6 +848,52 @@ function ogape_ops_handle_delete_recipe() {
     exit;
 }
 add_action( 'admin_post_ogape_delete_recipe', 'ogape_ops_handle_delete_recipe' );
+
+// ── POST HANDLER: EDIT RECIPE ─────────────────────────────────────────────────
+
+function ogape_ops_handle_edit_recipe() {
+    check_admin_referer( 'ogape_edit_recipe' );
+    if ( ! current_user_can( 'manage_options' ) ) wp_die( 'No autorizado.' );
+
+    $recipe_id  = (int) ( $_POST['recipe_id'] ?? 0 );
+    if ( ! $recipe_id ) wp_die( 'Receta no válida.' );
+
+    $title       = sanitize_text_field( wp_unslash( $_POST['recipe_title'] ?? '' ) );
+    $desc        = sanitize_textarea_field( wp_unslash( $_POST['recipe_desc'] ?? '' ) );
+    $time        = sanitize_text_field( wp_unslash( $_POST['recipe_time'] ?? '' ) );
+    $difficulty  = sanitize_text_field( wp_unslash( $_POST['recipe_difficulty'] ?? '' ) );
+    $allergens   = sanitize_text_field( wp_unslash( $_POST['recipe_allergens'] ?? '' ) );
+    $grad        = sanitize_text_field( wp_unslash( $_POST['recipe_grad'] ?? '' ) );
+    $ingredients = sanitize_textarea_field( wp_unslash( $_POST['recipe_ingredients'] ?? '' ) );
+    $is_hero     = isset( $_POST['recipe_hero'] ) ? 1 : 0;
+
+    $tag_map = ogape_recipe_tag_map();
+    $tags    = array();
+    foreach ( $tag_map as $type => $label ) {
+        if ( isset( $_POST[ 'tag_' . $type ] ) ) {
+            $tags[] = array( 'label' => $label, 'type' => $type );
+        }
+    }
+
+    if ( ! $title ) {
+        wp_safe_redirect( admin_url( 'admin.php?page=ogape-recetas&edit=' . $recipe_id . '&error=missing' ) );
+        exit;
+    }
+
+    wp_update_post( array( 'ID' => $recipe_id, 'post_title' => $title ) );
+    update_post_meta( $recipe_id, '_ogape_recipe_desc',        $desc );
+    update_post_meta( $recipe_id, '_ogape_recipe_time',        $time );
+    update_post_meta( $recipe_id, '_ogape_recipe_difficulty',  $difficulty );
+    update_post_meta( $recipe_id, '_ogape_recipe_allergens',   $allergens );
+    update_post_meta( $recipe_id, '_ogape_recipe_grad',        $grad );
+    update_post_meta( $recipe_id, '_ogape_recipe_hero',        $is_hero );
+    update_post_meta( $recipe_id, '_ogape_recipe_tags',        $tags );
+    update_post_meta( $recipe_id, '_ogape_recipe_ingredients', $ingredients );
+
+    wp_safe_redirect( admin_url( 'admin.php?page=ogape-recetas&updated=1' ) );
+    exit;
+}
+add_action( 'admin_post_ogape_edit_recipe', 'ogape_ops_handle_edit_recipe' );
 
 // ── RECIPE HELPERS ────────────────────────────────────────────────────────────
 
@@ -1004,6 +1238,7 @@ function ogape_ops_clientes_page() {
                         <th>Plan</th>
                         <th>Setup</th>
                         <th>Registro</th>
+                        <th style="width:80px">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1015,6 +1250,7 @@ function ogape_ops_clientes_page() {
                         $recipes = get_user_meta( $u->ID, 'ogape_recipes', true );
                         $setup   = get_user_meta( $u->ID, 'ogape_setup_complete', true );
                         $reg_at  = get_user_meta( $u->ID, 'ogape_registered_at', true );
+                        $edit_url = admin_url( 'admin.php?page=ogape-cliente&uid=' . $u->ID );
                         ?>
                         <tr>
                             <td><strong><?php echo esc_html( $u->display_name ); ?></strong></td>
@@ -1025,6 +1261,7 @@ function ogape_ops_clientes_page() {
                             <td><?php echo $people ? 'Para ' . esc_html( $people ) . ' · ' . esc_html( $recipes ) . ' rec.' : '—'; ?></td>
                             <td><?php echo $setup ? '<span style="color:green;font-weight:600">✓</span>' : '<span style="color:#888">Pendiente</span>'; ?></td>
                             <td style="font-size:11px;color:#666"><?php echo esc_html( $reg_at ? wp_date( 'd/m/Y H:i', strtotime( $reg_at ) ) : '' ); ?></td>
+                            <td><a href="<?php echo esc_url( $edit_url ); ?>" class="button button-small">Editar</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -1036,6 +1273,363 @@ function ogape_ops_clientes_page() {
     <?php
 }
 
+// ── ADMIN PAGE: CLIENTE (DETAIL / EDIT) ──────────────────────────────────────
+
+function ogape_ops_cliente_page() {
+    if ( ! current_user_can( 'manage_options' ) ) return;
+
+    $uid = isset( $_GET['uid'] ) ? (int) $_GET['uid'] : 0;
+    if ( ! $uid ) {
+        echo '<div class="wrap"><p>UID no especificado.</p></div>';
+        return;
+    }
+
+    $user = get_userdata( $uid );
+    if ( ! $user ) {
+        echo '<div class="wrap"><p>Cliente no encontrado.</p></div>';
+        return;
+    }
+
+    $m               = ogape_get_customer_meta( $uid );
+    $zones           = ogape_delivery_zones();
+    $pref_labels     = ogape_demo_preference_labels();
+    $saved_prefs     = (array) ( get_user_meta( $uid, 'ogape_preferences', true ) ?: array() );
+    $updated         = isset( $_GET['updated'] ) ? sanitize_key( $_GET['updated'] ) : '';
+    $back_url        = admin_url( 'admin.php?page=ogape-clientes' );
+    ?>
+    <div class="wrap">
+        <h1>
+            <a href="<?php echo esc_url( $back_url ); ?>" style="text-decoration:none;font-size:18px;margin-right:8px">←</a>
+            <?php echo esc_html( $user->display_name ); ?>
+            <span style="font-size:14px;font-weight:400;color:#666;margin-left:8px">#<?php echo $uid; ?></span>
+        </h1>
+        <?php if ( 'cliente' === $updated ) : ?>
+            <div class="notice notice-success is-dismissible"><p>Cliente actualizado correctamente.</p></div>
+        <?php endif; ?>
+
+        <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+            <input type="hidden" name="action" value="ogape_edit_cliente">
+            <input type="hidden" name="uid" value="<?php echo $uid; ?>">
+            <?php wp_nonce_field( 'ogape_edit_cliente_' . $uid ); ?>
+
+            <!-- WP User fields -->
+            <h2 style="margin-top:24px;border-bottom:1px solid #ddd;padding-bottom:6px">Datos de cuenta</h2>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th><label for="ec_first_name">Nombre</label></th>
+                    <td><input type="text" id="ec_first_name" name="first_name" class="regular-text" value="<?php echo esc_attr( $user->first_name ); ?>"></td>
+                </tr>
+                <tr>
+                    <th><label for="ec_last_name">Apellido</label></th>
+                    <td><input type="text" id="ec_last_name" name="last_name" class="regular-text" value="<?php echo esc_attr( $user->last_name ); ?>"></td>
+                </tr>
+                <tr>
+                    <th><label for="ec_email">Email</label></th>
+                    <td><input type="email" id="ec_email" name="email" class="regular-text" value="<?php echo esc_attr( $user->user_email ); ?>"></td>
+                </tr>
+                <tr>
+                    <th><label for="ec_phone">Teléfono</label></th>
+                    <td><input type="text" id="ec_phone" name="phone" class="regular-text" value="<?php echo esc_attr( $m['phone'] ); ?>"></td>
+                </tr>
+            </table>
+
+            <!-- Delivery -->
+            <h2 style="margin-top:24px;border-bottom:1px solid #ddd;padding-bottom:6px">Entrega</h2>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th><label for="ec_zone">Zona</label></th>
+                    <td>
+                        <select id="ec_zone" name="zone">
+                            <option value="">— Sin asignar —</option>
+                            <?php foreach ( $zones as $zk => $zl ) : ?>
+                                <option value="<?php echo esc_attr( $zk ); ?>"<?php selected( $m['zone_key'], $zk ); ?>><?php echo esc_html( $zl ); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="ec_address">Dirección</label></th>
+                    <td><input type="text" id="ec_address" name="address" class="regular-text" value="<?php echo esc_attr( $m['address'] ); ?>"></td>
+                </tr>
+                <tr>
+                    <th><label for="ec_apt">Apto / Torre</label></th>
+                    <td><input type="text" id="ec_apt" name="apt" class="small-text" value="<?php echo esc_attr( $m['apt'] ); ?>"></td>
+                </tr>
+                <tr>
+                    <th><label for="ec_window">Ventana de entrega</label></th>
+                    <td>
+                        <select id="ec_window" name="delivery_window">
+                            <option value="am"<?php selected( $m['delivery_window'], 'am' ); ?>>Mañana (AM)</option>
+                            <option value="pm"<?php selected( $m['delivery_window'], 'pm' ); ?>>Tarde (PM)</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="ec_window_label">Etiqueta de ventana</label></th>
+                    <td>
+                        <input type="text" id="ec_window_label" name="delivery_window_label" class="regular-text" placeholder="Ej: 17:00 – 20:00" value="<?php echo esc_attr( $m['delivery_window_label'] ); ?>">
+                        <p class="description">Texto libre que se muestra al cliente en su cuenta.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="ec_notes">Notas de entrega</label></th>
+                    <td><textarea id="ec_notes" name="notes" class="large-text" rows="3"><?php echo esc_textarea( $m['notes'] ); ?></textarea></td>
+                </tr>
+            </table>
+
+            <!-- Plan -->
+            <h2 style="margin-top:24px;border-bottom:1px solid #ddd;padding-bottom:6px">Plan</h2>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th><label for="ec_people">Personas</label></th>
+                    <td>
+                        <select id="ec_people" name="people">
+                            <?php foreach ( array( '2', '3', '4' ) as $n ) : ?>
+                                <option value="<?php echo $n; ?>"<?php selected( $m['people'], $n ); ?>><?php echo $n; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="ec_recipes">Recetas por semana</label></th>
+                    <td>
+                        <select id="ec_recipes" name="recipes">
+                            <?php foreach ( array( '2', '3', '4', '5' ) as $n ) : ?>
+                                <option value="<?php echo $n; ?>"<?php selected( $m['recipes'], $n ); ?>><?php echo $n; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="ec_price">Precio semanal (₲)</label></th>
+                    <td><input type="number" id="ec_price" name="price" class="small-text" step="500" min="0" value="<?php echo esc_attr( $m['price'] ); ?>"></td>
+                </tr>
+            </table>
+
+            <!-- Preferences -->
+            <h2 style="margin-top:24px;border-bottom:1px solid #ddd;padding-bottom:6px">Preferencias alimentarias</h2>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th>Preferencias</th>
+                    <td>
+                        <?php foreach ( $pref_labels as $pkey => $plabel ) : ?>
+                            <label style="display:inline-flex;align-items:center;gap:6px;margin-right:16px;margin-bottom:6px;font-size:13px">
+                                <input type="checkbox" name="preferences[]" value="<?php echo esc_attr( $pkey ); ?>"
+                                    <?php checked( in_array( $plabel, $saved_prefs, true ) ); ?>>
+                                <?php echo esc_html( $plabel ); ?>
+                            </label>
+                        <?php endforeach; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="ec_allergies">Alergias / restricciones</label></th>
+                    <td>
+                        <input type="text" id="ec_allergies" name="allergies" class="regular-text" placeholder="Nueces, mariscos…" value="<?php echo esc_attr( $m['allergies'] ); ?>">
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Notifications -->
+            <h2 style="margin-top:24px;border-bottom:1px solid #ddd;padding-bottom:6px">Notificaciones</h2>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th>Preferencias de notif.</th>
+                    <td>
+                        <label style="display:block;margin-bottom:6px"><input type="checkbox" name="notif_weekly_menu" value="1"<?php checked( $m['notif_weekly_menu'] ); ?>> Menú semanal</label>
+                        <label style="display:block;margin-bottom:6px"><input type="checkbox" name="notif_whatsapp" value="1"<?php checked( $m['notif_whatsapp'] ); ?>> WhatsApp</label>
+                        <label style="display:block;margin-bottom:6px"><input type="checkbox" name="notif_cutoff" value="1"<?php checked( $m['notif_cutoff'] ); ?>> Recordatorio de cierre</label>
+                        <label style="display:block;margin-bottom:6px"><input type="checkbox" name="notif_promo" value="1"<?php checked( $m['notif_promo'] ); ?>> Promociones</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="ec_comms">Comunicaciones</label></th>
+                    <td><label><input type="checkbox" id="ec_comms" name="comms" value="1"<?php checked( $m['comms'] ); ?>> Acepta comunicaciones de marketing</label></td>
+                </tr>
+            </table>
+
+            <!-- Account state -->
+            <h2 style="margin-top:24px;border-bottom:1px solid #ddd;padding-bottom:6px">Estado de cuenta</h2>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th><label for="ec_setup">Setup completo</label></th>
+                    <td><label><input type="checkbox" id="ec_setup" name="setup_complete" value="1"<?php checked( $m['setup_complete'] ); ?>> Marcar setup como completado</label></td>
+                </tr>
+                <tr>
+                    <th><label for="ec_pause">Estado de pausa</label></th>
+                    <td>
+                        <select id="ec_pause" name="pause_status">
+                            <option value=""<?php selected( $m['pause_status'], '' ); ?>>Activo</option>
+                            <option value="paused"<?php selected( $m['pause_status'], 'paused' ); ?>>Pausado</option>
+                            <option value="cancelled"<?php selected( $m['pause_status'], 'cancelled' ); ?>>Cancelado</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="ec_pause_until">Pausado hasta</label></th>
+                    <td>
+                        <input type="date" id="ec_pause_until" name="pause_until" value="<?php echo esc_attr( $m['pause_until'] ? wp_date( 'Y-m-d', strtotime( $m['pause_until'] ) ) : '' ); ?>">
+                        <p class="description">Solo aplica cuando el estado es "Pausado".</p>
+                    </td>
+                </tr>
+            </table>
+
+            <p class="submit" style="margin-top:24px">
+                <button type="submit" class="button button-primary">Guardar cambios</button>
+                <a href="<?php echo esc_url( $back_url ); ?>" class="button">Cancelar</a>
+            </p>
+        </form>
+    </div>
+    <?php
+}
+
+// ── POST HANDLER: EDIT CLIENTE ────────────────────────────────────────────────
+
+function ogape_ops_handle_edit_cliente() {
+    $uid = isset( $_POST['uid'] ) ? (int) $_POST['uid'] : 0;
+    check_admin_referer( 'ogape_edit_cliente_' . $uid );
+    if ( ! current_user_can( 'manage_options' ) || ! $uid ) wp_die( 'No autorizado.' );
+
+    // WP user core fields
+    $update_args = array( 'ID' => $uid );
+    if ( isset( $_POST['first_name'] ) )
+        $update_args['first_name'] = sanitize_text_field( wp_unslash( $_POST['first_name'] ) );
+    if ( isset( $_POST['last_name'] ) )
+        $update_args['last_name'] = sanitize_text_field( wp_unslash( $_POST['last_name'] ) );
+    if ( isset( $_POST['email'] ) ) {
+        $new_email = sanitize_email( wp_unslash( $_POST['email'] ) );
+        if ( $new_email && is_email( $new_email ) ) {
+            $existing = get_user_by( 'email', $new_email );
+            if ( ! $existing || (int) $existing->ID === $uid ) {
+                $update_args['user_email'] = $new_email;
+            }
+        }
+    }
+    wp_update_user( $update_args );
+
+    // display_name from first + last
+    $fn = sanitize_text_field( wp_unslash( $_POST['first_name'] ?? '' ) );
+    $ln = sanitize_text_field( wp_unslash( $_POST['last_name'] ?? '' ) );
+    if ( $fn || $ln ) {
+        wp_update_user( array( 'ID' => $uid, 'display_name' => trim( $fn . ' ' . $ln ) ) );
+    }
+
+    // Zone: resolve label from key
+    $zones   = ogape_delivery_zones();
+    $zone_key = sanitize_key( wp_unslash( $_POST['zone'] ?? '' ) );
+    $zone_label = $zones[ $zone_key ] ?? '';
+
+    // Preferences: submitted as keys, stored as labels
+    $raw_prefs = isset( $_POST['preferences'] ) && is_array( $_POST['preferences'] ) ? $_POST['preferences'] : array();
+    $prefs = ogape_sanitize_demo_preferences( $raw_prefs );
+    $pref_str = $prefs ? implode( ' · ', $prefs ) : '';
+
+    // Meta save
+    ogape_save_customer_meta( $uid, array(
+        'phone'                 => sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) ),
+        'zone'                  => $zone_label,
+        'zone_key'              => $zone_key,
+        'address'               => sanitize_text_field( wp_unslash( $_POST['address'] ?? '' ) ),
+        'apt'                   => sanitize_text_field( wp_unslash( $_POST['apt'] ?? '' ) ),
+        'delivery_window'       => sanitize_key( wp_unslash( $_POST['delivery_window'] ?? 'pm' ) ),
+        'delivery_window_label' => sanitize_text_field( wp_unslash( $_POST['delivery_window_label'] ?? '' ) ),
+        'notes'                 => sanitize_textarea_field( wp_unslash( $_POST['notes'] ?? '' ) ),
+        'people'                => in_array( $_POST['people'] ?? '', array( '2', '3', '4' ) ) ? $_POST['people'] : '2',
+        'recipes'               => in_array( $_POST['recipes'] ?? '', array( '2', '3', '4', '5' ) ) ? $_POST['recipes'] : '3',
+        'price'                 => absint( $_POST['price'] ?? 0 ),
+        'preferences'           => $prefs,
+        'preference'            => $pref_str,
+        'allergies'             => sanitize_text_field( wp_unslash( $_POST['allergies'] ?? '' ) ),
+        'comms'                 => isset( $_POST['comms'] ) ? 1 : 0,
+        'setup_complete'        => isset( $_POST['setup_complete'] ) ? 1 : 0,
+        'pause_status'          => sanitize_key( wp_unslash( $_POST['pause_status'] ?? '' ) ),
+        'pause_until'           => sanitize_text_field( wp_unslash( $_POST['pause_until'] ?? '' ) ),
+        'notif_weekly_menu'     => isset( $_POST['notif_weekly_menu'] ) ? 1 : 0,
+        'notif_whatsapp'        => isset( $_POST['notif_whatsapp'] ) ? 1 : 0,
+        'notif_cutoff'          => isset( $_POST['notif_cutoff'] ) ? 1 : 0,
+        'notif_promo'           => isset( $_POST['notif_promo'] ) ? 1 : 0,
+    ) );
+
+    wp_safe_redirect( admin_url( 'admin.php?page=ogape-cliente&uid=' . $uid . '&updated=cliente' ) );
+    exit;
+}
+add_action( 'admin_post_ogape_edit_cliente', 'ogape_ops_handle_edit_cliente' );
+
+// ── RECIPE FORM HELPER ───────────────────────────────────────────────────────
+
+function ogape_ops_recipe_form_fields( $grad_options, $tag_map, $v = array() ) {
+    $title       = $v['title']       ?? '';
+    $desc        = $v['desc']        ?? '';
+    $time        = $v['time']        ?? '';
+    $difficulty  = $v['difficulty']  ?? 'Fácil';
+    $allergens   = $v['allergens']   ?? '';
+    $grad        = $v['grad']        ?? array_key_first( $grad_options );
+    $hero        = (int) ( $v['hero'] ?? 0 );
+    $tags        = (array) ( $v['tags'] ?? array() );
+    $ingredients = $v['ingredients'] ?? '';
+    ?>
+    <table class="form-table" role="presentation">
+        <tr>
+            <th><label>Nombre *</label></th>
+            <td><input type="text" name="recipe_title" class="regular-text" value="<?php echo esc_attr( $title ); ?>" required></td>
+        </tr>
+        <tr>
+            <th><label>Descripción</label></th>
+            <td><textarea name="recipe_desc" class="large-text" rows="3"><?php echo esc_textarea( $desc ); ?></textarea></td>
+        </tr>
+        <tr>
+            <th><label>Ingredientes</label></th>
+            <td>
+                <textarea name="recipe_ingredients" class="large-text" rows="7" placeholder="250g pechuga de pollo&#10;1 taza arroz&#10;2 dientes de ajo"><?php echo esc_textarea( $ingredients ); ?></textarea>
+                <p class="description">Un ingrediente por línea. Se muestra en la tarjeta de receta del cliente.</p>
+            </td>
+        </tr>
+        <tr>
+            <th><label>Tiempo</label></th>
+            <td><input type="text" name="recipe_time" placeholder="35 min" class="small-text" value="<?php echo esc_attr( $time ); ?>"></td>
+        </tr>
+        <tr>
+            <th><label>Dificultad</label></th>
+            <td>
+                <select name="recipe_difficulty">
+                    <option value="Fácil"<?php selected( $difficulty, 'Fácil' ); ?>>Fácil</option>
+                    <option value="Media"<?php selected( $difficulty, 'Media' ); ?>>Media</option>
+                    <option value="Difícil"<?php selected( $difficulty, 'Difícil' ); ?>>Difícil</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label>Alérgenos</label></th>
+            <td><input type="text" name="recipe_allergens" placeholder="Gluten, lácteos — o Ninguno" class="regular-text" value="<?php echo esc_attr( $allergens ); ?>"></td>
+        </tr>
+        <tr>
+            <th>Tags</th>
+            <td>
+                <?php foreach ( $tag_map as $type => $label ) : ?>
+                    <label style="display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:13px">
+                        <input type="checkbox" name="tag_<?php echo esc_attr( $type ); ?>" value="1"<?php checked( in_array( $type, $tags, true ) ); ?>>
+                        <?php echo esc_html( $label ); ?>
+                    </label>
+                <?php endforeach; ?>
+            </td>
+        </tr>
+        <tr>
+            <th><label>Plato estrella</label></th>
+            <td><label><input type="checkbox" name="recipe_hero" value="1"<?php checked( $hero, 1 ); ?>> Marcar como plato estrella de la semana</label></td>
+        </tr>
+        <tr>
+            <th><label>Color de tarjeta</label></th>
+            <td>
+                <select name="recipe_grad" class="regular-text">
+                    <?php foreach ( $grad_options as $val => $label ) : ?>
+                        <option value="<?php echo esc_attr( $val ); ?>"<?php selected( $grad, $val ); ?>><?php echo esc_html( $label ); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <?php
+}
+
 // ── ADMIN PAGE: RECETAS ───────────────────────────────────────────────────────
 
 function ogape_ops_recetas_page() {
@@ -1043,7 +1637,13 @@ function ogape_ops_recetas_page() {
 
     $created = isset( $_GET['created'] ) ? (int) $_GET['created'] : 0;
     $deleted = isset( $_GET['deleted'] );
+    $updated = isset( $_GET['updated'] );
     $err     = isset( $_GET['error'] ) ? sanitize_key( $_GET['error'] ) : '';
+
+    // Edit state
+    $edit_id  = isset( $_GET['edit'] ) ? (int) $_GET['edit'] : 0;
+    $edit_rec = $edit_id ? get_post( $edit_id ) : null;
+    if ( $edit_rec && 'ogape_recipe' !== $edit_rec->post_type ) $edit_rec = null;
 
     $recipes = get_posts( array( 'post_type' => 'ogape_recipe', 'numberposts' => 200, 'orderby' => 'title', 'order' => 'ASC' ) );
     $tag_map = ogape_recipe_tag_map();
@@ -1057,14 +1657,37 @@ function ogape_ops_recetas_page() {
         'linear-gradient(145deg,#d8c8e0 0%,#9878b0 50%,#685088 100%)' => 'Violeta (vegetariano especial)',
         'linear-gradient(145deg,#f0e0c0 0%,#d4a060 50%,#a06830 100%)' => 'Ámbar (pasta/risotto)',
     );
+
+    // Pre-load edit values
+    if ( $edit_rec ) {
+        $e_tags_raw   = get_post_meta( $edit_id, '_ogape_recipe_tags', true );
+        $e_tags_raw   = is_array( $e_tags_raw ) ? $e_tags_raw : array();
+        $e_vals = array(
+            'title'       => $edit_rec->post_title,
+            'desc'        => get_post_meta( $edit_id, '_ogape_recipe_desc', true ),
+            'time'        => get_post_meta( $edit_id, '_ogape_recipe_time', true ),
+            'difficulty'  => get_post_meta( $edit_id, '_ogape_recipe_difficulty', true ),
+            'allergens'   => get_post_meta( $edit_id, '_ogape_recipe_allergens', true ),
+            'grad'        => get_post_meta( $edit_id, '_ogape_recipe_grad', true ),
+            'hero'        => (int) get_post_meta( $edit_id, '_ogape_recipe_hero', true ),
+            'tags'        => array_column( $e_tags_raw, 'type' ),
+            'ingredients' => get_post_meta( $edit_id, '_ogape_recipe_ingredients', true ),
+        );
+    }
     ?>
     <div class="wrap">
         <h1 class="wp-heading-inline">Recetas Ogape (<?php echo count( $recipes ); ?>)</h1>
-        <a href="#agregar-receta" class="page-title-action">+ Agregar receta</a>
+        <?php if ( ! $edit_rec ) : ?>
+            <a href="#agregar-receta" class="page-title-action">+ Agregar receta</a>
+        <?php else : ?>
+            <a href="<?php echo esc_url( admin_url( 'admin.php?page=ogape-recetas' ) ); ?>" class="page-title-action">← Volver a la lista</a>
+        <?php endif; ?>
         <hr class="wp-header-end">
 
         <?php if ( $created ) : ?>
             <div class="notice notice-success is-dismissible"><p>Receta creada con ID <?php echo $created; ?>.</p></div>
+        <?php elseif ( $updated ) : ?>
+            <div class="notice notice-success is-dismissible"><p>Receta actualizada correctamente.</p></div>
         <?php elseif ( $deleted ) : ?>
             <div class="notice notice-success is-dismissible"><p>Receta eliminada.</p></div>
         <?php elseif ( $err ) : ?>
@@ -1081,17 +1704,18 @@ function ogape_ops_recetas_page() {
                         <th>Dificultad</th>
                         <th>Alérgenos</th>
                         <th>Tags</th>
-                        <th style="width:70px">Estrella</th>
-                        <th style="width:80px">Acciones</th>
+                        <th style="width:60px">⭐</th>
+                        <th style="width:130px">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ( $recipes as $rp ) :
-                        $r_tags = get_post_meta( $rp->ID, '_ogape_recipe_tags', true );
-                        $r_tags = is_array( $r_tags ) ? $r_tags : array();
+                        $r_tags     = get_post_meta( $rp->ID, '_ogape_recipe_tags', true );
+                        $r_tags     = is_array( $r_tags ) ? $r_tags : array();
                         $tag_labels = array_map( function( $t ) { return $t['label'] ?? ''; }, $r_tags );
+                        $is_editing = $edit_rec && $rp->ID === $edit_id;
                         ?>
-                        <tr>
+                        <tr<?php echo $is_editing ? ' style="background:#e8f0fe"' : ''; ?>>
                             <td style="color:#888;font-size:12px"><?php echo (int) $rp->ID; ?></td>
                             <td>
                                 <strong><?php echo esc_html( $rp->post_title ); ?></strong>
@@ -1102,12 +1726,13 @@ function ogape_ops_recetas_page() {
                             <td style="font-size:12px"><?php echo esc_html( get_post_meta( $rp->ID, '_ogape_recipe_allergens', true ) ); ?></td>
                             <td style="font-size:11px"><?php echo esc_html( implode( ' · ', $tag_labels ) ); ?></td>
                             <td style="text-align:center"><?php echo get_post_meta( $rp->ID, '_ogape_recipe_hero', true ) ? '⭐' : ''; ?></td>
-                            <td>
-                                <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin:0" onsubmit="return confirm('¿Eliminar esta receta?')">
+                            <td style="white-space:nowrap">
+                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=ogape-recetas&edit=' . $rp->ID . '#editar-receta' ) ); ?>" class="button button-small">Editar</a>
+                                <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:inline;margin:0" onsubmit="return confirm('¿Eliminar esta receta?')">
                                     <input type="hidden" name="action" value="ogape_delete_recipe">
                                     <input type="hidden" name="recipe_id" value="<?php echo (int) $rp->ID; ?>">
                                     <?php wp_nonce_field( 'ogape_delete_recipe' ); ?>
-                                    <button type="submit" class="button button-small" style="color:#c62828">Eliminar</button>
+                                    <button type="submit" class="button button-small" style="color:#c62828;margin-left:4px">Eliminar</button>
                                 </form>
                             </td>
                         </tr>
@@ -1118,65 +1743,30 @@ function ogape_ops_recetas_page() {
             <p style="color:#888">No hay recetas todavía. Creá la primera a continuación.</p>
         <?php endif; ?>
 
+        <?php if ( $edit_rec ) : ?>
+        <!-- Edit recipe form -->
+        <div id="editar-receta" style="background:#fff;border:2px solid #1a56db;border-radius:4px;padding:24px;max-width:720px;margin-bottom:32px">
+            <h2 style="margin-top:0;color:#1a56db">Editando: <?php echo esc_html( $edit_rec->post_title ); ?></h2>
+            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+                <input type="hidden" name="action" value="ogape_edit_recipe">
+                <input type="hidden" name="recipe_id" value="<?php echo (int) $edit_id; ?>">
+                <?php wp_nonce_field( 'ogape_edit_recipe' ); ?>
+                <?php ogape_ops_recipe_form_fields( $grad_options, $tag_map, $e_vals ?? array() ); ?>
+                <p class="submit">
+                    <button type="submit" class="button button-primary">Guardar cambios</button>
+                    <a href="<?php echo esc_url( admin_url( 'admin.php?page=ogape-recetas' ) ); ?>" class="button">Cancelar</a>
+                </p>
+            </form>
+        </div>
+        <?php endif; ?>
+
         <!-- Add recipe form -->
         <div id="agregar-receta" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:24px;max-width:720px">
             <h2 style="margin-top:0">Agregar receta</h2>
             <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
                 <input type="hidden" name="action" value="ogape_create_recipe">
                 <?php wp_nonce_field( 'ogape_create_recipe' ); ?>
-                <table class="form-table" role="presentation">
-                    <tr>
-                        <th><label for="recipe_title">Nombre *</label></th>
-                        <td><input type="text" id="recipe_title" name="recipe_title" class="regular-text" required></td>
-                    </tr>
-                    <tr>
-                        <th><label for="recipe_desc">Descripción</label></th>
-                        <td><textarea id="recipe_desc" name="recipe_desc" class="large-text" rows="3"></textarea></td>
-                    </tr>
-                    <tr>
-                        <th><label for="recipe_time">Tiempo</label></th>
-                        <td><input type="text" id="recipe_time" name="recipe_time" placeholder="35 min" class="small-text"></td>
-                    </tr>
-                    <tr>
-                        <th><label for="recipe_difficulty">Dificultad</label></th>
-                        <td>
-                            <select id="recipe_difficulty" name="recipe_difficulty">
-                                <option value="Fácil">Fácil</option>
-                                <option value="Media">Media</option>
-                                <option value="Difícil">Difícil</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><label for="recipe_allergens">Alérgenos</label></th>
-                        <td><input type="text" id="recipe_allergens" name="recipe_allergens" placeholder="Gluten, lácteos — o Ninguno" class="regular-text"></td>
-                    </tr>
-                    <tr>
-                        <th>Tags</th>
-                        <td>
-                            <?php foreach ( $tag_map as $type => $label ) : ?>
-                                <label style="display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:13px">
-                                    <input type="checkbox" name="tag_<?php echo esc_attr( $type ); ?>" value="1">
-                                    <?php echo esc_html( $label ); ?>
-                                </label>
-                            <?php endforeach; ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><label for="recipe_hero">Plato estrella</label></th>
-                        <td><label><input type="checkbox" id="recipe_hero" name="recipe_hero" value="1"> Marcar como plato estrella de la semana</label></td>
-                    </tr>
-                    <tr>
-                        <th><label for="recipe_grad">Color de tarjeta</label></th>
-                        <td>
-                            <select id="recipe_grad" name="recipe_grad" class="regular-text">
-                                <?php foreach ( $grad_options as $val => $label ) : ?>
-                                    <option value="<?php echo esc_attr( $val ); ?>"><?php echo esc_html( $label ); ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </td>
-                    </tr>
-                </table>
+                <?php ogape_ops_recipe_form_fields( $grad_options, $tag_map ); ?>
                 <p class="submit"><button type="submit" class="button button-primary">Guardar receta</button></p>
             </form>
         </div>
