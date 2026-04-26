@@ -49,6 +49,7 @@ $two_week_resume_label = $demo_schedule['two_week_resume_label'] ?? 'la siguient
 $cutoff_label          = $demo_schedule['cutoff_label'] ?? 'martes previo';
 $cutoff_time           = $demo_schedule['cutoff_time'] ?? '23:59';
 $logo_url = get_stylesheet_directory_uri() . '/assets/img/ogape-logo.svg';
+$elegir_menu_url       = home_url( '/elegir-menu/' );
 
 // Derive window key (am / pm / any) from the stored label for select default.
 if ( false !== strpos( $demo_window, 'Mañana' ) || false !== strpos( $demo_window, 'mañana' ) ) {
@@ -305,6 +306,13 @@ if ( isset( $_GET['setup'] ) ) {
             <span class="text">Ventana de entrega: <b><?php echo esc_html( $demo_window ); ?></b> · <?php echo esc_html( $demo_delivery_address ); ?></span>
           </div>
           <?php endif; ?>
+
+          <div class="delivery-actions">
+            <a href="<?php echo esc_url( $elegir_menu_url ); ?>" class="btn btn--kraft btn--sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25Z"/><path d="m14.06 4.94 3.75 3.75"/><path d="M19 21H10"/></svg>
+              Cambiar menú elegido
+            </a>
+          </div>
         </div>
 
         <!-- THIS WEEK'S RECIPES -->

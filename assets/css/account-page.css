@@ -137,6 +137,8 @@
   .delivery-eta .text{font-size:13.5px;line-height:1.5;color:rgba(247,239,227,.8)}
   .delivery-eta .text b{color:#F7EFE3;font-weight:600}
   .delivery-eta .track-link{margin-left:auto;font-size:12px;font-weight:600;color:var(--brand-primary);white-space:nowrap;padding-bottom:1px;border-bottom:1px solid rgba(232,160,69,.4);flex:none}
+  .delivery-actions{display:flex;justify-content:flex-end;position:relative;z-index:1;margin-top:var(--space-4)}
+  .delivery-actions .btn{justify-content:center}
 
   /* ── RECIPES ──────────────────────────────────────── */
   .recipes-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-5)}
