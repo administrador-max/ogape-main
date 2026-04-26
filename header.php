@@ -20,7 +20,7 @@
     $account_url       = home_url( '/account/' );
     $logout_url        = function_exists( 'ogape_get_logout_url' ) ? ogape_get_logout_url() : home_url( '/future-site/' );
     $future_site_url   = home_url( '/future-site/' );
-    $official_nav_mode = is_page( 'future-site' ) || is_page( 'login' ) || is_page( 'register' ) || is_page( 'forgot-password' ) || is_page( 'elegir-menu' ) || is_page( 'account' );
+    $official_nav_mode = true;
     $is_logged_in      = is_user_logged_in();
     $header_account_context = $is_logged_in && function_exists( 'ogape_get_demo_account_context' )
         ? ogape_get_demo_account_context()

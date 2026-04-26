@@ -19,21 +19,6 @@ const $ = id => document.getElementById(id);
   // current plan state (mirrors sidebar)
   const plan = { people: '2', recipes: '3' };
 
-  // ── AVATAR DROPDOWN ─────────────────────────────────
-  const avatarBtn = $('avatarBtn');
-  const userMenu  = $('userMenu');
-  on('avatarBtn', 'click', e => {
-    e.stopPropagation();
-    const open = userMenu.classList.toggle('is-open');
-    avatarBtn.classList.toggle('is-open', open);
-    avatarBtn.setAttribute('aria-expanded', open);
-  });
-  document.addEventListener('click', () => {
-    userMenu.classList.remove('is-open');
-    avatarBtn.classList.remove('is-open');
-    avatarBtn.setAttribute('aria-expanded', 'false');
-  });
-
   // ── COPY REFERRAL ────────────────────────────────────
   on('copyBtn', 'click', () => {
     const refCode = $('refCode');

@@ -153,63 +153,19 @@ if ( isset( $_GET['setup'] ) ) {
 }
 ?>
 
-<!-- NAV -->
-<header class="nav">
-  <div class="wrap nav__inner">
-    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="nav__brand" aria-label="Ogape inicio">
-      <img src="<?php echo esc_url( $logo_url ); ?>" alt="">
-      <span>
-        <span class="wordmark">Ogape</span>
-        <span class="where">Tu Chef en Casa</span>
-      </span>
-    </a>
-
-    <nav aria-label="Secciones">
-      <ul class="nav__tabs">
+<!-- ACCOUNT SUBNAV -->
+<div class="account-subnav">
+  <div class="account-subnav__inner">
+    <nav aria-label="Secciones de cuenta">
+      <ul class="account-subnav__tabs">
         <li><a href="<?php echo esc_url( home_url( '/account/' ) ); ?>" class="is-active">Mi caja</a></li>
         <li><a href="#historial">Historial</a></li>
         <li><a href="<?php echo esc_url( home_url( '/menu/' ) ); ?>">Menú semanal</a></li>
         <li><a href="#configuracion">Mi cuenta</a></li>
       </ul>
     </nav>
-
-    <div class="nav__user">
-      <button class="nav__notif" aria-label="Notificaciones">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        <span class="badge"></span>
-      </button>
-      <button class="avatar-btn" id="avatarBtn" aria-haspopup="true" aria-expanded="false">
-        <span class="avatar"><?php echo esc_html( $demo_initials ); ?></span>
-        <span class="name"><?php echo esc_html( $demo_first_name ); ?></span>
-        <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
-      </button>
-
-      <div class="user-menu" id="userMenu" role="menu">
-        <div class="user-menu__head">
-          <div class="uname"><?php echo esc_html( $demo_name ); ?></div>
-          <div class="email"><?php echo esc_html( $demo_email ); ?></div>
-        </div>
-        <button class="umenu-item" role="menuitem">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-          Mi perfil
-        </button>
-        <button class="umenu-item" role="menuitem">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-          Facturación
-        </button>
-        <button class="umenu-item" role="menuitem">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-          Mis estadísticas
-        </button>
-        <div class="umenu-sep"></div>
-        <button class="umenu-item is-danger" role="menuitem">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Cerrar sesión
-        </button>
-      </div>
-    </div>
   </div>
-</header>
+</div>
 
 <?php if ( $demo_message ) : ?>
 <div class="account-demo-banner"><?php echo esc_html( $demo_message ); ?></div>

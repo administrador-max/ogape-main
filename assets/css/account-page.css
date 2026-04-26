@@ -11,7 +11,6 @@
  */
 
 /* ── Hide theme chrome on /account ─────────────────────────────── */
-.ogape-account-page #masthead,
 .ogape-account-page #colophon,
 .ogape-account-page .bg-canvas,
 .ogape-account-page .skip-link {
@@ -42,45 +41,15 @@
   @media(min-width:768px){.wrap{padding:0 var(--space-8)}}
   @media(min-width:1024px){.wrap{padding:0 var(--space-10)}}
 
-  /* ── NAV ──────────────────────────────────────────── */
-  .nav{position:sticky;top:0;z-index:50;background:rgba(247,239,227,.88);backdrop-filter:blur(18px) saturate(120%);-webkit-backdrop-filter:blur(18px) saturate(120%);border-bottom:1px solid rgba(154,90,8,.1)}
-  .nav__inner{display:flex;align-items:center;justify-content:space-between;min-height:72px;gap:var(--space-4)}
-  .nav__brand{display:flex;align-items:center;gap:.65rem;color:var(--text-primary)}
-  .nav__brand img{width:34px;height:34px;flex:none}
-  .nav__brand .wordmark{font-family:var(--font-display);font-size:22px;font-weight:600;letter-spacing:.01em;line-height:1}
-  .nav__brand .where{display:block;font-family:var(--font-body);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:3px}
-
-  .nav__tabs{display:none;gap:0;list-style:none}
-  @media(min-width:860px){.nav__tabs{display:flex}}
-  .nav__tabs a{display:inline-flex;align-items:center;height:40px;padding:0 14px;font-size:13.5px;font-weight:500;color:var(--text-secondary);border-radius:var(--radius-pill);transition:color .15s,background .15s;white-space:nowrap}
-  .nav__tabs a:hover{color:var(--text-primary);background:rgba(255,255,255,.55)}
-  .nav__tabs a.is-active{color:var(--brand-primary-strong);font-weight:600}
-
-  .nav__user{position:relative;display:flex;align-items:center;gap:var(--space-3)}
-  .nav__notif{width:36px;height:36px;border:none;background:transparent;border-radius:var(--radius-full);display:grid;place-items:center;color:var(--text-secondary);transition:background .15s,color .15s;position:relative}
-  .nav__notif:hover{background:rgba(255,255,255,.6);color:var(--text-primary)}
-  .nav__notif svg{width:18px;height:18px}
-  .nav__notif .badge{position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--brand-primary);border:2px solid rgba(247,239,227,.9)}
-  .avatar-btn{display:flex;align-items:center;gap:.6rem;padding:5px 12px 5px 5px;border:1px solid rgba(17,24,39,.1);border-radius:var(--radius-pill);background:rgba(255,255,255,.7);cursor:pointer;transition:border-color .15s,box-shadow .15s;font-family:var(--font-body)}
-  .avatar-btn:hover{border-color:rgba(17,24,39,.2);box-shadow:0 4px 12px rgba(17,24,39,.08)}
-  .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#C88B3A,#9A5A08);display:grid;place-items:center;font-family:var(--font-display);font-size:14px;font-weight:600;color:#F7EFE3;letter-spacing:.01em;flex:none}
-  .avatar-btn .name{font-size:13px;font-weight:600;color:var(--text-primary)}
-  .avatar-btn .chevron{width:14px;height:14px;color:var(--muted);transition:transform .2s}
-  .avatar-btn.is-open .chevron{transform:rotate(180deg)}
-
-  .user-menu{position:absolute;top:calc(100% + 10px);right:0;width:240px;background:#fff;border:1px solid rgba(17,24,39,.08);border-radius:var(--radius-xl);box-shadow:0 20px 50px rgba(17,24,39,.14),0 4px 12px rgba(17,24,39,.06);padding:var(--space-2);display:none;animation:popIn .18s cubic-bezier(.2,.7,.2,1) both}
-  .user-menu.is-open{display:block}
-  @keyframes popIn{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:none scale(1)}}
-  .user-menu__head{padding:var(--space-3) var(--space-3) var(--space-2);border-bottom:1px solid rgba(17,24,39,.06);margin-bottom:var(--space-2)}
-  .user-menu__head .email{font-size:11.5px;color:var(--muted);margin-top:.2rem;letter-spacing:.01em}
-  .user-menu__head .uname{font-size:13.5px;font-weight:600;color:var(--text-primary)}
-  .umenu-item{display:flex;align-items:center;gap:.6rem;width:100%;padding:9px var(--space-3);border:none;background:transparent;border-radius:var(--radius-md);font-size:13.5px;color:var(--text-secondary);font-family:var(--font-body);text-align:left;transition:background .12s,color .12s}
-  .umenu-item:hover{background:rgba(17,24,39,.04);color:var(--text-primary)}
-  .umenu-item svg{width:15px;height:15px;flex:none;color:var(--muted)}
-  .umenu-item.is-danger{color:#C62828}
-  .umenu-item.is-danger svg{color:#C62828}
-  .umenu-item.is-danger:hover{background:rgba(198,40,40,.06)}
-  .umenu-sep{height:1px;background:rgba(17,24,39,.06);margin:var(--space-2) 0}
+  /* ── ACCOUNT SUBNAV (tabs strip below main site header) ───────── */
+  .account-subnav{position:sticky;top:60px;z-index:40;background:rgba(247,239,227,.92);backdrop-filter:blur(16px) saturate(120%);-webkit-backdrop-filter:blur(16px) saturate(120%);border-bottom:1px solid rgba(154,90,8,.1)}
+  .account-subnav__inner{display:flex;align-items:center;min-height:48px;max-width:1240px;margin:0 auto;padding:0 var(--space-6)}
+  @media(min-width:768px){.account-subnav__inner{padding:0 var(--space-8)}}
+  @media(min-width:1024px){.account-subnav__inner{padding:0 var(--space-10)}}
+  .account-subnav__tabs{display:flex;gap:0;list-style:none}
+  .account-subnav__tabs a{display:inline-flex;align-items:center;height:38px;padding:0 14px;font-size:13.5px;font-weight:500;color:var(--text-secondary);border-radius:var(--radius-pill);transition:color .15s,background .15s;white-space:nowrap;text-decoration:none}
+  .account-subnav__tabs a:hover{color:var(--text-primary);background:rgba(255,255,255,.55)}
+  .account-subnav__tabs a.is-active{color:var(--brand-primary-strong);font-weight:600}
 
   /* ── LAYOUT ───────────────────────────────────────── */
   .page{padding:var(--space-10) 0 var(--space-20)}

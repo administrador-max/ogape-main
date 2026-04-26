@@ -182,32 +182,6 @@ $faq_items = array(
 ?>
 
 <main id="main" class="site-main future-site-design" role="main">
-    <header class="nav">
-        <div class="wrap nav__inner">
-            <a href="<?php echo esc_url( $home_url ); ?>" class="nav__brand" aria-label="Ogape Tu Chef en Casa · inicio">
-                <img src="<?php echo esc_url( $logo_url ); ?>" alt="">
-                <span>
-                    <span class="wordmark">Ogape</span>
-                    <span class="where">Tu Chef en Casa</span>
-                </span>
-            </a>
-            <nav aria-label="Future site navigation">
-                <ul class="nav__links">
-                    <li><a href="<?php echo esc_url( $plans_url ); ?>">Planes</a></li>
-                    <li><a href="<?php echo esc_url( $about_url ); ?>">Nosotros</a></li>
-                    <li><a href="<?php echo esc_url( $menu_url ); ?>">Menús</a></li>
-                    <li><a href="<?php echo esc_url( $how_url ); ?>">Kits</a></li>
-                    <li><a href="<?php echo esc_url( $gift_url ); ?>">Tarjetas regalo</a></li>
-                    <li><a href="<?php echo esc_url( $sustainability_url ); ?>">Sostenibilidad</a></li>
-                    <li><a href="<?php echo esc_url( $alliances_url ); ?>">Alianzas</a></li>
-                </ul>
-            </nav>
-            <div class="nav__right">
-                <a href="<?php echo esc_url( $login_url ); ?>" class="nav__signin">Iniciar sesión</a>
-                <a href="<?php echo esc_url( $waitlist_url ); ?>" class="nav__cta">Unirme</a>
-            </div>
-        </div>
-    </header>
 
     <section class="hero">
         <div class="wrap hero__grid">
