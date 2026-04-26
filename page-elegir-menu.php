@@ -170,6 +170,40 @@ $menu_recipes = array(
     ),
 );
 
+// ── LIVE RECIPE LOADING FROM CPT ─────────────────────────────────────────────
+// If the current caja has recipes assigned, replace the hardcoded list.
+$caja_obj = function_exists( 'ogape_get_current_caja' ) ? ogape_get_current_caja() : null;
+if ( $caja_obj ) {
+    $caja_recipe_ids = get_post_meta( $caja_obj->ID, '_ogape_recipe_ids', true );
+    if ( ! empty( $caja_recipe_ids ) && is_array( $caja_recipe_ids ) ) {
+        $recipe_posts = get_posts( array(
+            'post_type'   => 'ogape_recipe',
+            'include'     => array_map( 'absint', $caja_recipe_ids ),
+            'orderby'     => 'post__in',
+            'numberposts' => 20,
+        ) );
+        if ( $recipe_posts ) {
+            $live_recipes = array();
+            foreach ( $recipe_posts as $rp ) {
+                $tags_raw     = get_post_meta( $rp->ID, '_ogape_recipe_tags', true );
+                $live_recipes[] = array(
+                    'id'         => 'r' . $rp->ID,
+                    'name'       => $rp->post_title,
+                    'desc'       => get_post_meta( $rp->ID, '_ogape_recipe_desc', true ) ?: get_the_excerpt( $rp ),
+                    'tags'       => is_array( $tags_raw ) ? $tags_raw : array(),
+                    'time'       => get_post_meta( $rp->ID, '_ogape_recipe_time', true ) ?: '35 min',
+                    'difficulty' => get_post_meta( $rp->ID, '_ogape_recipe_difficulty', true ) ?: 'Fácil',
+                    'allergens'  => get_post_meta( $rp->ID, '_ogape_recipe_allergens', true ) ?: 'Ninguno',
+                    'isHero'     => (bool) get_post_meta( $rp->ID, '_ogape_recipe_hero', true ),
+                    'photoGrad'  => get_post_meta( $rp->ID, '_ogape_recipe_grad', true )
+                        ?: 'linear-gradient(145deg,#e8d5b0 0%,#c8a05a 50%,#9a6830 100%)',
+                );
+            }
+            $menu_recipes = $live_recipes;
+        }
+    }
+}
+
 // ── JS CONFIG ─────────────────────────────────────────────────────────────────
 
 $js_config = array(
@@ -191,6 +225,8 @@ $js_config = array(
     'weekLabel'     => $week_eyebrow,
     'weekKey'       => $week_key,
     'menuRecipes'   => $menu_recipes,
+    'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
+    'nonce'         => wp_create_nonce( 'ogape_account_actions' ),
 );
 ?>
 
@@ -484,9 +520,22 @@ window.OGAPE_MENU = <?php echo wp_json_encode( $js_config ); ?>;
       return;
     }
     if (this.disabled) return;
-    this.textContent = '…';
-    this.disabled = true;
-    setTimeout(function () { window.location.href = CFG.accountUrl; }, 900);
+    var btn = this;
+    btn.textContent = 'Guardando…';
+    btn.disabled = true;
+
+    var fd = new FormData();
+    fd.append('action',   'ogape_save_menu_selection');
+    fd.append('nonce',    CFG.nonce || '');
+    fd.append('week_key', CFG.weekKey || '');
+    Array.from(selected).forEach(function (id) { fd.append('selected[]', id); });
+
+    fetch(CFG.ajaxUrl || '/wp-admin/admin-ajax.php', {
+      method: 'POST', body: fd, credentials: 'same-origin'
+    })
+    .then(function (r) { return r.json(); })
+    .catch(function () { return { success: true }; }) // redirect regardless on network err
+    .then(function () { window.location.href = CFG.accountUrl; });
   });
 
   /* ── Init ── */

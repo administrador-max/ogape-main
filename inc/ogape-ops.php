@@ -196,6 +196,14 @@ function ogape_ops_admin_menu() {
         'ogape-clientes',
         'ogape_ops_clientes_page'
     );
+    add_submenu_page(
+        'ogape-ops',
+        'Recetas',
+        'Recetas',
+        'manage_options',
+        'ogape-recetas',
+        'ogape_ops_recetas_page'
+    );
 }
 add_action( 'admin_menu', 'ogape_ops_admin_menu' );
 
@@ -511,6 +519,34 @@ function ogape_ops_semana_page() {
                 <p style="color:#888">Ningún cliente registrado todavía.</p>
             <?php endif; ?>
 
+            <!-- Recipe assignment -->
+            <?php
+            $all_recipes      = get_posts( array( 'post_type' => 'ogape_recipe', 'numberposts' => 100, 'orderby' => 'title', 'order' => 'ASC' ) );
+            $assigned_ids_raw = get_post_meta( $caja_id, '_ogape_recipe_ids', true );
+            $assigned_ids     = is_array( $assigned_ids_raw ) ? array_map( 'intval', $assigned_ids_raw ) : array();
+            ?>
+            <h2 style="margin-top:28px">Recetas de esta semana</h2>
+            <?php if ( $all_recipes ) : ?>
+                <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:16px 24px;margin-bottom:24px">
+                    <input type="hidden" name="action" value="ogape_assign_recipes">
+                    <input type="hidden" name="caja_id" value="<?php echo (int) $caja_id; ?>">
+                    <?php wp_nonce_field( 'ogape_assign_recipes' ); ?>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:14px">
+                        <?php foreach ( $all_recipes as $rp ) : ?>
+                            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
+                                <input type="checkbox" name="recipe_ids[]" value="<?php echo (int) $rp->ID; ?>"<?php checked( in_array( $rp->ID, $assigned_ids, true ) ); ?>>
+                                <?php echo esc_html( $rp->post_title ); ?>
+                                <span style="font-size:11px;color:#888">#<?php echo (int) $rp->ID; ?></span>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+                    <button type="submit" class="button button-primary button-small">Guardar asignación</button>
+                    <a href="<?php echo esc_url( admin_url( 'admin.php?page=ogape-recetas' ) ); ?>" class="button button-small" style="margin-left:8px">Administrar recetas</a>
+                </form>
+            <?php else : ?>
+                <p style="color:#888">No hay recetas creadas todavía. <a href="<?php echo esc_url( admin_url( 'admin.php?page=ogape-recetas' ) ); ?>">Crear recetas →</a></p>
+            <?php endif; ?>
+
         <?php endif; ?>
 
         <!-- Create next week -->
@@ -537,6 +573,106 @@ function ogape_ops_semana_page() {
         </div>
     </div>
     <?php
+}
+
+// ── POST HANDLER: ASSIGN RECIPES TO CAJA ─────────────────────────────────────
+
+function ogape_ops_handle_assign_recipes() {
+    check_admin_referer( 'ogape_assign_recipes' );
+    if ( ! current_user_can( 'manage_options' ) ) wp_die( 'No autorizado.' );
+
+    $caja_id    = (int) ( $_POST['caja_id'] ?? 0 );
+    $recipe_ids = isset( $_POST['recipe_ids'] ) && is_array( $_POST['recipe_ids'] )
+        ? array_map( 'absint', $_POST['recipe_ids'] )
+        : array();
+
+    if ( ! $caja_id ) wp_die( 'Caja no válida.' );
+
+    update_post_meta( $caja_id, '_ogape_recipe_ids', $recipe_ids );
+    wp_safe_redirect( admin_url( 'admin.php?page=ogape-ops&updated=recipes' ) );
+    exit;
+}
+add_action( 'admin_post_ogape_assign_recipes', 'ogape_ops_handle_assign_recipes' );
+
+// ── POST HANDLER: CREATE RECIPE ───────────────────────────────────────────────
+
+function ogape_ops_handle_create_recipe() {
+    check_admin_referer( 'ogape_create_recipe' );
+    if ( ! current_user_can( 'manage_options' ) ) wp_die( 'No autorizado.' );
+
+    $title      = sanitize_text_field( wp_unslash( $_POST['recipe_title'] ?? '' ) );
+    $desc       = sanitize_textarea_field( wp_unslash( $_POST['recipe_desc'] ?? '' ) );
+    $time       = sanitize_text_field( wp_unslash( $_POST['recipe_time'] ?? '' ) );
+    $difficulty = sanitize_text_field( wp_unslash( $_POST['recipe_difficulty'] ?? '' ) );
+    $allergens  = sanitize_text_field( wp_unslash( $_POST['recipe_allergens'] ?? '' ) );
+    $grad       = sanitize_text_field( wp_unslash( $_POST['recipe_grad'] ?? '' ) );
+    $is_hero    = isset( $_POST['recipe_hero'] ) ? 1 : 0;
+
+    // Build tags array from checkboxes
+    $tag_map = ogape_recipe_tag_map();
+    $tags    = array();
+    foreach ( $tag_map as $type => $label ) {
+        if ( isset( $_POST[ 'tag_' . $type ] ) ) {
+            $tags[] = array( 'label' => $label, 'type' => $type );
+        }
+    }
+
+    if ( ! $title ) {
+        wp_safe_redirect( admin_url( 'admin.php?page=ogape-recetas&error=missing' ) );
+        exit;
+    }
+
+    $post_id = wp_insert_post( array(
+        'post_type'   => 'ogape_recipe',
+        'post_title'  => $title,
+        'post_status' => 'publish',
+    ) );
+
+    if ( is_wp_error( $post_id ) ) {
+        wp_safe_redirect( admin_url( 'admin.php?page=ogape-recetas&error=create' ) );
+        exit;
+    }
+
+    update_post_meta( $post_id, '_ogape_recipe_desc',       $desc );
+    update_post_meta( $post_id, '_ogape_recipe_time',       $time );
+    update_post_meta( $post_id, '_ogape_recipe_difficulty', $difficulty );
+    update_post_meta( $post_id, '_ogape_recipe_allergens',  $allergens );
+    update_post_meta( $post_id, '_ogape_recipe_grad',       $grad );
+    update_post_meta( $post_id, '_ogape_recipe_hero',       $is_hero );
+    update_post_meta( $post_id, '_ogape_recipe_tags',       $tags );
+
+    wp_safe_redirect( admin_url( 'admin.php?page=ogape-recetas&created=' . $post_id ) );
+    exit;
+}
+add_action( 'admin_post_ogape_create_recipe', 'ogape_ops_handle_create_recipe' );
+
+// ── POST HANDLER: DELETE RECIPE ───────────────────────────────────────────────
+
+function ogape_ops_handle_delete_recipe() {
+    check_admin_referer( 'ogape_delete_recipe' );
+    if ( ! current_user_can( 'manage_options' ) ) wp_die( 'No autorizado.' );
+
+    $recipe_id = (int) ( $_POST['recipe_id'] ?? 0 );
+    if ( ! $recipe_id ) wp_die( 'Receta no válida.' );
+
+    wp_delete_post( $recipe_id, true );
+    wp_safe_redirect( admin_url( 'admin.php?page=ogape-recetas&deleted=1' ) );
+    exit;
+}
+add_action( 'admin_post_ogape_delete_recipe', 'ogape_ops_handle_delete_recipe' );
+
+// ── RECIPE HELPERS ────────────────────────────────────────────────────────────
+
+function ogape_recipe_tag_map() {
+    return array(
+        'hero'    => 'Plato Estrella',
+        'local'   => 'Local',
+        'nomad'   => 'Favorito',
+        'protein' => 'Alto en proteína',
+        'veg'     => 'Vegetariano',
+        'intl'    => 'Internacional',
+        'family'  => 'Para toda la familia',
+    );
 }
 
 // ── ADMIN PAGE: CLIENTES ──────────────────────────────────────────────────────
@@ -596,6 +732,154 @@ function ogape_ops_clientes_page() {
         <?php else : ?>
             <p>No hay clientes registrados todavía.</p>
         <?php endif; ?>
+    </div>
+    <?php
+}
+
+// ── ADMIN PAGE: RECETAS ───────────────────────────────────────────────────────
+
+function ogape_ops_recetas_page() {
+    if ( ! current_user_can( 'manage_options' ) ) return;
+
+    $created = isset( $_GET['created'] ) ? (int) $_GET['created'] : 0;
+    $deleted = isset( $_GET['deleted'] );
+    $err     = isset( $_GET['error'] ) ? sanitize_key( $_GET['error'] ) : '';
+
+    $recipes = get_posts( array( 'post_type' => 'ogape_recipe', 'numberposts' => 200, 'orderby' => 'title', 'order' => 'ASC' ) );
+    $tag_map = ogape_recipe_tag_map();
+
+    $grad_options = array(
+        'linear-gradient(145deg,#e8d5b0 0%,#c8a05a 50%,#9a6830 100%)' => 'Dorado (pescado/mandioca)',
+        'linear-gradient(145deg,#d4b896 0%,#a87040 50%,#7a4a20 100%)' => 'Marrón (carne oscura)',
+        'linear-gradient(145deg,#c5d8a0 0%,#8aad55 50%,#5a7a30 100%)' => 'Verde (bowl/vegetariano)',
+        'linear-gradient(145deg,#c8d4e8 0%,#7890b0 50%,#486080 100%)' => 'Azul (curry/suave)',
+        'linear-gradient(145deg,#e8c8b0 0%,#c09068 50%,#905840 100%)' => 'Salmón (milanesa/pollo)',
+        'linear-gradient(145deg,#d8c8e0 0%,#9878b0 50%,#685088 100%)' => 'Violeta (vegetariano especial)',
+        'linear-gradient(145deg,#f0e0c0 0%,#d4a060 50%,#a06830 100%)' => 'Ámbar (pasta/risotto)',
+    );
+    ?>
+    <div class="wrap">
+        <h1 class="wp-heading-inline">Recetas Ogape (<?php echo count( $recipes ); ?>)</h1>
+        <a href="#agregar-receta" class="page-title-action">+ Agregar receta</a>
+        <hr class="wp-header-end">
+
+        <?php if ( $created ) : ?>
+            <div class="notice notice-success is-dismissible"><p>Receta creada con ID <?php echo $created; ?>.</p></div>
+        <?php elseif ( $deleted ) : ?>
+            <div class="notice notice-success is-dismissible"><p>Receta eliminada.</p></div>
+        <?php elseif ( $err ) : ?>
+            <div class="notice notice-error is-dismissible"><p>Error: <?php echo esc_html( $err ); ?>.</p></div>
+        <?php endif; ?>
+
+        <?php if ( $recipes ) : ?>
+            <table class="widefat striped" style="margin-bottom:32px">
+                <thead>
+                    <tr>
+                        <th style="width:36px">ID</th>
+                        <th>Nombre</th>
+                        <th>Tiempo</th>
+                        <th>Dificultad</th>
+                        <th>Alérgenos</th>
+                        <th>Tags</th>
+                        <th style="width:70px">Estrella</th>
+                        <th style="width:80px">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ( $recipes as $rp ) :
+                        $r_tags = get_post_meta( $rp->ID, '_ogape_recipe_tags', true );
+                        $r_tags = is_array( $r_tags ) ? $r_tags : array();
+                        $tag_labels = array_map( function( $t ) { return $t['label'] ?? ''; }, $r_tags );
+                        ?>
+                        <tr>
+                            <td style="color:#888;font-size:12px"><?php echo (int) $rp->ID; ?></td>
+                            <td>
+                                <strong><?php echo esc_html( $rp->post_title ); ?></strong>
+                                <div style="font-size:11px;color:#666;margin-top:2px"><?php echo esc_html( mb_strimwidth( get_post_meta( $rp->ID, '_ogape_recipe_desc', true ), 0, 80, '…' ) ); ?></div>
+                            </td>
+                            <td style="font-size:12px"><?php echo esc_html( get_post_meta( $rp->ID, '_ogape_recipe_time', true ) ); ?></td>
+                            <td style="font-size:12px"><?php echo esc_html( get_post_meta( $rp->ID, '_ogape_recipe_difficulty', true ) ); ?></td>
+                            <td style="font-size:12px"><?php echo esc_html( get_post_meta( $rp->ID, '_ogape_recipe_allergens', true ) ); ?></td>
+                            <td style="font-size:11px"><?php echo esc_html( implode( ' · ', $tag_labels ) ); ?></td>
+                            <td style="text-align:center"><?php echo get_post_meta( $rp->ID, '_ogape_recipe_hero', true ) ? '⭐' : ''; ?></td>
+                            <td>
+                                <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin:0" onsubmit="return confirm('¿Eliminar esta receta?')">
+                                    <input type="hidden" name="action" value="ogape_delete_recipe">
+                                    <input type="hidden" name="recipe_id" value="<?php echo (int) $rp->ID; ?>">
+                                    <?php wp_nonce_field( 'ogape_delete_recipe' ); ?>
+                                    <button type="submit" class="button button-small" style="color:#c62828">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else : ?>
+            <p style="color:#888">No hay recetas todavía. Creá la primera a continuación.</p>
+        <?php endif; ?>
+
+        <!-- Add recipe form -->
+        <div id="agregar-receta" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:24px;max-width:720px">
+            <h2 style="margin-top:0">Agregar receta</h2>
+            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+                <input type="hidden" name="action" value="ogape_create_recipe">
+                <?php wp_nonce_field( 'ogape_create_recipe' ); ?>
+                <table class="form-table" role="presentation">
+                    <tr>
+                        <th><label for="recipe_title">Nombre *</label></th>
+                        <td><input type="text" id="recipe_title" name="recipe_title" class="regular-text" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="recipe_desc">Descripción</label></th>
+                        <td><textarea id="recipe_desc" name="recipe_desc" class="large-text" rows="3"></textarea></td>
+                    </tr>
+                    <tr>
+                        <th><label for="recipe_time">Tiempo</label></th>
+                        <td><input type="text" id="recipe_time" name="recipe_time" placeholder="35 min" class="small-text"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="recipe_difficulty">Dificultad</label></th>
+                        <td>
+                            <select id="recipe_difficulty" name="recipe_difficulty">
+                                <option value="Fácil">Fácil</option>
+                                <option value="Media">Media</option>
+                                <option value="Difícil">Difícil</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="recipe_allergens">Alérgenos</label></th>
+                        <td><input type="text" id="recipe_allergens" name="recipe_allergens" placeholder="Gluten, lácteos — o Ninguno" class="regular-text"></td>
+                    </tr>
+                    <tr>
+                        <th>Tags</th>
+                        <td>
+                            <?php foreach ( $tag_map as $type => $label ) : ?>
+                                <label style="display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:13px">
+                                    <input type="checkbox" name="tag_<?php echo esc_attr( $type ); ?>" value="1">
+                                    <?php echo esc_html( $label ); ?>
+                                </label>
+                            <?php endforeach; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="recipe_hero">Plato estrella</label></th>
+                        <td><label><input type="checkbox" id="recipe_hero" name="recipe_hero" value="1"> Marcar como plato estrella de la semana</label></td>
+                    </tr>
+                    <tr>
+                        <th><label for="recipe_grad">Color de tarjeta</label></th>
+                        <td>
+                            <select id="recipe_grad" name="recipe_grad" class="regular-text">
+                                <?php foreach ( $grad_options as $val => $label ) : ?>
+                                    <option value="<?php echo esc_attr( $val ); ?>"><?php echo esc_html( $label ); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <p class="submit"><button type="submit" class="button button-primary">Guardar receta</button></p>
+            </form>
+        </div>
     </div>
     <?php
 }

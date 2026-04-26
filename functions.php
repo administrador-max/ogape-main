@@ -1168,6 +1168,27 @@ function ogape_ajax_update_notifications() {
 }
 add_action( 'wp_ajax_ogape_update_notifications', 'ogape_ajax_update_notifications' );
 
+function ogape_ajax_save_menu_selection() {
+    check_ajax_referer( 'ogape_account_actions', 'nonce' );
+    $user_id = get_current_user_id();
+    if ( ! $user_id ) {
+        wp_send_json_error( array( 'message' => 'No autorizado.' ), 403 );
+    }
+
+    $week_key    = sanitize_key( wp_unslash( $_POST['week_key'] ?? '' ) );
+    $raw         = isset( $_POST['selected'] ) && is_array( $_POST['selected'] ) ? $_POST['selected'] : array();
+    $selected    = array_values( array_map( 'sanitize_key', $raw ) );
+
+    if ( $week_key ) {
+        update_user_meta( $user_id, 'ogape_menu_selection_' . $week_key, $selected );
+    }
+    update_user_meta( $user_id, 'ogape_menu_last_selection', $selected );
+    update_user_meta( $user_id, 'ogape_menu_last_week', $week_key );
+
+    wp_send_json_success( array( 'count' => count( $selected ) ) );
+}
+add_action( 'wp_ajax_ogape_save_menu_selection', 'ogape_ajax_save_menu_selection' );
+
 // ── REMOVE UNNECESSARY WP BLOAT ─────────────────────────────
 remove_action( 'wp_head', 'wp_generator' );           // Hide WP version
 remove_action( 'wp_head', 'wlwmanifest_link' );       // Remove Windows Live Writer link
