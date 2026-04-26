@@ -681,6 +681,8 @@ function ogape_save_customer_meta( $user_id, $data ) {
         'setup_complete'        => 'ogape_setup_complete',
         'phone'                 => 'ogape_phone',
         'registered_at'         => 'ogape_registered_at',
+        'pause_status'          => 'ogape_pause_status',
+        'pause_until'           => 'ogape_pause_until',
     );
     foreach ( $meta_map as $data_key => $meta_key ) {
         if ( array_key_exists( $data_key, $data ) ) {
@@ -719,6 +721,8 @@ function ogape_get_customer_meta( $user_id ) {
         'comms'                 => (bool) get_user_meta( $user_id, 'ogape_comms', true ),
         'setup_complete'        => (bool) get_user_meta( $user_id, 'ogape_setup_complete', true ),
         'registered_at'         => (string) get_user_meta( $user_id, 'ogape_registered_at', true ),
+        'pause_status'          => (string) get_user_meta( $user_id, 'ogape_pause_status', true ),
+        'pause_until'           => (string) get_user_meta( $user_id, 'ogape_pause_until', true ),
     );
 }
 
@@ -967,6 +971,155 @@ function ogape_handle_demo_account_flow() {
     }
 }
 add_action( 'template_redirect', 'ogape_handle_demo_account_flow', 1 );
+
+// ── ACCOUNT AJAX HANDLERS ────────────────────────────────────────────────────
+
+function ogape_ajax_update_profile() {
+    check_ajax_referer( 'ogape_account_actions', 'nonce' );
+    $user_id = get_current_user_id();
+    if ( ! $user_id ) {
+        wp_send_json_error( array( 'message' => 'No autorizado.' ), 403 );
+    }
+
+    $first_name = sanitize_text_field( wp_unslash( $_POST['first_name'] ?? '' ) );
+    $last_name  = sanitize_text_field( wp_unslash( $_POST['last_name'] ?? '' ) );
+    $email      = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
+    $phone      = sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) );
+    $password   = isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '';
+
+    if ( $email && $email !== wp_get_current_user()->user_email && email_exists( $email ) ) {
+        wp_send_json_error( array( 'message' => 'Ese email ya está registrado en otra cuenta.' ) );
+    }
+
+    $user_data = array( 'ID' => $user_id );
+    if ( $first_name ) {
+        $user_data['first_name']    = $first_name;
+        $user_data['display_name']  = trim( $first_name . ' ' . $last_name );
+    }
+    if ( $last_name )                        { $user_data['last_name']   = $last_name; }
+    if ( $email )                            { $user_data['user_email']  = $email; }
+    if ( $password && strlen( $password ) >= 8 ) { $user_data['user_pass'] = $password; }
+
+    $result = wp_update_user( $user_data );
+    if ( is_wp_error( $result ) ) {
+        wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+    }
+
+    if ( $phone ) {
+        ogape_save_customer_meta( $user_id, array( 'phone' => $phone ) );
+    }
+
+    $updated_user = get_userdata( $user_id );
+    $fn           = $updated_user->first_name ?: $updated_user->display_name;
+    $ln           = $updated_user->last_name;
+    wp_send_json_success( array(
+        'name'       => trim( $fn . ' ' . $ln ),
+        'first_name' => $fn,
+        'initials'   => strtoupper( mb_substr( $fn, 0, 1 ) . mb_substr( $ln, 0, 1 ) ),
+        'email'      => $updated_user->user_email,
+    ) );
+}
+add_action( 'wp_ajax_ogape_update_profile', 'ogape_ajax_update_profile' );
+
+function ogape_ajax_update_address() {
+    check_ajax_referer( 'ogape_account_actions', 'nonce' );
+    $user_id = get_current_user_id();
+    if ( ! $user_id ) {
+        wp_send_json_error( array( 'message' => 'No autorizado.' ), 403 );
+    }
+
+    $zone_key = sanitize_key( wp_unslash( $_POST['zone_key'] ?? '' ) );
+    $address  = sanitize_text_field( wp_unslash( $_POST['address'] ?? '' ) );
+    $apt      = sanitize_text_field( wp_unslash( $_POST['apt'] ?? '' ) );
+    $window   = sanitize_key( wp_unslash( $_POST['window'] ?? 'pm' ) );
+    $notes    = sanitize_textarea_field( wp_unslash( $_POST['notes'] ?? '' ) );
+
+    $zone_labels = array(
+        'villa-morra'    => 'Villa Morra',
+        'recoleta'       => 'Recoleta',
+        'las-carmelitas' => 'Las Carmelitas',
+        'mburucuya'      => 'Mburucuyá',
+        'ykua-sati'      => 'Ykua Satí',
+        'centro'         => 'Centro',
+        'san-lorenzo'    => 'San Lorenzo',
+        'lambare'        => 'Lambaré',
+    );
+    $zone = $zone_labels[ $zone_key ] ?? ucwords( str_replace( '-', ' ', $zone_key ) );
+
+    $window_labels = array(
+        'am'  => 'Mañana · 10:00 – 13:00',
+        'pm'  => 'Tarde · 14:00 – 19:00',
+        'any' => 'Sin preferencia de horario',
+    );
+    $window_label = $window_labels[ $window ] ?? $window_labels['pm'];
+
+    ogape_save_customer_meta( $user_id, array(
+        'zone'                  => $zone,
+        'zone_key'              => $zone_key,
+        'address'               => $address,
+        'apt'                   => $apt,
+        'delivery_window'       => $window,
+        'delivery_window_label' => $window_label,
+        'notes'                 => $notes,
+    ) );
+
+    wp_send_json_success( array(
+        'zone'         => $zone,
+        'zone_key'     => $zone_key,
+        'address'      => $address,
+        'window_label' => $window_label,
+    ) );
+}
+add_action( 'wp_ajax_ogape_update_address', 'ogape_ajax_update_address' );
+
+function ogape_ajax_update_plan() {
+    check_ajax_referer( 'ogape_account_actions', 'nonce' );
+    $user_id = get_current_user_id();
+    if ( ! $user_id ) {
+        wp_send_json_error( array( 'message' => 'No autorizado.' ), 403 );
+    }
+
+    $people  = in_array( (string) absint( $_POST['people'] ?? 2 ), array( '2', '4' ), true )
+        ? (string) absint( $_POST['people'] ) : '2';
+    $recipes = in_array( (string) absint( $_POST['recipes'] ?? 3 ), array( '2', '3', '4', '5' ), true )
+        ? (string) absint( $_POST['recipes'] ) : '3';
+
+    $plan = ogape_demo_plan_from_state( array( 'people' => $people, 'recipes' => $recipes ) );
+
+    ogape_save_customer_meta( $user_id, array(
+        'people'  => $plan['people'],
+        'recipes' => $plan['recipes'],
+        'price'   => $plan['price'],
+        'plan'    => $plan['label'],
+    ) );
+
+    wp_send_json_success( array(
+        'label'         => $plan['label'],
+        'price_display' => ogape_demo_format_price( $plan['price'] ),
+    ) );
+}
+add_action( 'wp_ajax_ogape_update_plan', 'ogape_ajax_update_plan' );
+
+function ogape_ajax_pause_plan() {
+    check_ajax_referer( 'ogape_account_actions', 'nonce' );
+    $user_id = get_current_user_id();
+    if ( ! $user_id ) {
+        wp_send_json_error( array( 'message' => 'No autorizado.' ), 403 );
+    }
+
+    $pause_when = sanitize_key( wp_unslash( $_POST['pause_when'] ?? 'next' ) );
+    if ( ! in_array( $pause_when, array( 'next', 'two', 'indefinite' ), true ) ) {
+        $pause_when = 'next';
+    }
+
+    ogape_save_customer_meta( $user_id, array(
+        'pause_status' => $pause_when,
+        'pause_until'  => wp_date( 'Y-m-d' ),
+    ) );
+
+    wp_send_json_success( array( 'pause_when' => $pause_when ) );
+}
+add_action( 'wp_ajax_ogape_pause_plan', 'ogape_ajax_pause_plan' );
 
 // ── REMOVE UNNECESSARY WP BLOAT ─────────────────────────────
 remove_action( 'wp_head', 'wp_generator' );           // Hide WP version

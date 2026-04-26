@@ -719,7 +719,7 @@ if ( isset( $_GET['setup'] ) ) {
         </div>
         <div style="margin-bottom:var(--space-6)">
           <label class="modal-lbl" for="dirNotes">Instrucciones para el repartidor</label>
-          <input class="modal-input" id="dirNotes" type="text" placeholder="Timbre roto — llamar al WhatsApp al llegar">
+          <input class="modal-input" id="dirNotes" type="text" placeholder="Timbre roto — llamar al WhatsApp al llegar" value="<?php echo esc_attr( $demo_notes ); ?>">
         </div>
         <div class="modal__footer">
           <button type="button" class="btn btn--ghost" id="dirCancelBtn">Cancelar</button>
@@ -1213,5 +1213,165 @@ if ( isset( $_GET['setup'] ) ) {
 
   </div>
 </div>
+
+<script>
+(function () {
+  var ajaxUrl = (typeof ogapeTheme !== 'undefined') ? ogapeTheme.ajaxUrl : '/wp-admin/admin-ajax.php';
+  var nonce   = '<?php echo esc_js( wp_create_nonce( 'ogape_account_actions' ) ); ?>';
+  var logoutUrl = '<?php echo esc_js( wp_logout_url( home_url( '/' ) ) ); ?>';
+
+  function post(action, data, onSuccess, onError) {
+    data.action = action;
+    data.nonce  = nonce;
+    var fd = new FormData();
+    Object.keys(data).forEach(function (k) { fd.append(k, data[k]); });
+    fetch(ajaxUrl, { method: 'POST', body: fd, credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (res.success) { onSuccess(res.data || {}); }
+        else { onError((res.data && res.data.message) ? res.data.message : 'Error. Intentá de nuevo.'); }
+      })
+      .catch(function () { onError('Error de red. Intentá de nuevo.'); });
+  }
+
+  function setBtn(btn, loading, orig) {
+    if (loading) { btn.disabled = true; btn.dataset.origText = btn.textContent; btn.textContent = 'Guardando…'; }
+    else { btn.disabled = false; btn.textContent = btn.dataset.origText || btn.textContent; }
+  }
+
+  function showFormError(formEl, msg) {
+    var err = formEl.querySelector('.form-ajax-error');
+    if (!err) {
+      err = document.createElement('p');
+      err.className = 'form-ajax-error';
+      err.style.cssText = 'color:#c0392b;font-size:13px;margin:.5rem 0 0;padding:.5rem .75rem;background:#fdf2f2;border-radius:6px;border:1px solid #f5c6c6';
+      var foot = formEl.querySelector('.modal__footer');
+      if (foot) foot.insertAdjacentElement('beforebegin', err);
+      else formEl.appendChild(err);
+    }
+    err.textContent = msg;
+    err.style.display = '';
+  }
+
+  function hideFormError(formEl) {
+    var err = formEl.querySelector('.form-ajax-error');
+    if (err) err.style.display = 'none';
+  }
+
+  function showSuccess(wrapId, successId) {
+    var wrap = document.getElementById(wrapId);
+    var succ = document.getElementById(successId);
+    if (wrap) wrap.style.display = 'none';
+    if (succ) succ.style.display = '';
+  }
+
+  // ── PERFIL ───────────────────────────────────────────────────────
+  var perfilForm = document.getElementById('perfilForm');
+  if (perfilForm) {
+    perfilForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      hideFormError(perfilForm);
+      var btn = perfilForm.querySelector('[type=submit]');
+      setBtn(btn, true);
+      post('ogape_update_profile', {
+        first_name: document.getElementById('pfNombre').value,
+        last_name:  document.getElementById('pfApellido').value,
+        email:      document.getElementById('pfEmail').value,
+        phone:      document.getElementById('pfTel').value,
+        password:   document.getElementById('pfPw').value,
+      }, function (data) {
+        if (data.first_name) {
+          document.querySelectorAll('.avatar-btn .name').forEach(function (el) { el.textContent = data.first_name; });
+        }
+        if (data.initials) {
+          document.querySelectorAll('.avatar-btn .avatar').forEach(function (el) { el.textContent = data.initials; });
+        }
+        if (data.name) {
+          document.querySelectorAll('.user-menu__head .uname').forEach(function (el) { el.textContent = data.name; });
+        }
+        if (data.email) {
+          document.querySelectorAll('.user-menu__head .email').forEach(function (el) { el.textContent = data.email; });
+        }
+        showSuccess('perfilFormWrap', 'perfilSuccess');
+      }, function (msg) {
+        setBtn(btn, false);
+        showFormError(perfilForm, msg);
+      });
+    });
+  }
+
+  // ── DIRECCIÓN ────────────────────────────────────────────────────
+  var dirForm = document.getElementById('dirForm');
+  if (dirForm) {
+    dirForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      hideFormError(dirForm);
+      var btn = dirForm.querySelector('[type=submit]');
+      setBtn(btn, true);
+      post('ogape_update_address', {
+        zone_key: document.getElementById('dirZone').value,
+        address:  document.getElementById('dirAddress').value,
+        apt:      document.getElementById('dirApt').value,
+        window:   document.getElementById('dirWindow').value,
+        notes:    document.getElementById('dirNotes').value,
+      }, function (data) {
+        showSuccess('dirFormWrap', 'dirSuccess');
+      }, function (msg) {
+        setBtn(btn, false);
+        showFormError(dirForm, msg);
+      });
+    });
+  }
+
+  // ── PLAN ─────────────────────────────────────────────────────────
+  var planConfirmBtn = document.getElementById('planConfirmBtn');
+  if (planConfirmBtn) {
+    planConfirmBtn.addEventListener('click', function () {
+      setBtn(planConfirmBtn, true);
+      var people  = document.querySelector('#peopleOpts input[name=mp]:checked');
+      var recipes = document.querySelector('#recipesOpts input[name=mr]:checked');
+      post('ogape_update_plan', {
+        people:  people  ? people.value  : '2',
+        recipes: recipes ? recipes.value : '3',
+      }, function (data) {
+        var msg = document.getElementById('planSuccessMsg');
+        if (msg && data.label && data.price_display) {
+          msg.textContent = 'Plan actualizado: ' + data.label + ' · ' + data.price_display + ' / sem.';
+        }
+        document.getElementById('planForm').style.display = 'none';
+        document.getElementById('planSuccess').style.display = '';
+      }, function (msg) {
+        setBtn(planConfirmBtn, false);
+        alert(msg);
+      });
+    });
+  }
+
+  // ── PAUSA ─────────────────────────────────────────────────────────
+  var pauseConfirmBtn = document.getElementById('pauseConfirmBtn');
+  if (pauseConfirmBtn) {
+    pauseConfirmBtn.addEventListener('click', function () {
+      setBtn(pauseConfirmBtn, true);
+      var sel = document.querySelector('#pauseOpts input[name=pauseWhen]:checked');
+      post('ogape_pause_plan', {
+        pause_when: sel ? sel.value : 'next',
+      }, function () {
+        document.getElementById('pauseForm').style.display = 'none';
+        document.getElementById('pauseSuccess').style.display = '';
+      }, function (msg) {
+        setBtn(pauseConfirmBtn, false);
+        alert(msg);
+      });
+    });
+  }
+
+  // ── CERRAR SESIÓN ─────────────────────────────────────────────────
+  document.querySelectorAll('.umenu-item.is-danger').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      window.location.href = logoutUrl;
+    });
+  });
+})();
+</script>
 
 <?php get_footer(); ?>
