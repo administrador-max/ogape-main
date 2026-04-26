@@ -59,6 +59,65 @@ if ( false !== strpos( $demo_window, 'Mañana' ) || false !== strpos( $demo_wind
     $demo_window_key = 'any';
 }
 
+// ── LIVE CAJA STATE ────────────────────────────────────────────────────────
+$caja_ctx    = function_exists( 'ogape_get_caja_context' ) ? ogape_get_caja_context( $demo_zone_key ) : null;
+$caja_status = $caja_ctx ? $caja_ctx['status'] : 'in_transit';
+
+// Map status string to a 0-based index: planning=0 confirmed=1 preparing=2 in_transit=3 delivered=4
+$_status_order = array( 'planning', 'confirmed', 'preparing', 'in_transit', 'delivered' );
+$_status_idx   = (int) array_search( $caja_status, $_status_order, true );
+
+// Tracker step classes (is-done / is-current / '')
+$step1_class = $_status_idx >= 2 ? 'is-done' : ( 1 === $_status_idx ? 'is-current' : '' );
+$step2_class = $_status_idx >= 3 ? 'is-done' : ( 2 === $_status_idx ? 'is-current' : '' );
+$step3_class = $_status_idx >= 4 ? 'is-done' : ( 3 === $_status_idx ? 'is-current' : '' );
+$step4_class = $_status_idx >= 4 ? 'is-done' : '';
+
+// Delivery card headline
+$card_title = array(
+    'planning'   => 'Caja confirmada · entrega el ' . ( $caja_ctx ? $caja_ctx['delivery_label'] : $delivery_label ),
+    'confirmed'  => 'Caja confirmada · entrega el ' . ( $caja_ctx ? $caja_ctx['delivery_label'] : $delivery_label ),
+    'preparing'  => 'Preparando tu caja',
+    'in_transit' => 'En camino a ' . $demo_zone,
+    'delivered'  => 'Entregada en ' . $demo_zone,
+)[ $caja_status ] ?? 'En camino a ' . $demo_zone;
+
+// Delivery card sub-line
+$_card_date = $caja_ctx && $caja_ctx['delivery_label'] ? $caja_ctx['delivery_label'] : $delivery_label;
+$card_sub   = array(
+    'planning'   => 'Tu caja está programada. El cierre de pedidos es el ' . $cutoff_label . '.',
+    'confirmed'  => 'Tu caja está confirmada. El cierre de pedidos es el ' . $cutoff_label . '.',
+    'preparing'  => 'Estamos preparando los ingredientes. Sale el ' . $_card_date . '.',
+    'in_transit' => 'Entrega estimada: ' . ucfirst( $_card_date ),
+    'delivered'  => 'Entregada el ' . $_card_date . '. ¡Gracias por elegir Ogape!',
+)[ $caja_status ] ?? 'Entrega estimada: ' . ucfirst( $_card_date );
+
+// Badge
+$card_badge = array(
+    'planning'   => 'Planificando',
+    'confirmed'  => 'Confirmada',
+    'preparing'  => 'Preparando',
+    'in_transit' => 'En tránsito',
+    'delivered'  => 'Entregada',
+)[ $caja_status ] ?? 'En proceso';
+
+// ETA: use zone-specific eta if set, else extract time range from window label
+$card_eta = $caja_ctx && $caja_ctx['eta'] ? $caja_ctx['eta'] : '';
+if ( ! $card_eta && preg_match( '/\d{2}:\d{2}\s*[–\-]\s*\d{2}:\d{2}/', $demo_window, $_m ) ) {
+    $card_eta = $_m[0];
+}
+
+// Week number from live caja (falls back to '01')
+$card_week_number = $caja_ctx ? $caja_ctx['week_number'] : '01';
+
+// Delivery numeric date for invoice/history (prefer live caja date)
+if ( $caja_ctx && $caja_ctx['delivery_numeric'] ) {
+    $delivery_numeric      = $caja_ctx['delivery_numeric'];
+    $delivery_label_year   = $caja_ctx['delivery_label_year'];
+    $delivery_label        = $caja_ctx['delivery_label'];
+    $delivery_short_label  = $caja_ctx['delivery_label'];
+}
+
 // Post-flow messages
 $demo_message = '';
 if ( isset( $_GET['demo'] ) ) {
@@ -165,33 +224,45 @@ if ( isset( $_GET['setup'] ) ) {
         <div class="card delivery-card">
           <div class="delivery-header">
             <div>
-              <div class="card__eyebrow"><span class="dot"></span>Caja N.º 01</div>
-	              <h2 class="card__h">En camino a <?php echo esc_html( $demo_zone ); ?></h2>
-	              <p class="card__sub">Entrega estimada: <?php echo esc_html( $delivery_label ); ?> entre 10:00 y 13:00</p>
+              <div class="card__eyebrow"><span class="dot"></span>Caja N.º <?php echo esc_html( $card_week_number ); ?></div>
+              <h2 class="card__h"><?php echo esc_html( $card_title ); ?></h2>
+              <p class="card__sub"><?php echo esc_html( $card_sub ); ?></p>
             </div>
-            <span class="delivery-badge"><span class="pulse"></span>En tránsito</span>
+            <span class="delivery-badge"><?php if ( 'in_transit' === $caja_status ) : ?><span class="pulse"></span><?php endif; ?><?php echo esc_html( $card_badge ); ?></span>
           </div>
 
           <div class="timeline" role="list" aria-label="Estado de entrega">
-            <div class="tl-step is-done" role="listitem">
+            <div class="tl-step <?php echo esc_attr( $step1_class ); ?>" role="listitem">
               <div class="tl-dot">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg>
+                <?php if ( 'is-done' === $step1_class ) : ?>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg>
+                <?php else : ?>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                <?php endif; ?>
               </div>
               <div class="tl-label">Pedido<br>confirmado</div>
             </div>
-            <div class="tl-step is-done" role="listitem">
+            <div class="tl-step <?php echo esc_attr( $step2_class ); ?>" role="listitem">
               <div class="tl-dot">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg>
+                <?php if ( 'is-done' === $step2_class ) : ?>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg>
+                <?php else : ?>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <?php endif; ?>
               </div>
               <div class="tl-label">Ingredientes<br>preparados</div>
             </div>
-            <div class="tl-step is-current" role="listitem">
+            <div class="tl-step <?php echo esc_attr( $step3_class ); ?>" role="listitem">
               <div class="tl-dot">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v4h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                <?php if ( 'is-done' === $step3_class ) : ?>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg>
+                <?php else : ?>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v4h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                <?php endif; ?>
               </div>
               <div class="tl-label">En<br>camino</div>
             </div>
-            <div class="tl-step" role="listitem">
+            <div class="tl-step <?php echo esc_attr( $step4_class ); ?>" role="listitem">
               <div class="tl-dot">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
               </div>
@@ -199,10 +270,22 @@ if ( isset( $_GET['setup'] ) ) {
             </div>
           </div>
 
+          <?php if ( 'in_transit' === $caja_status ) : ?>
           <div class="delivery-eta">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-	            <span class="text"><b>Llegada estimada: 10:30 – 11:15</b> · <?php echo esc_html( $demo_delivery_address ); ?> — te mandamos un WhatsApp cuando estemos a 15 min.</span>
+            <span class="text">
+              <?php if ( $card_eta ) : ?>
+                <b>Llegada estimada: <?php echo esc_html( $card_eta ); ?></b> ·
+              <?php endif; ?>
+              <?php echo esc_html( $demo_delivery_address ); ?> — te mandamos un WhatsApp cuando estemos a 15 min.
+            </span>
           </div>
+          <?php elseif ( 'delivered' !== $caja_status ) : ?>
+          <div class="delivery-eta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span class="text">Ventana de entrega: <b><?php echo esc_html( $demo_window ); ?></b> · <?php echo esc_html( $demo_delivery_address ); ?></span>
+          </div>
+          <?php endif; ?>
         </div>
 
         <!-- THIS WEEK'S RECIPES -->
