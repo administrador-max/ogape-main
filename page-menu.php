@@ -237,64 +237,6 @@ $filters = array(
 
 <main id="main" class="site-main menu-design" role="main">
 
-    <!-- NAV -->
-    <header class="nav">
-        <div class="wrap nav__inner">
-            <a href="<?php echo esc_url( $home_url ); ?>" class="nav__brand" aria-label="Ogape Tu Chef en Casa · inicio">
-                <img src="<?php echo esc_url( $logo_url ); ?>" alt="">
-                <span>
-                    <span class="wordmark">Ogape</span>
-                    <span class="where">Tu Chef en Casa</span>
-                </span>
-            </a>
-            <nav aria-label="Menu page navigation">
-                <ul class="nav__links">
-                    <li><a href="<?php echo esc_url( $plans_url ); ?>">Planes</a></li>
-                    <li><a href="<?php echo esc_url( $about_url ); ?>">Nosotros</a></li>
-                    <li><a href="<?php echo esc_url( $menu_url ); ?>" class="is-current">Menús</a></li>
-                    <li><a href="<?php echo esc_url( $how_url ); ?>">Kits</a></li>
-                    <li><a href="<?php echo esc_url( $gift_url ); ?>">Tarjetas regalo</a></li>
-                    <li><a href="<?php echo esc_url( $sustainability_url ); ?>">Sostenibilidad</a></li>
-                    <li><a href="<?php echo esc_url( $alliances_url ); ?>">Alianzas</a></li>
-                </ul>
-            </nav>
-            <div class="nav__right">
-                <?php if ( $is_logged_in ) : ?>
-                    <div class="nav__user">
-                        <button class="nav__notif" aria-label="Notificaciones">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                            <span class="badge"></span>
-                        </button>
-                        <button class="avatar-btn" id="menuAvatarBtn" aria-haspopup="true" aria-expanded="false">
-                            <span class="avatar"><?php echo esc_html( $menu_initials ); ?></span>
-                            <span class="name"><?php echo esc_html( $menu_first_name ); ?></span>
-                            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
-                        </button>
-
-                        <div class="user-menu" id="menuUserMenu" role="menu">
-                            <div class="user-menu__head">
-                                <div class="uname"><?php echo esc_html( $menu_name ); ?></div>
-                                <div class="email"><?php echo esc_html( $menu_email ); ?></div>
-                            </div>
-                            <a href="<?php echo esc_url( $account_url ); ?>" class="umenu-item" role="menuitem">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-                                Mi caja
-                            </a>
-                            <div class="umenu-sep"></div>
-                            <a href="<?php echo esc_url( $logout_url ); ?>" class="umenu-item is-danger" role="menuitem">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                                Cerrar sesión
-                            </a>
-                        </div>
-                    </div>
-                <?php else : ?>
-                    <a href="<?php echo esc_url( $login_url ); ?>" class="nav__signin">Iniciar sesión</a>
-                    <a href="<?php echo esc_url( $waitlist_url ); ?>" class="nav__cta">Unirme</a>
-                <?php endif; ?>
-            </div>
-        </div>
-    </header>
-
     <!-- PAGE HEADER -->
     <section class="pagehead">
         <div class="wrap">
