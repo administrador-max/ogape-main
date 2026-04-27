@@ -432,56 +432,6 @@ $filters = array(
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="foot">
-        <div class="wrap">
-            <div class="foot__top">
-                <div>
-                    <div class="foot__brand">
-                        <img src="<?php echo esc_url( $logo_url ); ?>" alt="">
-                        <div>
-                            <div class="foot__wordmark">Ogape</div>
-                            <span class="foot__where">Tu Chef en Casa</span>
-                        </div>
-                    </div>
-                    <p class="foot__copy">Recetas semanales, listas para cocinar en 30 minutos.</p>
-                </div>
-                <div class="foot__col">
-                    <h4>El producto</h4>
-                    <ul>
-                        <li><a href="<?php echo esc_url( $how_url ); ?>">Cómo funciona</a></li>
-                        <li><a href="<?php echo esc_url( $menu_url ); ?>">Menú de la semana</a></li>
-                        <li><a href="<?php echo esc_url( $plans_url ); ?>">Cajas &amp; precios</a></li>
-                        <li><a href="<?php echo esc_url( $coverage_url ); ?>">Zonas de entrega</a></li>
-                    </ul>
-                </div>
-                <div class="foot__col">
-                    <h4>Contacto</h4>
-                    <ul>
-                        <?php if ( $wa_url ) : ?>
-                            <li><a href="<?php echo esc_url( $wa_url ); ?>">WhatsApp <?php echo esc_html( $wa_display ); ?></a></li>
-                        <?php endif; ?>
-                        <?php if ( $contact_email ) : ?>
-                            <li><a href="mailto:<?php echo esc_attr( $contact_email ); ?>"><?php echo esc_html( $contact_email ); ?></a></li>
-                        <?php endif; ?>
-                        <li><a href="mailto:<?php echo esc_attr( $orders_email ); ?>"><?php echo esc_html( $orders_email ); ?></a></li>
-                    </ul>
-                </div>
-                <div class="foot__col">
-                    <h4>Calendario</h4>
-                    <ul>
-                        <li><span>Pedidos cierran · martes 23:59</span></li>
-                        <li><span>Entrega · jueves 10 – 19 h</span></li>
-                        <li><span>Menú nuevo · todos los viernes</span></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="foot__legal">
-                <span>© <?php echo esc_html( gmdate( 'Y' ) ); ?> Ogape Tu Chef en Casa</span>
-                <span><a href="<?php echo esc_url( $privacy_url ); ?>">Privacidad</a> · <a href="<?php echo esc_url( $terms_url ); ?>">Términos</a> · <a href="<?php echo esc_url( $contact_url ); ?>">Contacto</a></span>
-            </div>
-        </div>
-    </footer>
 
 </main>
 

@@ -26,8 +26,6 @@ p,
 .editorial-checklist li,
 .waitlist-card__subtitle,
 .editorial-page-hero__subtitle,
-.footer__contact-note,
-.footer__brand-copy,
 .waitlist-form__helper,
 .waitlist-form__privacy {
   color: #4A4A4A;
@@ -241,22 +239,6 @@ p,
   gap: 12px;
 }
 
-.footer {
-  border-top: 2px solid rgba(212, 147, 10, 0.35);
-}
-
-.footer__grid {
-  gap: 24px;
-}
-
-.footer__logo-mark {
-  margin-bottom: 10px;
-}
-
-.footer__logo-mark .custom-logo {
-  max-height: 40px;
-  width: auto;
-}
 
 @media (min-width: 1024px) {
   .editorial-page-hero--waitlist > .container {

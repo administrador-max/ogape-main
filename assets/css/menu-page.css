@@ -11,7 +11,6 @@
  */
 
 /* ── Hide theme chrome on /menu ─────────────────────────────────── */
-.ogape-menu-page #colophon,
 .ogape-menu-page .bg-canvas,
 .ogape-menu-page .skip-link {
   display: none !important;
@@ -216,20 +215,6 @@
 .menu-design .btn--ghost.on-dark { background: transparent; color: #F7EFE3; border-color: rgba(247,239,227,.3); }
 .menu-design .btn--ghost.on-dark:hover { background: rgba(247,239,227,.08); border-color: rgba(247,239,227,.5); }
 
-/* ===== FOOTER (shared) ===== */
-.menu-design footer.foot { background: #1B1B1E; color: rgba(247,239,227,.7); padding: var(--space-16) 0 var(--space-8); }
-.menu-design .foot__top { display: grid; gap: var(--space-10); padding-bottom: var(--space-10); border-bottom: 1px solid rgba(247,239,227,.1); }
-@media (min-width: 900px) { .menu-design .foot__top { grid-template-columns: 1.4fr 1fr 1fr 1fr; } }
-.menu-design .foot__brand { display: flex; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-4); }
-.menu-design .foot__brand img { width: 44px; height: 44px; flex: none; }
-.menu-design .foot__wordmark { font-family: var(--font-display); font-size: 26px; font-weight: 500; color: #F7EFE3; line-height: 1; }
-.menu-design .foot__where { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--brand-primary); margin-top: .3rem; display: block; }
-.menu-design .foot__copy { font-size: 13.5px; line-height: 1.65; color: rgba(247,239,227,.6); max-width: 34ch; }
-.menu-design .foot__col h4 { font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: rgba(247,239,227,.5); margin-bottom: var(--space-4); }
-.menu-design .foot__col ul { list-style: none; display: flex; flex-direction: column; gap: var(--space-2); }
-.menu-design .foot__col a { font-size: 14px; color: rgba(247,239,227,.78); transition: color .15s; }
-.menu-design .foot__col a:hover { color: #F7EFE3; }
-.menu-design .foot__legal { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4); padding-top: var(--space-6); font-size: 12px; color: rgba(247,239,227,.4); }
 
 @keyframes menu-design-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 .menu-design .rise { animation: menu-design-rise .7s .05s both cubic-bezier(.2,.7,.2,1); }
