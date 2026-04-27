@@ -291,6 +291,35 @@ function ogape_send_caja_status_email( $caja_id, $new_status, $old_status ) {
 }
 add_action( 'ogape_caja_status_changed', 'ogape_send_caja_status_email', 10, 3 );
 
+// ── PLAN RESUMED EMAIL ────────────────────────────────────────────────────────
+
+function ogape_send_plan_resumed_email( $user_id ) {
+    $user = get_userdata( $user_id );
+    if ( ! $user || ! is_email( $user->user_email ) ) {
+        return;
+    }
+
+    $first_name  = $user->first_name ?: $user->display_name;
+    $account_url = home_url( '/account/' );
+
+    $subject = 'Tu plan Ogape está activo de nuevo';
+    $heading = 'Tu entrega se reanuda.';
+    $body    = '
+    <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.65;">
+      Hola <strong>' . esc_html( $first_name ) . '</strong>, tu suscripción Ogape está activa nuevamente. Volvés a recibir tu caja semanal a partir de la próxima entrega.
+    </p>
+    <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.65;">
+      Entrá a tu cuenta para elegir tus recetas antes del cierre de pedidos del martes.
+    </p>
+    <hr style="border:none;border-top:1px solid #F3EDE5;margin:24px 0;">
+    <p style="margin:0;font-size:13px;color:#6B7280;line-height:1.6;">
+      ¿Querés pausar de nuevo? Podés hacerlo en cualquier momento desde tu cuenta.
+    </p>';
+
+    ogape_send_email( $user->user_email, $subject, $heading, $body, $account_url, 'Ir a mi cuenta' );
+}
+add_action( 'ogape_plan_resumed', 'ogape_send_plan_resumed_email' );
+
 // ── ZONE-SPECIFIC STATUS EMAIL ────────────────────────────────────────────────
 
 function ogape_send_zone_status_email( $caja_id, $zone_key, $new_status ) {

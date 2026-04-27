@@ -1288,9 +1288,21 @@ function ogape_ajax_pause_plan() {
         $pause_when = 'next';
     }
 
+    // Calculate the correct resume date so the cron can auto-resume on the right day.
+    $schedule = function_exists( 'ogape_demo_schedule' ) ? ogape_demo_schedule() : array();
+    if ( 'indefinite' === $pause_when ) {
+        $pause_until = '';
+    } elseif ( 'two' === $pause_when ) {
+        $pause_until = ( new DateTimeImmutable( '+14 days', wp_timezone() ) )->format( 'Y-m-d' );
+    } else { // 'next' — resume after next delivery date
+        $pause_until = isset( $schedule['delivery'] ) && $schedule['delivery'] instanceof DateTimeImmutable
+            ? $schedule['delivery']->format( 'Y-m-d' )
+            : ( new DateTimeImmutable( 'next thursday', wp_timezone() ) )->format( 'Y-m-d' );
+    }
+
     ogape_save_customer_meta( $user_id, array(
-        'pause_status' => $pause_when,
-        'pause_until'  => wp_date( 'Y-m-d' ),
+        'pause_status' => 'paused',
+        'pause_until'  => $pause_until,
     ) );
 
     do_action( 'ogape_plan_paused', $user_id, $pause_when );

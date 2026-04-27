@@ -1869,6 +1869,35 @@ function ogape_ops_handle_clientes_export_csv() {
 }
 add_action( 'admin_post_ogape_export_clientes', 'ogape_ops_handle_clientes_export_csv' );
 
+// ── SHOPPING LIST HELPERS ─────────────────────────────────────────────────────
+
+function ogape_scale_ingredient( $line, $count ) {
+    $count = max( 1, (int) $count );
+    $units = 'g|kg|ml|l|u|unid\.?|tazas?|cdas?\.?|ctas?\.?|dientes?|hojas?|rebanadas?|filetes?|pechugas?|latas?';
+    $pattern = '/^([\d]+(?:[.,]\d+)?)\s*(' . $units . ')\b/ui';
+
+    if ( ! preg_match( $pattern, $line, $m ) ) {
+        return null;
+    }
+
+    $qty   = (float) str_replace( ',', '.', $m[1] );
+    $unit  = rtrim( strtolower( $m[2] ), '.' );
+    $total = $qty * $count;
+
+    // Unit upgrade: g → kg, ml → l
+    if ( in_array( $unit, array( 'g', 'gramo', 'gramos' ), true ) && $total >= 1000 ) {
+        $val = $total / 1000;
+        return ( $val == floor( $val ) ? (int) $val : number_format( $val, 2, '.', '' ) ) . ' kg';
+    }
+    if ( 'ml' === $unit && $total >= 1000 ) {
+        $val = $total / 1000;
+        return ( $val == floor( $val ) ? (int) $val : number_format( $val, 2, '.', '' ) ) . ' l';
+    }
+
+    $formatted = ( $total == floor( $total ) ) ? (int) $total : number_format( $total, 1, '.', '' );
+    return $formatted . ' ' . $unit;
+}
+
 // ── ADMIN PAGE: LISTA DE COMPRAS ──────────────────────────────────────────────
 
 function ogape_ops_compras_page() {
@@ -1942,21 +1971,18 @@ function ogape_ops_compras_page() {
                 <table class="widefat" style="font-size:13px">
                     <thead>
                         <tr>
-                            <th>Ingrediente (cantidad por caja)</th>
-                            <th style="width:240px">Total necesario (<?php echo $total_subs; ?> cajas)</th>
+                            <th>Ingrediente (por caja)</th>
+                            <th style="width:200px">Total (<?php echo $total_subs; ?> cajas)</th>
                         </tr>
                     </thead>
                     <tbody>
                     <?php foreach ( $lines as $line ) :
-                        preg_match( '/^([\d.,]+\s*(?:g|kg|ml|l|u|unid\.?|tazas?|cdas?\.?|ctas?\.?|dientes?|hojas?|rebanadas?)?\s*)/ui', $line, $qty_m );
-                        $qty_part = trim( $qty_m[0] ?? '' );
+                        $scaled = ogape_scale_ingredient( $line, $total_subs );
                         ?>
                         <tr>
                             <td><?php echo esc_html( $line ); ?></td>
-                            <td style="color:#50575e;font-size:12px">
-                                <?php echo $qty_part
-                                    ? esc_html( $qty_part ) . ' × ' . $total_subs . ' = ?'
-                                    : '× ' . $total_subs . ' cajas'; ?>
+                            <td style="font-size:13px;font-weight:600;color:<?php echo $scaled ? '#1a56db' : '#50575e'; ?>">
+                                <?php echo $scaled ? esc_html( $scaled ) : '× ' . $total_subs . ' cajas'; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -2114,6 +2140,7 @@ function ogape_ops_pagos_page() {
     if ( ! current_user_can( 'manage_options' ) ) return;
 
     $caja     = ogape_get_current_caja();
+    $caja_id  = $caja ? $caja->ID : 0;
     $week_key = $caja ? (string) get_post_meta( $caja->ID, '_ogape_week_number', true ) : '';
     $message  = sanitize_key( $_GET['msg'] ?? '' );
 
@@ -2145,14 +2172,14 @@ function ogape_ops_pagos_page() {
         }
 
         $paid_users = array();
-        if ( $week_key ) {
+        if ( $caja_id ) {
             $payments = get_posts( array(
                 'post_type'      => 'ogape_payment',
                 'post_status'    => 'publish',
                 'posts_per_page' => -1,
                 'meta_query'     => array(
-                    array( 'key' => '_ogape_pay_week',   'value' => $week_key ),
-                    array( 'key' => '_ogape_pay_status', 'value' => 'paid' ),
+                    array( 'key' => '_ogape_pay_caja_id', 'value' => $caja_id, 'type' => 'NUMERIC' ),
+                    array( 'key' => '_ogape_pay_status',  'value' => 'paid' ),
                 ),
             ) );
             foreach ( $payments as $pay ) {
@@ -2214,6 +2241,7 @@ function ogape_ops_pagos_page() {
                             <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:flex;gap:4px;align-items:center;margin:0">
                                 <input type="hidden" name="action"   value="ogape_register_payment">
                                 <input type="hidden" name="user_id"  value="<?php echo $uid; ?>">
+                                <input type="hidden" name="caja_id"  value="<?php echo (int) $caja_id; ?>">
                                 <input type="hidden" name="week_key" value="<?php echo esc_attr( $week_key ); ?>">
                                 <input type="hidden" name="amount"   value="<?php echo (int) $m['price']; ?>">
                                 <?php wp_nonce_field( 'ogape_register_payment' ); ?>
@@ -2289,11 +2317,12 @@ function ogape_ops_handle_register_payment() {
     if ( ! current_user_can( 'manage_options' ) ) wp_die( 'No autorizado.' );
 
     $user_id  = (int) ( $_POST['user_id']  ?? 0 );
+    $caja_id  = (int) ( $_POST['caja_id']  ?? 0 );
     $week_key = sanitize_key( $_POST['week_key'] ?? '' );
     $amount   = absint( $_POST['amount']   ?? 0 );
     $method   = sanitize_key( $_POST['method']   ?? 'transferencia' );
 
-    if ( ! $user_id || ! $week_key ) wp_die( 'Datos incompletos.' );
+    if ( ! $user_id || ! $caja_id ) wp_die( 'Datos incompletos.' );
 
     $post_id = wp_insert_post( array(
         'post_type'   => 'ogape_payment',
@@ -2303,6 +2332,7 @@ function ogape_ops_handle_register_payment() {
 
     if ( ! is_wp_error( $post_id ) ) {
         update_post_meta( $post_id, '_ogape_pay_user_id', $user_id );
+        update_post_meta( $post_id, '_ogape_pay_caja_id', $caja_id );
         update_post_meta( $post_id, '_ogape_pay_week',    $week_key );
         update_post_meta( $post_id, '_ogape_pay_amount',  $amount );
         update_post_meta( $post_id, '_ogape_pay_method',  $method );
