@@ -131,19 +131,28 @@ function ogape_send_pause_confirmed_email( $user_id, $pause_when ) {
     $first_name  = $user->first_name ?: $user->display_name;
     $account_url = home_url( '/account/' );
 
-    $pause_labels = array(
-        'next'       => 'la próxima entrega',
-        'two'        => 'las próximas dos semanas',
+    $semantic_labels = array(
+        'next'       => 'para la próxima entrega',
+        'two'        => 'para las próximas dos semanas',
         'indefinite' => 'indefinidamente',
     );
-    $pause_label = $pause_labels[ $pause_when ] ?? 'la próxima entrega';
+    if ( isset( $semantic_labels[ $pause_when ] ) ) {
+        $pause_phrase = $semantic_labels[ $pause_when ];
+    } elseif ( $pause_when && $pause_when !== 'indefinite' ) {
+        $dt = DateTimeImmutable::createFromFormat( 'Y-m-d', $pause_when, wp_timezone() );
+        $pause_phrase = $dt && function_exists( 'ogape_demo_format_date_label' )
+            ? 'hasta el ' . ogape_demo_format_date_label( $dt )
+            : 'temporalmente';
+    } else {
+        $pause_phrase = 'indefinidamente';
+    }
 
     $subject = 'Tu entrega quedó pausada';
     $heading = 'Pausa confirmada.';
 
     $body = '
     <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.65;">
-      Hola <strong>' . esc_html( $first_name ) . '</strong>, confirmamos que pausamos tu suscripción para ' . esc_html( $pause_label ) . '. No se te cobrará ni realizará entrega durante ese período.
+      Hola <strong>' . esc_html( $first_name ) . '</strong>, confirmamos que pausamos tu suscripción ' . esc_html( $pause_phrase ) . '. No se te cobrará ni realizará entrega durante ese período.
     </p>
     <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.65;">
       Cuando quieras reanudar, entrá a tu cuenta y activá la entrega con un clic. Tu historial, preferencias y dirección quedan guardados.
@@ -236,6 +245,10 @@ function ogape_send_caja_status_email( $caja_id, $new_status, $old_status ) {
         return;
     }
 
+    // Get zone overrides so we can skip subscribers whose zone is already at a different status.
+    $zone_overrides = get_post_meta( $caja_id, '_ogape_status_by_zone', true );
+    if ( ! is_array( $zone_overrides ) ) $zone_overrides = array();
+
     // Get all active subscribers (setup_complete = 1)
     $subscribers = get_users( array(
         'meta_key'   => 'ogape_setup_complete',
@@ -249,16 +262,21 @@ function ogape_send_caja_status_email( $caja_id, $new_status, $old_status ) {
             continue;
         }
 
-        // Respect weekly menu / promo opt-out for non-critical emails.
-        // Status change emails (in_transit, delivered) are considered operational — always send.
-        // confirmed / preparing respect notif_weekly_menu preference as a proxy.
+        // If the subscriber's zone has a status override that differs from $new_status,
+        // skip — their zone-specific email will fire via ogape_zone_status_changed instead.
+        $zone_key = get_user_meta( $sub->ID, 'ogape_zone_key', true );
+        if ( $zone_key && isset( $zone_overrides[ $zone_key ] ) && $zone_overrides[ $zone_key ] !== $new_status ) {
+            continue;
+        }
+
+        // Respect weekly menu opt-out for non-operational transitions.
         if ( in_array( $new_status, array( 'confirmed', 'preparing' ), true ) ) {
             if ( ! ogape_notif_pref( $sub->ID, 'ogape_notif_weekly_menu', true ) ) {
                 continue;
             }
         }
 
-        $first = $sub->first_name ?: $sub->display_name;
+        $first             = $sub->first_name ?: $sub->display_name;
         $personalised_body = '<p style="margin:0 0 12px;font-size:15px;color:#374151;">Hola <strong>' . esc_html( $first ) . '</strong>,</p>' . $v['body'];
 
         ogape_send_email(
@@ -272,3 +290,84 @@ function ogape_send_caja_status_email( $caja_id, $new_status, $old_status ) {
     }
 }
 add_action( 'ogape_caja_status_changed', 'ogape_send_caja_status_email', 10, 3 );
+
+// ── ZONE-SPECIFIC STATUS EMAIL ────────────────────────────────────────────────
+
+function ogape_send_zone_status_email( $caja_id, $zone_key, $new_status ) {
+    $send_for = array( 'confirmed', 'preparing', 'in_transit', 'delivered' );
+    if ( ! in_array( $new_status, $send_for, true ) ) {
+        return;
+    }
+
+    $delivery_date = get_post_meta( $caja_id, '_ogape_delivery_date', true );
+    $week_number   = str_pad( (string) get_post_meta( $caja_id, '_ogape_week_number', true ), 2, '0', STR_PAD_LEFT );
+    $account_url   = home_url( '/account/' );
+
+    $date_label = $delivery_date
+        ? wp_date( 'l j \d\e F', strtotime( $delivery_date ), wp_timezone() )
+        : 'próximo jueves';
+
+    $variants = array(
+        'confirmed'  => array(
+            'subject'   => 'Tu caja N.° ' . $week_number . ' está confirmada',
+            'heading'   => 'Pedido confirmado.',
+            'body'      => '<p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.65;">Tu caja N.° <strong>' . esc_html( $week_number ) . '</strong> está confirmada para el <strong>' . esc_html( $date_label ) . '</strong>.</p>',
+            'cta_url'   => $account_url,
+            'cta_label' => 'Ver mi caja',
+        ),
+        'preparing'  => array(
+            'subject'   => 'Estamos preparando tu caja',
+            'heading'   => 'Tu caja está en preparación.',
+            'body'      => '<p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.65;">Estamos armando tu caja N.° <strong>' . esc_html( $week_number ) . '</strong>. La entrega está programada para el <strong>' . esc_html( $date_label ) . '</strong>.</p>',
+            'cta_url'   => $account_url,
+            'cta_label' => 'Ver estado',
+        ),
+        'in_transit' => array(
+            'subject'   => 'Tu caja está en camino',
+            'heading'   => '¡En camino!',
+            'body'      => '<p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.65;">Tu caja N.° <strong>' . esc_html( $week_number ) . '</strong> ya salió a entrega. Revisá el horario estimado en tu dashboard.</p>',
+            'cta_url'   => $account_url,
+            'cta_label' => 'Ver horario estimado',
+        ),
+        'delivered'  => array(
+            'subject'   => 'Tu caja N.° ' . $week_number . ' fue entregada',
+            'heading'   => '¡Entregada! Buen provecho.',
+            'body'      => '<p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.65;">Tu caja N.° <strong>' . esc_html( $week_number ) . '</strong> llegó. Esperamos que disfrutes las recetas.</p>',
+            'cta_url'   => '',
+            'cta_label' => '',
+        ),
+    );
+
+    $v = $variants[ $new_status ] ?? null;
+    if ( ! $v ) return;
+
+    $subscribers = get_users( array(
+        'meta_query' => array(
+            array( 'key' => 'ogape_setup_complete', 'value' => '1',        'compare' => '=' ),
+            array( 'key' => 'ogape_zone_key',       'value' => $zone_key,  'compare' => '=' ),
+        ),
+        'fields' => array( 'ID', 'user_email', 'display_name', 'first_name' ),
+        'number' => 500,
+    ) );
+
+    foreach ( $subscribers as $sub ) {
+        if ( ! is_email( $sub->user_email ) ) continue;
+
+        if ( in_array( $new_status, array( 'confirmed', 'preparing' ), true ) ) {
+            if ( ! ogape_notif_pref( $sub->ID, 'ogape_notif_weekly_menu', true ) ) continue;
+        }
+
+        $first             = $sub->first_name ?: $sub->display_name;
+        $personalised_body = '<p style="margin:0 0 12px;font-size:15px;color:#374151;">Hola <strong>' . esc_html( $first ) . '</strong>,</p>' . $v['body'];
+
+        ogape_send_email(
+            $sub->user_email,
+            $v['subject'],
+            $v['heading'],
+            $personalised_body,
+            $v['cta_url'],
+            $v['cta_label']
+        );
+    }
+}
+add_action( 'ogape_zone_status_changed', 'ogape_send_zone_status_email', 10, 3 );

@@ -204,6 +204,30 @@ function ogape_ops_admin_menu() {
         'ogape-recetas',
         'ogape_ops_recetas_page'
     );
+    add_submenu_page(
+        'ogape-ops',
+        'Lista de compras',
+        'Lista de compras',
+        'manage_options',
+        'ogape-compras',
+        'ogape_ops_compras_page'
+    );
+    add_submenu_page(
+        'ogape-ops',
+        'Hoja de reparto',
+        'Hoja de reparto',
+        'manage_options',
+        'ogape-reparto',
+        'ogape_ops_reparto_page'
+    );
+    add_submenu_page(
+        'ogape-ops',
+        'Pagos',
+        'Pagos',
+        'manage_options',
+        'ogape-pagos',
+        'ogape_ops_pagos_page'
+    );
     // Hidden detail page — not shown in nav, accessible via ?page=ogape-cliente&uid=X
     add_submenu_page( null, 'Editar cliente', 'Editar cliente', 'manage_options', 'ogape-cliente', 'ogape_ops_cliente_page' );
 }
@@ -252,6 +276,14 @@ function ogape_ops_handle_zone_status() {
         $overrides[ $zone_key ] = $status;
     }
     update_post_meta( $caja_id, '_ogape_status_by_zone', $overrides );
+
+    if ( $status ) {
+        $send_for = array( 'confirmed', 'preparing', 'in_transit', 'delivered' );
+        $global   = get_post_meta( $caja_id, '_ogape_global_status', true ) ?: 'planning';
+        if ( in_array( $status, $send_for, true ) && $status !== $global ) {
+            do_action( 'ogape_zone_status_changed', $caja_id, $zone_key, $status );
+        }
+    }
 
     wp_safe_redirect( admin_url( 'admin.php?page=ogape-ops&updated=zone' ) );
     exit;
@@ -1225,7 +1257,13 @@ function ogape_ops_clientes_page() {
 
     ?>
     <div class="wrap">
-        <h1>Clientes Ogape (<?php echo count( $users ); ?>)</h1>
+        <h1 class="wp-heading-inline">Clientes Ogape (<?php echo count( $users ); ?>)</h1>
+        <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:inline;margin-left:12px">
+            <input type="hidden" name="action" value="ogape_export_clientes">
+            <?php wp_nonce_field( 'ogape_export_clientes' ); ?>
+            <button type="submit" class="page-title-action">Exportar CSV</button>
+        </form>
+        <hr class="wp-header-end">
         <?php if ( $users ) : ?>
             <table class="widefat striped">
                 <thead>
@@ -1489,6 +1527,8 @@ function ogape_ops_handle_edit_cliente() {
     check_admin_referer( 'ogape_edit_cliente_' . $uid );
     if ( ! current_user_can( 'manage_options' ) || ! $uid ) wp_die( 'No autorizado.' );
 
+    $old_pause_status = get_user_meta( $uid, 'ogape_pause_status', true );
+
     // WP user core fields
     $update_args = array( 'ID' => $uid );
     if ( isset( $_POST['first_name'] ) )
@@ -1548,6 +1588,12 @@ function ogape_ops_handle_edit_cliente() {
         'notif_cutoff'          => isset( $_POST['notif_cutoff'] ) ? 1 : 0,
         'notif_promo'           => isset( $_POST['notif_promo'] ) ? 1 : 0,
     ) );
+
+    $new_pause_status = sanitize_key( wp_unslash( $_POST['pause_status'] ?? '' ) );
+    if ( 'paused' === $new_pause_status && 'paused' !== $old_pause_status ) {
+        $pause_until = sanitize_text_field( wp_unslash( $_POST['pause_until'] ?? '' ) );
+        do_action( 'ogape_plan_paused', $uid, $pause_until ?: 'indefinite' );
+    }
 
     wp_safe_redirect( admin_url( 'admin.php?page=ogape-cliente&uid=' . $uid . '&updated=cliente' ) );
     exit;
@@ -1773,3 +1819,539 @@ function ogape_ops_recetas_page() {
     </div>
     <?php
 }
+
+// ── EXPORT: CLIENTES CSV ──────────────────────────────────────────────────────
+
+function ogape_ops_handle_clientes_export_csv() {
+    check_admin_referer( 'ogape_export_clientes' );
+    if ( ! current_user_can( 'manage_options' ) ) wp_die( 'No autorizado.' );
+
+    $users = get_users( array(
+        'meta_query' => array(
+            array( 'key' => 'ogape_registered_at', 'compare' => 'EXISTS' ),
+        ),
+        'number'  => -1,
+        'orderby' => 'registered',
+        'order'   => 'ASC',
+    ) );
+
+    $filename = 'ogape-clientes-' . gmdate( 'Y-m-d' ) . '.csv';
+    header( 'Content-Type: text/csv; charset=utf-8' );
+    header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+
+    $out = fopen( 'php://output', 'w' );
+    fprintf( $out, chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF ) ); // UTF-8 BOM for Excel
+    fputcsv( $out, array( 'ID', 'Nombre', 'Email', 'Teléfono', 'Zona', 'Dirección', 'Apto', 'Ventana', 'Personas', 'Recetas/sem.', 'Precio (Gs)', 'Setup', 'Estado', 'Pausa hasta', 'Registro' ) );
+
+    foreach ( $users as $u ) {
+        $m = ogape_get_customer_meta( $u->ID );
+        fputcsv( $out, array(
+            $u->ID,
+            $m['name'],
+            $m['email'],
+            $m['phone'],
+            $m['zone'],
+            $m['address'],
+            $m['apt'],
+            $m['delivery_window_label'] ?: strtoupper( $m['delivery_window'] ),
+            $m['people'],
+            $m['recipes'],
+            $m['price'],
+            $m['setup_complete'] ? 'Sí' : 'No',
+            $m['pause_status'] ?: 'Activo',
+            $m['pause_until'],
+            $m['registered_at'],
+        ) );
+    }
+
+    fclose( $out );
+    exit;
+}
+add_action( 'admin_post_ogape_export_clientes', 'ogape_ops_handle_clientes_export_csv' );
+
+// ── ADMIN PAGE: LISTA DE COMPRAS ──────────────────────────────────────────────
+
+function ogape_ops_compras_page() {
+    if ( ! current_user_can( 'manage_options' ) ) return;
+
+    $caja = ogape_get_current_caja();
+
+    ?>
+    <div class="wrap">
+        <h1>Lista de compras</h1>
+        <?php if ( ! $caja ) : ?>
+            <div class="notice notice-warning inline"><p>No hay ninguna caja activa todavía.</p></div>
+            <?php return; ?>
+        <?php endif; ?>
+
+        <?php
+        $all_subs = get_users( array(
+            'meta_query' => array( array( 'key' => 'ogape_setup_complete', 'value' => '1', 'compare' => '=' ) ),
+            'fields'     => 'ID',
+            'number'     => -1,
+        ) );
+        $total_subs   = count( $all_subs );
+        $total_people = 0;
+        $zone_counts  = array();
+        foreach ( $all_subs as $uid ) {
+            $zk = get_user_meta( $uid, 'ogape_zone_key', true );
+            if ( $zk ) $zone_counts[ $zk ] = ( $zone_counts[ $zk ] ?? 0 ) + 1;
+            $total_people += (int) ( get_user_meta( $uid, 'ogape_people', true ) ?: 2 );
+        }
+
+        $recipe_ids = get_post_meta( $caja->ID, '_ogape_recipe_ids', true );
+        $recipe_ids = is_array( $recipe_ids ) ? array_map( 'absint', $recipe_ids ) : array();
+        $recipes    = $recipe_ids ? get_posts( array(
+            'post_type'   => 'ogape_recipe',
+            'include'     => $recipe_ids,
+            'orderby'     => 'post__in',
+            'numberposts' => 20,
+        ) ) : array();
+        ?>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:16px 0 24px">
+            <div style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:14px 18px">
+                <div style="font-size:11px;color:#50575e;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Suscriptores activos</div>
+                <div style="font-size:28px;font-weight:700"><?php echo $total_subs; ?></div>
+            </div>
+            <div style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:14px 18px">
+                <div style="font-size:11px;color:#50575e;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Total personas</div>
+                <div style="font-size:28px;font-weight:700"><?php echo $total_people; ?></div>
+            </div>
+            <div style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:14px 18px">
+                <div style="font-size:11px;color:#50575e;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Recetas asignadas</div>
+                <div style="font-size:28px;font-weight:700"><?php echo count( $recipes ); ?></div>
+            </div>
+        </div>
+
+        <p style="color:#50575e;margin-bottom:20px">Caja: <strong><?php echo esc_html( $caja->post_title ); ?></strong></p>
+
+        <?php if ( $recipes ) : ?>
+            <?php foreach ( $recipes as $rp ) :
+                $ingredients_raw = get_post_meta( $rp->ID, '_ogape_recipe_ingredients', true );
+                $lines = $ingredients_raw
+                    ? array_values( array_filter( array_map( 'trim', explode( "\n", $ingredients_raw ) ) ) )
+                    : array();
+            ?>
+            <div style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:20px 24px;margin-bottom:16px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+                    <h2 style="margin:0;font-size:16px"><?php echo esc_html( $rp->post_title ); ?></h2>
+                    <span style="font-size:12px;color:#888">Para <?php echo $total_people; ?> pers. · <?php echo $total_subs; ?> cajas</span>
+                </div>
+                <?php if ( $lines ) : ?>
+                <table class="widefat" style="font-size:13px">
+                    <thead>
+                        <tr>
+                            <th>Ingrediente (cantidad por caja)</th>
+                            <th style="width:240px">Total necesario (<?php echo $total_subs; ?> cajas)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ( $lines as $line ) :
+                        preg_match( '/^([\d.,]+\s*(?:g|kg|ml|l|u|unid\.?|tazas?|cdas?\.?|ctas?\.?|dientes?|hojas?|rebanadas?)?\s*)/ui', $line, $qty_m );
+                        $qty_part = trim( $qty_m[0] ?? '' );
+                        ?>
+                        <tr>
+                            <td><?php echo esc_html( $line ); ?></td>
+                            <td style="color:#50575e;font-size:12px">
+                                <?php echo $qty_part
+                                    ? esc_html( $qty_part ) . ' × ' . $total_subs . ' = ?'
+                                    : '× ' . $total_subs . ' cajas'; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <?php else : ?>
+                    <p style="color:#888;font-size:13px;margin:0">Sin ingredientes cargados para esta receta.</p>
+                <?php endif; ?>
+            </div>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <div class="notice notice-warning inline"><p>No hay recetas asignadas a la caja activa. <a href="<?php echo esc_url( admin_url( 'admin.php?page=ogape-ops' ) ); ?>">Asignar recetas →</a></p></div>
+        <?php endif; ?>
+    </div>
+    <?php
+}
+
+// ── ADMIN PAGE: HOJA DE REPARTO ───────────────────────────────────────────────
+
+function ogape_ops_reparto_page() {
+    if ( ! current_user_can( 'manage_options' ) ) return;
+
+    $caja  = ogape_get_current_caja();
+    $zones = ogape_delivery_zones();
+
+    ?>
+    <div class="wrap">
+        <h1 class="wp-heading-inline">Hoja de reparto</h1>
+        <?php if ( $caja ) : ?>
+            <a href="javascript:window.print()" class="page-title-action" style="margin-left:12px">Imprimir</a>
+        <?php endif; ?>
+        <hr class="wp-header-end">
+
+        <?php if ( ! $caja ) : ?>
+            <div class="notice notice-warning inline"><p>No hay ninguna caja activa todavía.</p></div>
+            <?php return; ?>
+        <?php endif; ?>
+
+        <p style="color:#50575e;margin-bottom:20px">
+            <strong><?php echo esc_html( $caja->post_title ); ?></strong>
+            &nbsp;·&nbsp; Entrega: <strong><?php echo esc_html( get_post_meta( $caja->ID, '_ogape_delivery_date', true ) ); ?></strong>
+        </p>
+
+        <?php
+        $subscribers = get_users( array(
+            'meta_query' => array(
+                array( 'key' => 'ogape_setup_complete', 'value' => '1', 'compare' => '=' ),
+            ),
+            'fields' => 'ID',
+            'number' => -1,
+        ) );
+
+        $by_zone = array();
+        foreach ( $subscribers as $uid ) {
+            $zk = get_user_meta( $uid, 'ogape_zone_key', true ) ?: '_sin_zona';
+            $by_zone[ $zk ][] = $uid;
+        }
+        $eta_map = get_post_meta( $caja->ID, '_ogape_eta_by_zone', true );
+        if ( ! is_array( $eta_map ) ) $eta_map = array();
+        ?>
+
+        <?php foreach ( $zones as $zk => $zname ) :
+            if ( empty( $by_zone[ $zk ] ) ) continue;
+            $zone_users = $by_zone[ $zk ];
+            usort( $zone_users, function( $a, $b ) {
+                $wa = get_user_meta( $a, 'ogape_delivery_window', true ) ?: 'pm';
+                $wb = get_user_meta( $b, 'ogape_delivery_window', true ) ?: 'pm';
+                return strcmp( $wa, $wb );
+            } );
+            $zone_eta = $eta_map[ $zk ] ?? '';
+        ?>
+        <div style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:16px 20px;margin-bottom:20px;page-break-inside:avoid">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <h2 style="margin:0;font-size:15px">
+                    <?php echo esc_html( $zname ); ?>
+                    <span style="font-size:13px;font-weight:400;color:#888">(<?php echo count( $zone_users ); ?>)</span>
+                </h2>
+                <?php if ( $zone_eta ) : ?>
+                    <span style="font-size:13px;color:#50575e">ETA: <strong><?php echo esc_html( $zone_eta ); ?></strong></span>
+                <?php endif; ?>
+            </div>
+            <table class="widefat" style="font-size:13px">
+                <thead>
+                    <tr>
+                        <th style="width:28px">#</th>
+                        <th>Nombre</th>
+                        <th>Dirección</th>
+                        <th style="width:80px">Apto</th>
+                        <th style="width:110px">Ventana</th>
+                        <th style="width:130px">Plan</th>
+                        <th>Notas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ( $zone_users as $i => $uid ) :
+                        $m = ogape_get_customer_meta( $uid );
+                    ?>
+                    <tr>
+                        <td style="color:#888"><?php echo $i + 1; ?></td>
+                        <td>
+                            <strong><?php echo esc_html( $m['name'] ); ?></strong><br>
+                            <span style="font-size:11px;color:#888"><?php echo esc_html( $m['phone'] ); ?></span>
+                        </td>
+                        <td><?php echo esc_html( $m['address'] ); ?></td>
+                        <td style="font-size:12px"><?php echo esc_html( $m['apt'] ); ?></td>
+                        <td style="font-size:12px;white-space:nowrap"><?php echo esc_html( $m['delivery_window_label'] ?: strtoupper( $m['delivery_window'] ) ); ?></td>
+                        <td style="font-size:12px">Para <?php echo esc_html( $m['people'] ); ?> · <?php echo esc_html( $m['recipes'] ); ?> rec.</td>
+                        <td style="font-size:12px;color:#666"><?php echo esc_html( $m['notes'] ); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php endforeach; ?>
+
+        <?php if ( ! empty( $by_zone['_sin_zona'] ) ) : ?>
+        <div style="background:#fff;border:2px dashed #c3c4c7;border-radius:4px;padding:16px 20px;margin-bottom:20px">
+            <h2 style="margin:0 0 12px;font-size:15px;color:#856404">Sin zona asignada (<?php echo count( $by_zone['_sin_zona'] ); ?>)</h2>
+            <table class="widefat" style="font-size:13px">
+                <thead><tr><th>Nombre</th><th>Email</th><th>Dirección</th></tr></thead>
+                <tbody>
+                <?php foreach ( $by_zone['_sin_zona'] as $uid ) :
+                    $m = ogape_get_customer_meta( $uid ); ?>
+                    <tr>
+                        <td><?php echo esc_html( $m['name'] ); ?></td>
+                        <td><?php echo esc_html( $m['email'] ); ?></td>
+                        <td><?php echo esc_html( $m['address'] ); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php endif; ?>
+
+        <style>@media print { #adminmenuback, #adminmenuwrap, #wpadminbar, #screen-meta, .notice, .page-title-action, .wp-header-end { display:none !important; } }</style>
+    </div>
+    <?php
+}
+
+// ── CPT: PAGOS ────────────────────────────────────────────────────────────────
+
+function ogape_register_payment_cpt() {
+    register_post_type( 'ogape_payment', array(
+        'label'    => 'Pagos',
+        'public'   => false,
+        'show_ui'  => false,
+        'supports' => array( 'title' ),
+    ) );
+}
+add_action( 'init', 'ogape_register_payment_cpt' );
+
+// ── ADMIN PAGE: PAGOS ─────────────────────────────────────────────────────────
+
+function ogape_ops_pagos_page() {
+    if ( ! current_user_can( 'manage_options' ) ) return;
+
+    $caja     = ogape_get_current_caja();
+    $week_key = $caja ? (string) get_post_meta( $caja->ID, '_ogape_week_number', true ) : '';
+    $message  = sanitize_key( $_GET['msg'] ?? '' );
+
+    ?>
+    <div class="wrap">
+        <h1 class="wp-heading-inline">Pagos</h1>
+        <hr class="wp-header-end">
+
+        <?php if ( 'saved' === $message ) : ?>
+            <div class="notice notice-success is-dismissible"><p>Pago registrado.</p></div>
+        <?php elseif ( 'reverted' === $message ) : ?>
+            <div class="notice notice-success is-dismissible"><p>Pago revertido.</p></div>
+        <?php endif; ?>
+
+        <?php
+        $subscribers = get_users( array(
+            'meta_query' => array(
+                array( 'key' => 'ogape_setup_complete', 'value' => '1', 'compare' => '=' ),
+            ),
+            'fields'  => 'ID',
+            'number'  => -1,
+            'orderby' => 'display_name',
+            'order'   => 'ASC',
+        ) );
+
+        if ( ! $subscribers ) {
+            echo '<p>No hay suscriptores activos.</p>';
+            return;
+        }
+
+        $paid_users = array();
+        if ( $week_key ) {
+            $payments = get_posts( array(
+                'post_type'      => 'ogape_payment',
+                'post_status'    => 'publish',
+                'posts_per_page' => -1,
+                'meta_query'     => array(
+                    array( 'key' => '_ogape_pay_week',   'value' => $week_key ),
+                    array( 'key' => '_ogape_pay_status', 'value' => 'paid' ),
+                ),
+            ) );
+            foreach ( $payments as $pay ) {
+                $paid_users[ (int) get_post_meta( $pay->ID, '_ogape_pay_user_id', true ) ] = $pay;
+            }
+        }
+        ?>
+
+        <?php if ( $caja ) : ?>
+        <p style="margin-bottom:16px;color:#50575e">
+            Semana activa: <strong><?php echo esc_html( $caja->post_title ); ?></strong>
+            &nbsp;·&nbsp; <?php echo count( $paid_users ); ?> de <?php echo count( $subscribers ); ?> confirmados
+            &nbsp;·&nbsp; Total: Gs <?php
+                $total_rev = 0;
+                foreach ( $paid_users as $pay ) {
+                    $total_rev += (int) get_post_meta( $pay->ID, '_ogape_pay_amount', true );
+                }
+                echo number_format( $total_rev, 0, ',', '.' );
+            ?>
+        </p>
+        <?php endif; ?>
+
+        <table class="widefat striped">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th style="width:120px">Precio / sem.</th>
+                    <th style="width:130px">Estado</th>
+                    <th style="width:130px">Método</th>
+                    <th style="width:120px">Fecha</th>
+                    <th style="width:160px">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ( $subscribers as $uid ) :
+                    $m        = ogape_get_customer_meta( $uid );
+                    $is_paid  = isset( $paid_users[ $uid ] );
+                    $pay_post = $is_paid ? $paid_users[ $uid ] : null;
+                    $pay_date = $pay_post ? get_post_meta( $pay_post->ID, '_ogape_pay_date', true ) : '';
+                    $pay_meth = $pay_post ? get_post_meta( $pay_post->ID, '_ogape_pay_method', true ) : '';
+                ?>
+                <tr>
+                    <td>
+                        <strong><?php echo esc_html( $m['name'] ); ?></strong><br>
+                        <span style="font-size:11px;color:#888"><?php echo esc_html( $m['email'] ); ?></span>
+                    </td>
+                    <td style="font-size:13px">Gs <?php echo number_format( (int) $m['price'], 0, ',', '.' ); ?></td>
+                    <td>
+                        <?php if ( $is_paid ) : ?>
+                            <span style="color:#155724;font-weight:600;font-size:13px">✓ Confirmado</span>
+                        <?php else : ?>
+                            <span style="color:#856404;font-size:13px">Pendiente</span>
+                        <?php endif; ?>
+                    </td>
+                    <td style="font-size:12px;color:#50575e"><?php echo esc_html( $pay_meth ); ?></td>
+                    <td style="font-size:12px;color:#50575e"><?php echo $pay_date ? esc_html( wp_date( 'd/m/Y', strtotime( $pay_date ) ) ) : ''; ?></td>
+                    <td>
+                        <?php if ( ! $is_paid && $caja ) : ?>
+                            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:flex;gap:4px;align-items:center;margin:0">
+                                <input type="hidden" name="action"   value="ogape_register_payment">
+                                <input type="hidden" name="user_id"  value="<?php echo $uid; ?>">
+                                <input type="hidden" name="week_key" value="<?php echo esc_attr( $week_key ); ?>">
+                                <input type="hidden" name="amount"   value="<?php echo (int) $m['price']; ?>">
+                                <?php wp_nonce_field( 'ogape_register_payment' ); ?>
+                                <select name="method" style="font-size:11px">
+                                    <option value="transferencia">Transferencia</option>
+                                    <option value="efectivo">Efectivo</option>
+                                    <option value="billetera">Billetera</option>
+                                </select>
+                                <button type="submit" class="button button-primary button-small">✓ Confirmar</button>
+                            </form>
+                        <?php elseif ( $is_paid ) : ?>
+                            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin:0" onsubmit="return confirm('¿Revertir este pago?')">
+                                <input type="hidden" name="action"     value="ogape_revert_payment">
+                                <input type="hidden" name="payment_id" value="<?php echo (int) $pay_post->ID; ?>">
+                                <?php wp_nonce_field( 'ogape_revert_payment' ); ?>
+                                <button type="submit" class="button button-small" style="color:#c62828">Revertir</button>
+                            </form>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <h2 style="margin-top:32px">Historial completo</h2>
+        <?php
+        $all_payments = get_posts( array(
+            'post_type'      => 'ogape_payment',
+            'post_status'    => 'publish',
+            'posts_per_page' => 200,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        ) );
+        if ( $all_payments ) : ?>
+        <table class="widefat striped" style="margin-bottom:24px">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th style="width:120px">Semana N.°</th>
+                    <th style="width:140px">Monto</th>
+                    <th style="width:130px">Método</th>
+                    <th style="width:120px">Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ( $all_payments as $pay ) :
+                $pay_uid  = (int) get_post_meta( $pay->ID, '_ogape_pay_user_id', true );
+                $pay_user = get_userdata( $pay_uid );
+                $pay_name = $pay_user ? ( trim( $pay_user->first_name . ' ' . $pay_user->last_name ) ?: $pay_user->display_name ) : '#' . $pay_uid;
+                $pay_date = get_post_meta( $pay->ID, '_ogape_pay_date', true );
+            ?>
+                <tr>
+                    <td><?php echo esc_html( $pay_name ); ?></td>
+                    <td>N.° <?php echo esc_html( get_post_meta( $pay->ID, '_ogape_pay_week', true ) ); ?></td>
+                    <td>Gs <?php echo number_format( (int) get_post_meta( $pay->ID, '_ogape_pay_amount', true ), 0, ',', '.' ); ?></td>
+                    <td><?php echo esc_html( get_post_meta( $pay->ID, '_ogape_pay_method', true ) ); ?></td>
+                    <td><?php echo $pay_date ? esc_html( wp_date( 'd/m/Y', strtotime( $pay_date ) ) ) : ''; ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php else : ?>
+            <p style="color:#888">No hay pagos registrados todavía.</p>
+        <?php endif; ?>
+    </div>
+    <?php
+}
+
+// ── POST HANDLERS: PAGOS ──────────────────────────────────────────────────────
+
+function ogape_ops_handle_register_payment() {
+    check_admin_referer( 'ogape_register_payment' );
+    if ( ! current_user_can( 'manage_options' ) ) wp_die( 'No autorizado.' );
+
+    $user_id  = (int) ( $_POST['user_id']  ?? 0 );
+    $week_key = sanitize_key( $_POST['week_key'] ?? '' );
+    $amount   = absint( $_POST['amount']   ?? 0 );
+    $method   = sanitize_key( $_POST['method']   ?? 'transferencia' );
+
+    if ( ! $user_id || ! $week_key ) wp_die( 'Datos incompletos.' );
+
+    $post_id = wp_insert_post( array(
+        'post_type'   => 'ogape_payment',
+        'post_status' => 'publish',
+        'post_title'  => 'Pago semana N.° ' . $week_key . ' · usuario ' . $user_id,
+    ) );
+
+    if ( ! is_wp_error( $post_id ) ) {
+        update_post_meta( $post_id, '_ogape_pay_user_id', $user_id );
+        update_post_meta( $post_id, '_ogape_pay_week',    $week_key );
+        update_post_meta( $post_id, '_ogape_pay_amount',  $amount );
+        update_post_meta( $post_id, '_ogape_pay_method',  $method );
+        update_post_meta( $post_id, '_ogape_pay_status',  'paid' );
+        update_post_meta( $post_id, '_ogape_pay_date',    gmdate( 'Y-m-d' ) );
+    }
+
+    wp_safe_redirect( admin_url( 'admin.php?page=ogape-pagos&msg=saved' ) );
+    exit;
+}
+add_action( 'admin_post_ogape_register_payment', 'ogape_ops_handle_register_payment' );
+
+function ogape_ops_handle_revert_payment() {
+    check_admin_referer( 'ogape_revert_payment' );
+    if ( ! current_user_can( 'manage_options' ) ) wp_die( 'No autorizado.' );
+
+    $payment_id = (int) ( $_POST['payment_id'] ?? 0 );
+    if ( ! $payment_id ) wp_die( 'Pago no válido.' );
+
+    wp_delete_post( $payment_id, true );
+    wp_safe_redirect( admin_url( 'admin.php?page=ogape-pagos&msg=reverted' ) );
+    exit;
+}
+add_action( 'admin_post_ogape_revert_payment', 'ogape_ops_handle_revert_payment' );
+
+// ── CRON: AUTO-RESUME PAUSED CUSTOMERS ───────────────────────────────────────
+
+function ogape_register_auto_resume_cron() {
+    if ( ! wp_next_scheduled( 'ogape_auto_resume_check' ) ) {
+        wp_schedule_event( time(), 'daily', 'ogape_auto_resume_check' );
+    }
+}
+add_action( 'init', 'ogape_register_auto_resume_cron' );
+
+function ogape_run_auto_resume() {
+    $today = ( new DateTimeImmutable( 'today', wp_timezone() ) )->format( 'Y-m-d' );
+    $users = get_users( array(
+        'meta_key'   => 'ogape_pause_status',
+        'meta_value' => 'paused',
+        'fields'     => array( 'ID' ),
+        'number'     => -1,
+    ) );
+    foreach ( $users as $u ) {
+        $until = get_user_meta( $u->ID, 'ogape_pause_until', true );
+        if ( $until && $until <= $today ) {
+            update_user_meta( $u->ID, 'ogape_pause_status', '' );
+            update_user_meta( $u->ID, 'ogape_pause_until', '' );
+            do_action( 'ogape_plan_resumed', $u->ID );
+        }
+    }
+}
+add_action( 'ogape_auto_resume_check', 'ogape_run_auto_resume' );

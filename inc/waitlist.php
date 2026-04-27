@@ -562,6 +562,25 @@ if ( ! function_exists( 'ogape_waitlist_details_meta_box' ) ) {
                 <label for="ogape_waitlist_internal_notes"><strong><?php esc_html_e( 'Internal notes', 'ogape-child' ); ?></strong></label><br>
                 <textarea id="ogape_waitlist_internal_notes" name="ogape_waitlist_internal_notes" rows="6" style="width:100%;"><?php echo esc_textarea( $internal ); ?></textarea>
             </p>
+
+            <?php if ( 'converted' !== $status ) :
+                $wl_email    = get_post_meta( $post->ID, 'ogape_waitlist_email', true );
+                $already_wpu = $wl_email ? get_user_by( 'email', $wl_email ) : false;
+            ?>
+            <hr style="margin:16px 0">
+            <p><strong>Convertir a cliente Ogape</strong></p>
+            <?php if ( $already_wpu ) : ?>
+                <p style="color:#856404;font-size:13px">Ya existe un usuario con el email <em><?php echo esc_html( $wl_email ); ?></em> (#<?php echo (int) $already_wpu->ID; ?>). No es necesario convertir.</p>
+            <?php else : ?>
+                <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" onsubmit="return confirm('¿Crear cuenta de cliente para <?php echo esc_js( get_post_meta( $post->ID, 'ogape_waitlist_first_name', true ) ); ?>?')">
+                    <input type="hidden" name="action"      value="ogape_waitlist_convert">
+                    <input type="hidden" name="waitlist_id" value="<?php echo (int) $post->ID; ?>">
+                    <?php wp_nonce_field( 'ogape_waitlist_convert_' . $post->ID ); ?>
+                    <button type="submit" class="button button-primary">Crear cuenta de cliente →</button>
+                    <p style="margin-top:6px;font-size:12px;color:#50575e">Crea un usuario de WordPress con los datos de la lista de espera y envía el email de bienvenida. El estado se actualizará a "Converted".</p>
+                </form>
+            <?php endif; ?>
+            <?php endif; ?>
         </div>
         <?php
     }
@@ -766,4 +785,78 @@ if ( ! function_exists( 'ogape_waitlist_export_csv' ) ) {
         exit;
     }
     add_action( 'admin_post_ogape_waitlist_export_csv', 'ogape_waitlist_export_csv' );
+}
+
+// ── WAITLIST → CUSTOMER CONVERSION ───────────────────────────────────────────
+
+if ( ! function_exists( 'ogape_handle_waitlist_convert' ) ) {
+    function ogape_handle_waitlist_convert() {
+        $waitlist_id = (int) ( $_POST['waitlist_id'] ?? 0 );
+        check_admin_referer( 'ogape_waitlist_convert_' . $waitlist_id );
+        if ( ! current_user_can( 'manage_options' ) || ! $waitlist_id ) wp_die( 'No autorizado.' );
+
+        $post = get_post( $waitlist_id );
+        if ( ! $post || 'ogape_waitlist' !== $post->post_type ) wp_die( 'Entrada no válida.' );
+
+        $first_name    = get_post_meta( $waitlist_id, 'ogape_waitlist_first_name', true );
+        $email         = get_post_meta( $waitlist_id, 'ogape_waitlist_email', true );
+        $phone         = get_post_meta( $waitlist_id, 'ogape_waitlist_phone_whatsapp', true );
+        $neighbourhood = get_post_meta( $waitlist_id, 'ogape_waitlist_neighbourhood', true );
+        $notes         = get_post_meta( $waitlist_id, 'ogape_waitlist_notes', true );
+
+        if ( ! $email || ! is_email( $email ) ) {
+            wp_safe_redirect( add_query_arg( array( 'post' => $waitlist_id, 'action' => 'edit', 'wl_error' => 'no_email' ), admin_url( 'post.php' ) ) );
+            exit;
+        }
+
+        if ( get_user_by( 'email', $email ) ) {
+            wp_safe_redirect( add_query_arg( array( 'post' => $waitlist_id, 'action' => 'edit', 'wl_error' => 'exists' ), admin_url( 'post.php' ) ) );
+            exit;
+        }
+
+        // Map waitlist neighbourhood to delivery zone key/label
+        $neighbourhood_map = array(
+            'Villa Morra'    => array( 'key' => 'villa-morra',    'label' => 'Villa Morra' ),
+            'Carmelitas'     => array( 'key' => 'las-carmelitas', 'label' => 'Las Carmelitas' ),
+            'Las Mercedes'   => array( 'key' => 'recoleta',       'label' => 'Recoleta' ),
+            'Recoleta'       => array( 'key' => 'recoleta',       'label' => 'Recoleta' ),
+            'Mburucuyá'      => array( 'key' => 'mburucuya',      'label' => 'Mburucuyá' ),
+            'Ycuá Satí'      => array( 'key' => 'ykua-sati',      'label' => 'Ykua Satí' ),
+            'Centro'         => array( 'key' => 'centro',         'label' => 'Centro' ),
+        );
+        $zone = $neighbourhood_map[ $neighbourhood ] ?? array( 'key' => '', 'label' => $neighbourhood );
+
+        $password = wp_generate_password( 12, false );
+        $user_id  = wp_create_user( $email, $password, $email );
+
+        if ( is_wp_error( $user_id ) ) {
+            wp_safe_redirect( add_query_arg( array( 'post' => $waitlist_id, 'action' => 'edit', 'wl_error' => 'create' ), admin_url( 'post.php' ) ) );
+            exit;
+        }
+
+        wp_update_user( array(
+            'ID'           => $user_id,
+            'first_name'   => $first_name,
+            'display_name' => $first_name,
+        ) );
+
+        ogape_save_customer_meta( $user_id, array(
+            'phone'        => $phone,
+            'zone'         => $zone['label'],
+            'zone_key'     => $zone['key'],
+            'notes'        => $notes,
+            'registered_at' => current_time( 'mysql' ),
+        ) );
+
+        // Mark waitlist entry as converted
+        update_post_meta( $waitlist_id, 'ogape_waitlist_status', 'converted' );
+        $existing_notes = get_post_meta( $waitlist_id, 'ogape_waitlist_internal_notes', true );
+        update_post_meta( $waitlist_id, 'ogape_waitlist_internal_notes', trim( $existing_notes . "\n[" . gmdate( 'Y-m-d' ) . '] Convertido a cliente WP ID ' . $user_id . '.' ) );
+
+        do_action( 'ogape_user_registered', $user_id );
+
+        wp_safe_redirect( add_query_arg( array( 'post' => $waitlist_id, 'action' => 'edit', 'wl_converted' => $user_id ), admin_url( 'post.php' ) ) );
+        exit;
+    }
+    add_action( 'admin_post_ogape_waitlist_convert', 'ogape_handle_waitlist_convert' );
 }
