@@ -46,18 +46,33 @@ $menu_initials   = $menu_account_context['initials'] ?? '';
 
 $arrow_svg = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 8h8m-3-3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 $time_svg  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 13c0-3.5 3-7 7-7s7 3.5 7 7"/></svg>';
-$plus_svg  = '<svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+$close_svg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+$diff_svg  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 17h14M5 12h8M5 7h5"/></svg>';
 
-/* --------------------------------------------------------------------
- * Dish data — mirrors the handoff (menu.html) and keeps richer fields
- * (difficulty, time, stats) that aren't yet in assets/data/menu.json.
- * ------------------------------------------------------------------ */
+/* ── Category navigation ─────────────────────────────────────────── */
+$categories = array(
+    array( 'key' => 'all',         'label' => 'Todo'        ),
+    array( 'key' => 'veggie',      'label' => 'Veggie'      ),
+    array( 'key' => 'premium',     'label' => 'Premium'     ),
+    array( 'key' => 'tradicional', 'label' => 'Tradicional' ),
+    array( 'key' => 'regular',     'label' => 'Regular'     ),
+);
+
+$cat_icons = array(
+    'all'         => '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></svg>',
+    'veggie'      => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6c2-3 10-5 12-3s0 10-3 12C8 18 2 16 4 6z"/><path d="M10 18V10"/></svg>',
+    'premium'     => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2l1.9 5.8H18l-4.9 3.6 1.9 5.8L10 14l-4.9 3.2 1.9-5.8L2 7.8h6.1L10 2z"/></svg>',
+    'tradicional' => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2c0 0-5 5-5 9a5 5 0 0010 0c0-3-2-5-3-6 0 2-2 3-2 3s0-4 0-6z"/></svg>',
+    'regular'     => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 10c0 4 3 7 7 7s7-3 7-7H3z"/><path d="M1 10h18"/><path d="M7 6l1-3M13 6l-1-3"/></svg>',
+);
+
+/* ── Dish data ───────────────────────────────────────────────────── */
 $dishes = array(
     array(
         'class'       => 'dish dish--hero',
-        'filter'      => 'local',
+        'category'    => 'premium',
         'tags'        => array(
-            array( 'class' => 'tag tag--hero', 'label' => 'Plato Estrella' ),
+            array( 'class' => 'tag tag--hero',  'label' => 'Plato Estrella' ),
             array( 'class' => 'tag tag--local', 'label' => 'Local' ),
         ),
         'time'        => '35 min',
@@ -68,13 +83,13 @@ $dishes = array(
         'description' => 'Surubí del Paraná en tu caja, ya porcionado y frío. Lo sellás en 6 minutos, montás la mantequilla de maracuyá con lo que incluimos, y servís con mandioca dorada. Sabe a un viernes bien pensado.',
         'stats'       => array(
             array( 'label' => 'Porciones', 'value' => '2 · 4' ),
-            array( 'label' => 'Calorías', 'value' => '620 kcal' ),
-            array( 'label' => 'Contiene', 'value' => 'Pescado · Lácteos' ),
+            array( 'label' => 'Calorías',  'value' => '620 kcal' ),
+            array( 'label' => 'Contiene',  'value' => 'Pescado · Lácteos' ),
         ),
     ),
     array(
         'class'       => 'dish dish--beef',
-        'filter'      => 'local',
+        'category'    => 'tradicional',
         'tags'        => array(
             array( 'class' => 'tag tag--nomad', 'label' => 'Favorito' ),
         ),
@@ -86,12 +101,13 @@ $dishes = array(
         'description' => 'Costilla braseada en reducción de cerveza negra — ya marinada 24 h — con cebolla asada y puré rústico.',
         'stats'       => array(
             array( 'label' => 'Porciones', 'value' => '2 · 4' ),
-            array( 'label' => 'Calorías', 'value' => '710 kcal' ),
+            array( 'label' => 'Calorías',  'value' => '710 kcal' ),
+            array( 'label' => 'Contiene',  'value' => 'Gluten · Lácteos' ),
         ),
     ),
     array(
         'class'       => 'dish dish--bowl',
-        'filter'      => 'huerta',
+        'category'    => 'regular',
         'tags'        => array(
             array( 'class' => 'tag tag--nomad', 'label' => 'Favorito' ),
         ),
@@ -103,12 +119,13 @@ $dishes = array(
         'description' => 'Pollo grillado, arroz jazmín, hummus suave, verduras encurtidas y crocante de semillas de la casa.',
         'stats'       => array(
             array( 'label' => 'Porciones', 'value' => '2 · 4' ),
-            array( 'label' => 'Calorías', 'value' => '540 kcal' ),
+            array( 'label' => 'Calorías',  'value' => '540 kcal' ),
+            array( 'label' => 'Contiene',  'value' => 'Sésamo' ),
         ),
     ),
     array(
         'class'       => 'dish dish--curry',
-        'filter'      => 'intl',
+        'category'    => 'regular',
         'tags'        => array(
             array( 'class' => 'tag tag--intl', 'label' => 'Internacional' ),
         ),
@@ -120,12 +137,13 @@ $dishes = array(
         'description' => 'Curry suave de coco con especias ya dosificadas, arroz perfumado y cilantro fresco.',
         'stats'       => array(
             array( 'label' => 'Porciones', 'value' => '2 · 4' ),
-            array( 'label' => 'Calorías', 'value' => '580 kcal' ),
+            array( 'label' => 'Calorías',  'value' => '580 kcal' ),
+            array( 'label' => 'Contiene',  'value' => 'Coco' ),
         ),
     ),
     array(
         'class'       => 'dish dish--mila',
-        'filter'      => 'local',
+        'category'    => 'tradicional',
         'tags'        => array(
             array( 'class' => 'tag tag--nomad', 'label' => 'Favorito' ),
         ),
@@ -137,12 +155,13 @@ $dishes = array(
         'description' => 'Milanesa de corte premium, ya apanada — solo la freís — con papas rústicas y alioli casero.',
         'stats'       => array(
             array( 'label' => 'Porciones', 'value' => '2 · 4' ),
-            array( 'label' => 'Calorías', 'value' => '670 kcal' ),
+            array( 'label' => 'Calorías',  'value' => '670 kcal' ),
+            array( 'label' => 'Contiene',  'value' => 'Gluten · Huevo' ),
         ),
     ),
     array(
         'class'       => 'dish dish--green',
-        'filter'      => 'veg huerta',
+        'category'    => 'veggie',
         'tags'        => array(
             array( 'class' => 'tag tag--veg', 'label' => 'Vegetariano' ),
         ),
@@ -154,7 +173,8 @@ $dishes = array(
         'description' => 'Ñoquis de mandioca hechos a mano con mantequilla noisette, salvia crocante y parmesano añejo.',
         'stats'       => array(
             array( 'label' => 'Porciones', 'value' => '2 · 4' ),
-            array( 'label' => 'Calorías', 'value' => '490 kcal' ),
+            array( 'label' => 'Calorías',  'value' => '490 kcal' ),
+            array( 'label' => 'Contiene',  'value' => 'Lácteos · Gluten' ),
         ),
     ),
 );
@@ -226,13 +246,21 @@ $weeks = array(
     array( 'num' => 'Semana 20 · preview', 'range' => '11 – 17 mayo',    'tagline' => 'Frío & guisos' ),
 );
 
-$filters = array(
-    array( 'key' => 'all',     'label' => 'Todo',             'dot' => 'var(--brand-primary)', 'on' => true ),
-    array( 'key' => 'local',   'label' => 'Del río & monte',  'dot' => '#1B5E20' ),
-    array( 'key' => 'huerta',  'label' => 'De la huerta',     'dot' => '#6b8a3a' ),
-    array( 'key' => 'intl',    'label' => 'Del mundo',        'dot' => '#0D47A1' ),
-    array( 'key' => 'veg',     'label' => 'Vegetariano',      'dot' => '#BF360C' ),
-);
+/* Dishes as JSON for modal JS */
+$dishes_json = wp_json_encode( array_map( function ( $d ) {
+    return array(
+        'class'       => $d['class'],
+        'category'    => $d['category'],
+        'time'        => $d['time'],
+        'difficulty'  => $d['difficulty'],
+        'number'      => $d['number'],
+        'title'       => $d['title'],
+        'title_en'    => $d['title_en'],
+        'description' => $d['description'],
+        'stats'       => $d['stats'],
+        'tags'        => $d['tags'],
+    );
+}, $dishes ) );
 ?>
 
 <main id="main" class="site-main menu-design" role="main">
@@ -294,63 +322,99 @@ $filters = array(
         </div>
     </section>
 
-    <!-- FILTER BAR -->
-    <section class="filter">
+    <!-- MENU VIEWER -->
+    <section class="menucat">
         <div class="wrap">
-            <div class="filter__row" role="group" aria-label="Filtrar por origen">
-                <span class="filter__label">Filtrar</span>
-                <?php foreach ( $filters as $filter ) :
-                    $on = ! empty( $filter['on'] );
-                    ?>
-                    <button class="chip<?php echo $on ? ' is-on' : ''; ?>" type="button" data-filter="<?php echo esc_attr( $filter['key'] ); ?>">
-                        <span class="dot" style="background:<?php echo esc_attr( $filter['dot'] ); ?>"></span><?php echo esc_html( $filter['label'] ); ?>
-                    </button>
-                <?php endforeach; ?>
+            <div class="menucat__layout">
+
+                <!-- CATEGORY SIDEBAR -->
+                <nav class="menucat__sidebar" aria-label="Categorías de platos">
+                    <?php foreach ( $categories as $cat ) :
+                        $is_active = $cat['key'] === 'all';
+                        ?>
+                        <button
+                            class="catbtn<?php echo $is_active ? ' is-active' : ''; ?>"
+                            data-cat="<?php echo esc_attr( $cat['key'] ); ?>"
+                            type="button"
+                            aria-pressed="<?php echo $is_active ? 'true' : 'false'; ?>">
+                            <span class="catbtn__circle">
+                                <?php echo $cat_icons[ $cat['key'] ]; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+                            </span>
+                            <span class="catbtn__label"><?php echo esc_html( $cat['label'] ); ?></span>
+                        </button>
+                    <?php endforeach; ?>
+                </nav>
+
+                <!-- DISH GRID -->
+                <div class="menucat__main">
+                    <div class="dishes" id="dishes">
+                        <?php foreach ( $dishes as $idx => $dish ) : ?>
+                            <article
+                                class="<?php echo esc_attr( $dish['class'] ); ?>"
+                                data-cat="<?php echo esc_attr( $dish['category'] ); ?>"
+                                data-index="<?php echo (int) $idx; ?>"
+                                role="button"
+                                tabindex="0"
+                                aria-label="<?php echo esc_attr( 'Ver detalle de ' . $dish['title'] ); ?>">
+                                <div class="dish__img">
+                                    <?php if ( ! empty( $dish['tags'] ) ) : ?>
+                                        <div class="dish__tags">
+                                            <?php foreach ( $dish['tags'] as $tag ) : ?>
+                                                <span class="<?php echo esc_attr( $tag['class'] ); ?>"><?php echo esc_html( $tag['label'] ); ?></span>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="dish__meta">
+                                        <span class="mleft"><?php echo $time_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?><?php echo esc_html( $dish['time'] ); ?></span>
+                                        <span>Dificultad · <?php echo esc_html( $dish['difficulty'] ); ?></span>
+                                    </div>
+                                </div>
+                                <div class="dish__body">
+                                    <span class="dish__num"><?php echo esc_html( $dish['number'] ); ?></span>
+                                    <h3 class="dish__title"><?php echo esc_html( $dish['title'] ); ?></h3>
+                                    <div class="dish__title-en"><?php echo esc_html( $dish['title_en'] ); ?></div>
+                                    <p class="dish__desc"><?php echo esc_html( $dish['description'] ); ?></p>
+                                    <div class="dish__foot">
+                                        <div class="dish__stats">
+                                            <?php foreach ( $dish['stats'] as $stat ) : ?>
+                                                <div><?php echo esc_html( $stat['label'] ); ?><b><?php echo esc_html( $stat['value'] ); ?></b></div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <span class="dish__peek">Ver <?php echo $arrow_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+                                    </div>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="menu-empty" id="empty">Sin platos en esta categoría esta semana.</div>
+                </div>
+
             </div>
         </div>
     </section>
 
-    <!-- MENU GRID -->
-    <section class="menu">
-        <div class="wrap">
-            <div class="dishes" id="dishes">
-                <?php foreach ( $dishes as $dish ) : ?>
-                    <article class="<?php echo esc_attr( $dish['class'] ); ?>" data-filter="<?php echo esc_attr( $dish['filter'] ); ?>">
-                        <div class="dish__img">
-                            <?php if ( ! empty( $dish['tags'] ) ) : ?>
-                                <div class="dish__tags">
-                                    <?php foreach ( $dish['tags'] as $tag ) : ?>
-                                        <span class="<?php echo esc_attr( $tag['class'] ); ?>"><?php echo esc_html( $tag['label'] ); ?></span>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endif; ?>
-                            <div class="dish__meta">
-                                <span class="mleft"><?php echo $time_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?><?php echo esc_html( $dish['time'] ); ?></span>
-                                <span>Dificultad · <?php echo esc_html( $dish['difficulty'] ); ?></span>
-                            </div>
-                        </div>
-                        <div class="dish__body">
-                            <span class="dish__num"><?php echo esc_html( $dish['number'] ); ?></span>
-                            <h3 class="dish__title"><?php echo esc_html( $dish['title'] ); ?></h3>
-                            <div class="dish__title-en"><?php echo esc_html( $dish['title_en'] ); ?></div>
-                            <p class="dish__desc"><?php echo esc_html( $dish['description'] ); ?></p>
-                            <div class="dish__foot">
-                                <div class="dish__stats">
-                                    <?php foreach ( $dish['stats'] as $stat ) : ?>
-                                        <div><?php echo esc_html( $stat['label'] ); ?><b><?php echo esc_html( $stat['value'] ); ?></b></div>
-                                    <?php endforeach; ?>
-                                </div>
-                                <a href="<?php echo esc_url( $waitlist_url ); ?>" class="dish__link">Ver receta
-                                    <?php echo $arrow_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                <?php endforeach; ?>
+    <!-- DISH DETAIL MODAL -->
+    <div class="dish-modal" id="dishModal" role="dialog" aria-modal="true" aria-label="Detalle del plato" hidden>
+        <div class="dish-modal__backdrop" id="dishModalBackdrop"></div>
+        <div class="dish-modal__panel" id="dishModalPanel">
+            <button class="dish-modal__close" id="dishModalClose" type="button" aria-label="Cerrar detalle">
+                <?php echo $close_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+            </button>
+            <div class="dish-modal__img" id="dishModalImg"></div>
+            <div class="dish-modal__content">
+                <div class="dish-modal__tags" id="dishModalTags"></div>
+                <h2 class="dish-modal__title" id="dishModalTitle"></h2>
+                <div class="dish-modal__subtitle" id="dishModalSubtitle"></div>
+                <div class="dish-modal__badges" id="dishModalBadges"></div>
+                <p class="dish-modal__desc" id="dishModalDesc"></p>
+                <div class="dish-modal__stats" id="dishModalStats"></div>
+                <div class="dish-modal__note">
+                    <?php echo $arrow_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+                    La selección de platos se realiza dentro de tu cuenta.
+                </div>
             </div>
-            <div class="menu-empty" id="empty">Sin platos con ese filtro esta semana. Probá con otro origen.</div>
         </div>
-    </section>
+    </div>
 
     <!-- SIDES / ADDONS -->
     <section class="sides" id="sumas">
@@ -371,9 +435,6 @@ $filters = array(
                         <p><?php echo esc_html( $side['description'] ); ?></p>
                         <div class="side__foot">
                             <span class="addon"><?php echo esc_html( $side['addon'] ); ?></span>
-                            <button class="addbtn" type="button">Sumar
-                                <?php echo $plus_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                            </button>
                         </div>
                     </article>
                 <?php endforeach; ?>
@@ -432,7 +493,6 @@ $filters = array(
         </div>
     </section>
 
-
 </main>
 
 <script>
@@ -440,8 +500,22 @@ $filters = array(
   var root = document.querySelector('.menu-design');
   if (!root) return;
 
+  /* ── Dish data ─────────────────────────────────────────────── */
+  var dishes = <?php echo $dishes_json; // phpcs:ignore WordPress.Security.EscapeOutput ?>;
+
+  /* Image gradients indexed to match $dishes array order */
+  var dishGradients = [
+    /* surubi   */ 'radial-gradient(circle at 35% 40%, #F0B765 0%, transparent 55%), radial-gradient(circle at 70% 65%, #E8A045 0%, transparent 55%), linear-gradient(135deg, #9A5A08, #C88B3A)',
+    /* bife     */ 'radial-gradient(circle at 30% 45%, #C88B3A 0%, transparent 48%), radial-gradient(circle at 70% 60%, #9A5A08 0%, transparent 55%), linear-gradient(135deg, #3B2A14, #6B4A1E 70%, #8B5A1C)',
+    /* bowl     */ 'radial-gradient(circle at 30% 35%, #F0B765, transparent 50%), radial-gradient(circle at 72% 70%, #4a7a3a, transparent 55%), linear-gradient(135deg, #C88B3A, #9A5A08)',
+    /* curry    */ 'radial-gradient(circle at 35% 40%, #FFD783, transparent 55%), radial-gradient(circle at 72% 68%, #E8A045, transparent 55%), linear-gradient(135deg, #C88B3A, #9A5A08)',
+    /* milanesa */ 'radial-gradient(circle at 50% 50%, #E8A045, transparent 55%), linear-gradient(135deg, #C88B3A 0%, #9A5A08 50%, #6B4A1E 100%)',
+    /* gnocchi  */ 'radial-gradient(circle at 35% 40%, #c9d97a, transparent 55%), radial-gradient(circle at 70% 65%, #6b8a3a, transparent 55%), linear-gradient(135deg, #3e5a27, #6b8a3a)',
+  ];
+
+  /* ── Avatar menu ───────────────────────────────────────────── */
   var avatarBtn = root.querySelector('#menuAvatarBtn');
-  var userMenu = root.querySelector('#menuUserMenu');
+  var userMenu  = root.querySelector('#menuUserMenu');
   if (avatarBtn && userMenu) {
     avatarBtn.addEventListener('click', function (e) {
       e.stopPropagation();
@@ -449,7 +523,6 @@ $filters = array(
       avatarBtn.classList.toggle('is-open', open);
       avatarBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
-
     document.addEventListener('click', function () {
       userMenu.classList.remove('is-open');
       avatarBtn.classList.remove('is-open');
@@ -457,27 +530,130 @@ $filters = array(
     });
   }
 
-  // FILTER CHIPS
-  var chips  = root.querySelectorAll('.chip[data-filter]');
-  var dishes = root.querySelectorAll('#dishes .dish');
-  var empty  = root.querySelector('#empty');
-  chips.forEach(function (chip) {
-    chip.addEventListener('click', function () {
-      chips.forEach(function (c) { c.classList.remove('is-on'); });
-      chip.classList.add('is-on');
-      var f = chip.dataset.filter;
+  /* ── Category filter ───────────────────────────────────────── */
+  var catBtns   = root.querySelectorAll('.catbtn[data-cat]');
+  var dishCards = root.querySelectorAll('#dishes [data-cat]');
+  var emptyMsg  = root.querySelector('#empty');
+
+  catBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      catBtns.forEach(function (b) {
+        b.classList.remove('is-active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-pressed', 'true');
+
+      var cat   = btn.dataset.cat;
       var shown = 0;
-      dishes.forEach(function (d) {
-        var tags = (d.dataset.filter || '').split(/\s+/);
-        var match = (f === 'all') || tags.indexOf(f) !== -1;
-        d.style.display = match ? '' : 'none';
+      dishCards.forEach(function (card) {
+        var match = (cat === 'all') || (card.dataset.cat === cat);
+        card.style.display = match ? '' : 'none';
         if (match) shown++;
       });
-      if (empty) empty.classList.toggle('is-shown', shown === 0);
+      if (emptyMsg) emptyMsg.classList.toggle('is-shown', shown === 0);
     });
   });
 
-  // WEEK SWITCHER (visual only — piloto)
+  /* ── Modal ─────────────────────────────────────────────────── */
+  var modal        = document.getElementById('dishModal');
+  var modalBackdrop= document.getElementById('dishModalBackdrop');
+  var modalClose   = document.getElementById('dishModalClose');
+  var modalImg     = document.getElementById('dishModalImg');
+  var modalTags    = document.getElementById('dishModalTags');
+  var modalTitle   = document.getElementById('dishModalTitle');
+  var modalSubtitle= document.getElementById('dishModalSubtitle');
+  var modalBadges  = document.getElementById('dishModalBadges');
+  var modalDesc    = document.getElementById('dishModalDesc');
+  var modalStats   = document.getElementById('dishModalStats');
+  var lastFocused  = null;
+
+  function openModal(idx) {
+    var d = dishes[idx];
+    if (!d) return;
+    lastFocused = document.activeElement;
+
+    /* Image gradient */
+    modalImg.style.background = dishGradients[idx] || dishGradients[0];
+
+    /* Tags */
+    modalTags.innerHTML = '';
+    (d.tags || []).forEach(function (t) {
+      var s = document.createElement('span');
+      s.className = t['class'];
+      s.textContent = t.label;
+      modalTags.appendChild(s);
+    });
+
+    /* Title */
+    modalTitle.textContent    = d.title;
+    modalSubtitle.textContent = d.title_en;
+
+    /* Badges: time + difficulty */
+    modalBadges.innerHTML =
+      '<span class="dish-modal__badge">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" style="width:13px;height:13px"><path d="M5 13c0-3.5 3-7 7-7s7 3.5 7 7"/></svg>' +
+        d.time +
+      '</span>' +
+      '<span class="dish-modal__badge">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" style="width:13px;height:13px"><path d="M5 17h14M5 12h8M5 7h5"/></svg>' +
+        'Dificultad ' + d.difficulty +
+      '</span>';
+
+    /* Description */
+    modalDesc.textContent = d.description;
+
+    /* Stats */
+    modalStats.innerHTML = '';
+    (d.stats || []).forEach(function (s) {
+      var el = document.createElement('div');
+      el.className = 'dish-modal__stat';
+      el.innerHTML =
+        '<span class="dish-modal__stat-label">' + escHtml(s.label) + '</span>' +
+        '<span class="dish-modal__stat-value">' + escHtml(s.value) + '</span>';
+      modalStats.appendChild(el);
+    });
+
+    modal.removeAttribute('hidden');
+    document.body.classList.add('modal-open');
+    setTimeout(function () { modalClose.focus(); }, 50);
+  }
+
+  function closeModal() {
+    modal.setAttribute('hidden', '');
+    document.body.classList.remove('modal-open');
+    if (lastFocused) lastFocused.focus();
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  /* Card clicks */
+  dishCards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      openModal(parseInt(card.dataset.index, 10));
+    });
+    card.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal(parseInt(card.dataset.index, 10));
+      }
+    });
+  });
+
+  /* Close triggers */
+  if (modalClose)    modalClose.addEventListener('click', closeModal);
+  if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.hasAttribute('hidden')) closeModal();
+  });
+
+  /* ── Week switcher (visual only — piloto) ──────────────────── */
   var weekchips = root.querySelectorAll('.weekchip');
   weekchips.forEach(function (wc) {
     wc.addEventListener('click', function () {
@@ -490,22 +666,6 @@ $filters = array(
     });
   });
 
-  // ADD-ON feedback (piloto)
-  root.querySelectorAll('.addbtn').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var orig = b.innerHTML;
-      b.innerHTML = 'Sumado \u2713';
-      b.style.background = 'var(--brand-primary)';
-      b.style.color = '#1B1B1E';
-      b.style.borderColor = 'var(--brand-primary)';
-      setTimeout(function () {
-        b.innerHTML = orig;
-        b.style.background = '';
-        b.style.color = '';
-        b.style.borderColor = '';
-      }, 1800);
-    });
-  });
 })();
 </script>
 
