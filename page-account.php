@@ -494,12 +494,6 @@ if ( isset( $_GET['setup'] ) ) {
       </aside>
     </div><!-- /page__grid -->
 
-    <!-- FOOTER -->
-    <footer class="foot">
-      Ogape Tu Chef en Casa · Asunción, Paraguay ·
-      <a href="#">Términos</a><a href="#">Privacidad</a><a href="#">WhatsApp</a>
-    </footer>
-
   </div><!-- /wrap -->
 </main>
 

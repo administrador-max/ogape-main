@@ -11,7 +11,6 @@
  */
 
 /* ── Hide theme chrome on /account ─────────────────────────────── */
-.ogape-account-page #colophon,
 .ogape-account-page .bg-canvas,
 .ogape-account-page .skip-link {
   display: none !important;
@@ -42,7 +41,7 @@
   @media(min-width:1024px){.wrap{padding:0 var(--space-10)}}
 
   /* ── ACCOUNT SUBNAV (tabs strip below main site header) ───────── */
-  .account-subnav{position:sticky;top:60px;z-index:40;background:rgba(247,239,227,.92);backdrop-filter:blur(16px) saturate(120%);-webkit-backdrop-filter:blur(16px) saturate(120%);border-bottom:1px solid rgba(154,90,8,.1)}
+  .account-subnav{position:sticky;top:72px;z-index:40;background:rgba(247,239,227,.92);backdrop-filter:blur(16px) saturate(120%);-webkit-backdrop-filter:blur(16px) saturate(120%);border-bottom:1px solid rgba(154,90,8,.1)}
   .account-subnav__inner{display:flex;align-items:center;min-height:48px;max-width:1240px;margin:0 auto;padding:0 var(--space-6)}
   @media(min-width:768px){.account-subnav__inner{padding:0 var(--space-8)}}
   @media(min-width:1024px){.account-subnav__inner{padding:0 var(--space-10)}}
@@ -207,10 +206,6 @@
   .section-label{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--brand-primary-strong);margin-bottom:var(--space-4);display:flex;align-items:center;gap:.5rem}
   .section-label::after{content:"";flex:1;height:1px;background:rgba(154,90,8,.15)}
   .section-label .dot{width:5px;height:5px;border-radius:50%;background:var(--brand-primary)}
-
-  /* ── FOOTER ──────────────────────────────────────── */
-  .foot{background:transparent;text-align:center;padding:var(--space-6) 0 var(--space-8);color:var(--muted);font-size:12px;border-top:1px solid rgba(17,24,39,.06);margin-top:var(--space-10)}
-  .foot a{color:var(--text-secondary);margin:0 .4rem;border-bottom:1px solid rgba(17,24,39,.12);padding-bottom:1px}
 
   @media(max-width:639px){
     .delivery-card .card__h{font-size:20px}
