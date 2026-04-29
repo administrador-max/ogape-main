@@ -325,37 +325,6 @@ a:hover {
   align-items: center;
   gap: var(--space-3);
 }
-.nav__notif {
-  width: 36px;
-  height: 36px;
-  border: none;
-  background: transparent;
-  border-radius: var(--radius-full);
-  display: grid;
-  place-items: center;
-  color: var(--text-secondary);
-  transition: background 0.15s, color 0.15s;
-  position: relative;
-  cursor: pointer;
-}
-.nav__notif:hover {
-  background: rgba(255, 255, 255, 0.6);
-  color: var(--text-primary);
-}
-.nav__notif svg {
-  width: 18px;
-  height: 18px;
-}
-.nav__notif .badge {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--brand-primary);
-  border: 2px solid rgba(247, 239, 227, 0.9);
-}
 .avatar-btn {
   display: flex;
   align-items: center;
