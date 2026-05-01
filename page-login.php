@@ -27,7 +27,7 @@ $redirect_to = isset( $_GET['redirect_to'] ) ? rawurldecode( sanitize_text_field
 $login_error  = '';
 $login_notice = '';
 if ( isset( $_GET['error'] ) ) {
-	$login_error = __( 'Email o contraseña incorrectos. Revisá los datos e intentá de nuevo.', 'ogape-child' );
+	$login_error = __( 'Email, usuario o contraseña incorrectos. Revisá los datos e intentá de nuevo.', 'ogape-child' );
 }
 if ( isset( $_GET['reset'] ) ) {
 	$login_notice = __( 'Si ese email tiene una cuenta, te mandamos el enlace de recuperación.', 'ogape-child' );
@@ -80,7 +80,7 @@ if ( isset( $_GET['reset'] ) ) {
       <!-- ERROR -->
       <div class="error-msg<?php echo $login_error ? ' is-visible' : ''; ?>" id="loginErrorMsg" role="alert">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg>
-        <span id="loginErrorText"><?php echo $login_error ? esc_html( $login_error ) : esc_html__( 'Email o contraseña incorrectos. Intentá de nuevo.', 'ogape-child' ); ?></span>
+        <span id="loginErrorText"><?php echo $login_error ? esc_html( $login_error ) : esc_html__( 'Email, usuario o contraseña incorrectos. Intentá de nuevo.', 'ogape-child' ); ?></span>
       </div>
 
       <!-- NOTICE (password reset) -->
@@ -100,8 +100,8 @@ if ( isset( $_GET['reset'] ) ) {
 
         <!-- EMAIL -->
         <div class="field">
-          <label for="loginEmail"><?php esc_html_e( 'Email', 'ogape-child' ); ?></label>
-          <input class="input" id="loginEmail" name="email" type="email" placeholder="maria@correo.com.py" autocomplete="email" required>
+          <label for="loginEmail"><?php esc_html_e( 'Email o usuario', 'ogape-child' ); ?></label>
+          <input class="input" id="loginEmail" name="email" type="text" placeholder="maria@correo.com.py o tu usuario" autocomplete="username" required>
         </div>
 
         <!-- PASSWORD -->
