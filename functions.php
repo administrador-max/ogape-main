@@ -65,51 +65,6 @@ function ogape_get_logout_url( $redirect_to = '' ) {
 }
 
 /**
- * Check whether the public maintenance screen should be served.
- *
- * Toggle by creating/removing `.ogape-public-maintenance` in the active theme.
- *
- * @return bool
- */
-function ogape_public_maintenance_enabled() {
-    $enabled = file_exists( get_stylesheet_directory() . '/.ogape-public-maintenance' );
-
-    return (bool) apply_filters( 'ogape_public_maintenance_enabled', $enabled );
-}
-
-/**
- * Serve the polished maintenance experience to public visitors while keeping
- * admin auth, AJAX, and REST available.
- */
-function ogape_render_public_maintenance() {
-    global $pagenow;
-
-    if ( ! ogape_public_maintenance_enabled() ) {
-        return;
-    }
-
-    if ( is_user_logged_in() || is_admin() || wp_doing_ajax() || wp_doing_cron() ) {
-        return;
-    }
-
-    if ( 'wp-login.php' === $pagenow ) {
-        return;
-    }
-
-    if ( ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) ) {
-        return;
-    }
-
-    if ( is_feed() || is_robots() || is_trackback() ) {
-        return;
-    }
-
-    require get_stylesheet_directory() . '/maintenance.php';
-    exit;
-}
-add_action( 'template_redirect', 'ogape_render_public_maintenance', 0 );
-
-/**
  * Route lost-password links through the branded recovery page.
  *
  * @param string $lostpassword_url Existing lost password URL.

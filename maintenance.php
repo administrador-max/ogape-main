@@ -10,11 +10,6 @@
  *   wp maintenance-mode activate
  * To deactivate:
  *   wp maintenance-mode deactivate
- *
- * Theme-controlled public maintenance mode:
- *   create/remove `.ogape-public-maintenance` in the active theme directory.
- *   This keeps `wp-login.php` and `/wp-admin/` available while showing this
- *   screen to logged-out front-end visitors.
  */
 
 header( 'HTTP/1.1 503 Service Unavailable' );
