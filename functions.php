@@ -65,6 +65,152 @@ function ogape_get_logout_url( $redirect_to = '' ) {
 }
 
 /**
+ * Check whether the branded public maintenance screen is enabled.
+ *
+ * @return bool
+ */
+function ogape_public_maintenance_enabled() {
+    return (bool) get_option( 'ogape_public_maintenance_enabled', false );
+}
+
+/**
+ * Serve the polished maintenance experience to public visitors while keeping
+ * admin auth, AJAX, and REST available.
+ */
+function ogape_render_public_maintenance() {
+    global $pagenow;
+
+    if ( ! ogape_public_maintenance_enabled() ) {
+        return;
+    }
+
+    if ( is_user_logged_in() || is_admin() || wp_doing_ajax() || wp_doing_cron() ) {
+        return;
+    }
+
+    if ( 'wp-login.php' === $pagenow ) {
+        return;
+    }
+
+    if ( ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) ) {
+        return;
+    }
+
+    if ( is_feed() || is_robots() || is_trackback() ) {
+        return;
+    }
+
+    require get_stylesheet_directory() . '/maintenance.php';
+    exit;
+}
+add_action( 'template_redirect', 'ogape_render_public_maintenance', 0 );
+
+/**
+ * Register the maintenance toggle setting.
+ */
+function ogape_register_maintenance_setting() {
+    register_setting(
+        'ogape_maintenance',
+        'ogape_public_maintenance_enabled',
+        array(
+            'type'              => 'boolean',
+            'sanitize_callback' => static function( $value ) {
+                return ! empty( $value );
+            },
+            'default'           => false,
+        )
+    );
+}
+add_action( 'admin_init', 'ogape_register_maintenance_setting' );
+
+/**
+ * Add a simple dashboard toggle for the branded maintenance screen.
+ */
+function ogape_add_maintenance_page() {
+    add_theme_page(
+        __( 'Ogape Maintenance Mode', 'ogape-child' ),
+        __( 'Maintenance Mode', 'ogape-child' ),
+        'manage_options',
+        'ogape-maintenance',
+        'ogape_render_maintenance_page'
+    );
+}
+add_action( 'admin_menu', 'ogape_add_maintenance_page' );
+
+/**
+ * Render the maintenance mode settings page.
+ */
+function ogape_render_maintenance_page() {
+    if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+
+    $enabled = ogape_public_maintenance_enabled();
+    ?>
+    <div class="wrap">
+        <h1><?php esc_html_e( 'Ogape Maintenance Mode', 'ogape-child' ); ?></h1>
+        <p><?php esc_html_e( 'Show the polished branded maintenance page to logged-out visitors while keeping wp-login.php and wp-admin available for admins.', 'ogape-child' ); ?></p>
+
+        <form action="options.php" method="post">
+            <?php settings_fields( 'ogape_maintenance' ); ?>
+
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row"><?php esc_html_e( 'Public Maintenance Page', 'ogape-child' ); ?></th>
+                    <td>
+                        <label for="ogape_public_maintenance_enabled">
+                            <input
+                                id="ogape_public_maintenance_enabled"
+                                name="ogape_public_maintenance_enabled"
+                                type="checkbox"
+                                value="1"
+                                <?php checked( $enabled ); ?>
+                            >
+                            <?php esc_html_e( 'Enable the branded maintenance page for logged-out visitors', 'ogape-child' ); ?>
+                        </label>
+                        <p class="description">
+                            <?php esc_html_e( 'When enabled, the polished maintenance page is shown publicly. Logged-in admins, wp-login.php, wp-admin, AJAX, and API routes stay available.', 'ogape-child' ); ?>
+                        </p>
+                        <p>
+                            <strong><?php esc_html_e( 'Current status:', 'ogape-child' ); ?></strong>
+                            <?php echo $enabled ? esc_html__( 'Enabled', 'ogape-child' ) : esc_html__( 'Disabled', 'ogape-child' ); ?>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+            <?php submit_button( __( 'Save Maintenance Settings', 'ogape-child' ) ); ?>
+        </form>
+    </div>
+    <?php
+}
+
+/**
+ * Add an admin bar status item for quick visibility.
+ *
+ * @param WP_Admin_Bar $wp_admin_bar Admin bar instance.
+ */
+function ogape_admin_bar_maintenance_status( $wp_admin_bar ) {
+    if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+
+    $enabled = ogape_public_maintenance_enabled();
+
+    $wp_admin_bar->add_node(
+        array(
+            'id'    => 'ogape-maintenance-status',
+            'title' => $enabled ? __( 'Maintenance: On', 'ogape-child' ) : __( 'Maintenance: Off', 'ogape-child' ),
+            'href'  => admin_url( 'themes.php?page=ogape-maintenance' ),
+            'meta'  => array(
+                'class' => $enabled ? 'ogape-maintenance-on' : 'ogape-maintenance-off',
+            ),
+        )
+    );
+}
+add_action( 'admin_bar_menu', 'ogape_admin_bar_maintenance_status', 90 );
+
+/**
  * Route lost-password links through the branded recovery page.
  *
  * @param string $lostpassword_url Existing lost password URL.
