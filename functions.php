@@ -65,32 +65,6 @@ function ogape_get_logout_url( $redirect_to = '' ) {
 }
 
 /**
- * Route core login links through the branded login page.
- *
- * This keeps unauthenticated `/wp-admin` requests inside the custom account
- * flow because core auth redirects use `wp_login_url()`.
- *
- * @param string $login_url Existing login URL.
- * @param string $redirect  Optional destination after login.
- * @param bool   $force_reauth Whether to force reauthentication.
- * @return string
- */
-function ogape_filter_login_url( $login_url, $redirect, $force_reauth ) {
-    $args = array();
-
-    if ( is_string( $redirect ) && '' !== $redirect ) {
-        $args['redirect_to'] = $redirect;
-    }
-
-    if ( $force_reauth ) {
-        $args['reauth'] = '1';
-    }
-
-    return add_query_arg( $args, home_url( '/login/' ) );
-}
-add_filter( 'login_url', 'ogape_filter_login_url', 10, 3 );
-
-/**
  * Route lost-password links through the branded recovery page.
  *
  * @param string $lostpassword_url Existing lost password URL.
@@ -702,23 +676,6 @@ function ogape_bridge_wp_login_logout() {
         exit;
     }
 
-    if ( ! is_user_logged_in() && 'GET' === strtoupper( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) && '' === $action ) {
-        $redirect_to = isset( $_REQUEST['redirect_to'] )
-            ? sanitize_text_field( wp_unslash( $_REQUEST['redirect_to'] ) )
-            : admin_url();
-        $target      = add_query_arg(
-            array_filter(
-                array(
-                    'redirect_to' => wp_validate_redirect( $redirect_to, admin_url() ),
-                    'reauth'      => isset( $_REQUEST['reauth'] ) ? '1' : '',
-                )
-            ),
-            home_url( '/login/' )
-        );
-
-        wp_safe_redirect( $target );
-        exit;
-    }
 }
 add_action( 'login_init', 'ogape_bridge_wp_login_logout' );
 
