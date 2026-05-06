@@ -4,6 +4,10 @@
  * Central branding helpers: asset URIs, logo rendering, whatsapp URL helper.
  */
 
+if ( ! defined( 'OGAPE_PILOT_START' ) ) {
+    define( 'OGAPE_PILOT_START', 0 );
+}
+
 if ( ! function_exists( 'ogape_get_brand_asset_uri' ) ) {
     function ogape_get_brand_asset_uri( $name ) {
         return get_stylesheet_directory_uri() . '/assets/img/' . ltrim( $name, '/' );

@@ -141,7 +141,7 @@ foreach ( $json_candidates as $source => $candidate_path ) {
         continue;
     }
 
-    if ( ! array_key_exists( 'mains', $decoded ) && ! array_key_exists( 'sides', $decoded ) ) {
+    if ( ! array_key_exists( 'mains', $decoded ) && ! array_key_exists( 'sides', $decoded ) && ! array_key_exists( 'dishes', $decoded ) ) {
         $json_issue = 'menu-sections-missing';
         continue;
     }
@@ -150,6 +150,29 @@ foreach ( $json_candidates as $source => $candidate_path ) {
         'mains' => is_array( $decoded['mains'] ?? null ) ? $decoded['mains'] : array(),
         'sides' => is_array( $decoded['sides'] ?? null ) ? $decoded['sides'] : array(),
     );
+
+    if ( empty( $sections['mains'] ) && is_array( $decoded['dishes'] ?? null ) ) {
+        $sections['mains'] = array_map(
+            static function ( $dish ) {
+                $img = is_array( $dish['img'] ?? null ) ? $dish['img'] : array();
+                return array(
+                    'title'       => $dish['name_es'] ?? '',
+                    'title_en'    => $dish['name_en'] ?? '',
+                    'slug'        => $dish['slug'] ?? '',
+                    'description' => $dish['description_es'] ?? '',
+                    'description_en' => $dish['description_en'] ?? '',
+                    'price_pyg'   => $dish['price_pyg'] ?? null,
+                    'show_price'  => ! empty( $dish['show_price'] ),
+                    'is_hero'     => ! empty( $dish['is_staple'] ),
+                    'tags'        => $dish['tags'] ?? array(),
+                    'img_src'     => '',
+                    'img_srcset'  => '',
+                    'img_alt'     => $img['alt_es'] ?? ( $dish['name_es'] ?? '' ),
+                );
+            },
+            $decoded['dishes']
+        );
+    }
     if ( empty( $sections['mains'] ) && empty( $sections['sides'] ) ) {
         $json_issue = 'menu-empty';
         continue;

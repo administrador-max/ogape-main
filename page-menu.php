@@ -13,259 +13,264 @@
 
 get_header();
 
-$home_url           = home_url( '/' );
-$waitlist_url       = ogape_get_waitlist_url();
-$plans_url          = home_url( '/planes/' );
-$about_url          = home_url( '/nosotros/' );
-$menu_url           = home_url( '/menu/' );
-$how_url            = home_url( '/como-funciona/' );
-$gift_url           = home_url( '/tarjetas-regalo/' );
-$sustainability_url = home_url( '/sostenibilidad/' );
-$alliances_url      = home_url( '/alianzas/' );
-$coverage_url       = home_url( '/cobertura/' );
-$login_url          = home_url( '/login/' );
-$account_url        = home_url( '/account/' );
-$privacy_url        = home_url( '/privacidad/' );
-$terms_url          = home_url( '/terminos/' );
-$contact_url        = home_url( '/contacto/' );
-$logo_url           = get_stylesheet_directory_uri() . '/assets/img/ogape-logo.svg';
-$wa_url             = function_exists( 'ogape_get_whatsapp_url' ) ? ogape_get_whatsapp_url() : '';
-$wa_display         = function_exists( 'ogape_get_whatsapp_display' ) ? ogape_get_whatsapp_display() : '';
-$contact_email      = ogape_get_contact_email();
-$orders_email       = 'pedidos@ogape.com.py';
-$is_logged_in       = is_user_logged_in();
-$logout_url         = function_exists( 'ogape_get_logout_url' ) ? ogape_get_logout_url() : home_url( '/future-site/' );
-
-$menu_account_context = $is_logged_in && function_exists( 'ogape_get_demo_account_context' )
-    ? ogape_get_demo_account_context()
-    : array();
-$menu_first_name = $menu_account_context['first_name'] ?? '';
-$menu_name       = $menu_account_context['name'] ?? '';
-$menu_email      = $menu_account_context['email'] ?? '';
-$menu_initials   = $menu_account_context['initials'] ?? '';
+$home_url     = home_url( '/' );
+$waitlist_url = ogape_get_waitlist_url();
+$plans_url    = home_url( '/planes/' );
+$menu_url     = home_url( '/menu/' );
 
 $arrow_svg = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 8h8m-3-3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 $time_svg  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 13c0-3.5 3-7 7-7s7 3.5 7 7"/></svg>';
 $close_svg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>';
-$diff_svg  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 17h14M5 12h8M5 7h5"/></svg>';
 
-/* ── Category navigation ─────────────────────────────────────────── */
 $categories = array(
-    array( 'key' => 'all',         'label' => 'Todo'        ),
-    array( 'key' => 'veggie',      'label' => 'Veggie'      ),
-    array( 'key' => 'premium',     'label' => 'Premium'     ),
-    array( 'key' => 'tradicional', 'label' => 'Tradicional' ),
-    array( 'key' => 'regular',     'label' => 'Regular'     ),
+    array( 'key' => 'all',         'label' => 'Todo' ),
+    array( 'key' => 'veggie',      'label' => 'Veggie' ),
+    array( 'key' => 'premium',     'label' => 'Premium' ),
+    array( 'key' => 'traditional', 'label' => 'Tradicional' ),
+    array( 'key' => 'regular',     'label' => 'Regular' ),
 );
 
 $cat_icons = array(
     'all'         => '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></svg>',
     'veggie'      => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6c2-3 10-5 12-3s0 10-3 12C8 18 2 16 4 6z"/><path d="M10 18V10"/></svg>',
     'premium'     => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2l1.9 5.8H18l-4.9 3.6 1.9 5.8L10 14l-4.9 3.2 1.9-5.8L2 7.8h6.1L10 2z"/></svg>',
-    'tradicional' => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2c0 0-5 5-5 9a5 5 0 0010 0c0-3-2-5-3-6 0 2-2 3-2 3s0-4 0-6z"/></svg>',
+    'traditional' => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2c0 0-5 5-5 9a5 5 0 0010 0c0-3-2-5-3-6 0 2-2 3-2 3s0-4 0-6z"/></svg>',
     'regular'     => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 10c0 4 3 7 7 7s7-3 7-7H3z"/><path d="M1 10h18"/><path d="M7 6l1-3M13 6l-1-3"/></svg>',
 );
 
-/* ── Dish data ───────────────────────────────────────────────────── */
-$dishes = array(
-    array(
-        'class'       => 'dish dish--hero',
-        'category'    => 'premium',
-        'tags'        => array(
-            array( 'class' => 'tag tag--hero',  'label' => 'Plato Estrella' ),
-            array( 'class' => 'tag tag--local', 'label' => 'Local' ),
-        ),
-        'time'        => '35 min',
-        'difficulty'  => 'media',
-        'number'      => 'Receta N.º 01 · del río',
-        'title'       => 'Surubí al Maracuyá',
-        'title_en'    => 'Surubi with passion fruit butter',
-        'description' => 'Surubí del Paraná en tu caja, ya porcionado y frío. Lo sellás en 6 minutos, montás la mantequilla de maracuyá con lo que incluimos, y servís con mandioca dorada. Sabe a un viernes bien pensado.',
-        'stats'       => array(
-            array( 'label' => 'Porciones', 'value' => '2 · 4' ),
-            array( 'label' => 'Calorías',  'value' => '620 kcal' ),
-            array( 'label' => 'Contiene',  'value' => 'Pescado · Lácteos' ),
-        ),
-    ),
-    array(
-        'class'       => 'dish dish--beef',
-        'category'    => 'tradicional',
-        'tags'        => array(
-            array( 'class' => 'tag tag--nomad', 'label' => 'Favorito' ),
-        ),
-        'time'        => '40 min',
-        'difficulty'  => 'baja',
-        'number'      => 'Receta N.º 02 · del monte',
-        'title'       => 'Bife Koygua Negro',
-        'title_en'    => 'Black beer countryside beef',
-        'description' => 'Costilla braseada en reducción de cerveza negra — ya marinada 24 h — con cebolla asada y puré rústico.',
-        'stats'       => array(
-            array( 'label' => 'Porciones', 'value' => '2 · 4' ),
-            array( 'label' => 'Calorías',  'value' => '710 kcal' ),
-            array( 'label' => 'Contiene',  'value' => 'Gluten · Lácteos' ),
-        ),
-    ),
-    array(
-        'class'       => 'dish dish--bowl',
-        'category'    => 'regular',
-        'tags'        => array(
-            array( 'class' => 'tag tag--nomad', 'label' => 'Favorito' ),
-        ),
-        'time'        => '25 min',
-        'difficulty'  => 'baja',
-        'number'      => 'Receta N.º 03 · de la huerta',
-        'title'       => 'Bowl Proteico Ogape',
-        'title_en'    => 'Ogape protein bowl',
-        'description' => 'Pollo grillado, arroz jazmín, hummus suave, verduras encurtidas y crocante de semillas de la casa.',
-        'stats'       => array(
-            array( 'label' => 'Porciones', 'value' => '2 · 4' ),
-            array( 'label' => 'Calorías',  'value' => '540 kcal' ),
-            array( 'label' => 'Contiene',  'value' => 'Sésamo' ),
-        ),
-    ),
-    array(
-        'class'       => 'dish dish--curry',
-        'category'    => 'regular',
-        'tags'        => array(
-            array( 'class' => 'tag tag--intl', 'label' => 'Internacional' ),
-        ),
-        'time'        => '30 min',
-        'difficulty'  => 'baja',
-        'number'      => 'Receta N.º 04 · del mundo',
-        'title'       => 'Pollo al Curry Suave',
-        'title_en'    => 'Mild coconut curry chicken',
-        'description' => 'Curry suave de coco con especias ya dosificadas, arroz perfumado y cilantro fresco.',
-        'stats'       => array(
-            array( 'label' => 'Porciones', 'value' => '2 · 4' ),
-            array( 'label' => 'Calorías',  'value' => '580 kcal' ),
-            array( 'label' => 'Contiene',  'value' => 'Coco' ),
-        ),
-    ),
-    array(
-        'class'       => 'dish dish--mila',
-        'category'    => 'tradicional',
-        'tags'        => array(
-            array( 'class' => 'tag tag--nomad', 'label' => 'Favorito' ),
-        ),
-        'time'        => '25 min',
-        'difficulty'  => 'muy baja',
-        'number'      => 'Receta N.º 05 · clásico de casa',
-        'title'       => 'Milanesa Signature',
-        'title_en'    => 'Signature milanesa',
-        'description' => 'Milanesa de corte premium, ya apanada — solo la freís — con papas rústicas y alioli casero.',
-        'stats'       => array(
-            array( 'label' => 'Porciones', 'value' => '2 · 4' ),
-            array( 'label' => 'Calorías',  'value' => '670 kcal' ),
-            array( 'label' => 'Contiene',  'value' => 'Gluten · Huevo' ),
-        ),
-    ),
-    array(
-        'class'       => 'dish dish--green',
-        'category'    => 'veggie',
-        'tags'        => array(
-            array( 'class' => 'tag tag--veg', 'label' => 'Vegetariano' ),
-        ),
-        'time'        => '30 min',
-        'difficulty'  => 'baja',
-        'number'      => 'Extra · de la huerta',
-        'title'       => 'Gnocchi de Mandioca',
-        'title_en'    => 'Cassava gnocchi with brown butter',
-        'description' => 'Ñoquis de mandioca hechos a mano con mantequilla noisette, salvia crocante y parmesano añejo.',
-        'stats'       => array(
-            array( 'label' => 'Porciones', 'value' => '2 · 4' ),
-            array( 'label' => 'Calorías',  'value' => '490 kcal' ),
-            array( 'label' => 'Contiene',  'value' => 'Lácteos · Gluten' ),
-        ),
-    ),
+$category_labels = array(
+    'veggie'      => 'veggie',
+    'premium'     => 'premium',
+    'traditional' => 'tradicional',
+    'regular'     => 'regular',
 );
 
-$sides = array(
-    array(
-        'num'         => 'Extra i.',
-        'title'       => 'Sopa Paraguaya Artesanal',
-        'description' => 'Pan de maíz paraguayo horneado con queso fresco y cebolla caramelizada. Rinde para cuatro.',
-        'addon'       => '+ add-on · lista para calentar',
-    ),
-    array(
-        'num'         => 'Extra ii.',
-        'title'       => 'Mandioca Frita con Alioli',
-        'description' => 'Bastones de mandioca dorados con sal marina gruesa y alioli casero de la semana.',
-        'addon'       => '+ add-on · lista para calentar',
-    ),
-    array(
-        'num'         => 'Extra iii.',
-        'title'       => 'Ensalada de Temporada',
-        'description' => 'Hojas frescas de temporada con vegetales encurtidos y vinagreta cítrica de la casa.',
-        'addon'       => '+ add-on · listo',
-    ),
+$tag_class_map = array(
+    'hero'  => 'tag tag--hero',
+    'local' => 'tag tag--local',
+    'nomad' => 'tag tag--nomad',
+    'intl'  => 'tag tag--intl',
+    'veg'   => 'tag tag--veg',
 );
 
-$past_weeks = array(
-    array(
-        'week'  => 'Semana 16',
-        'date'  => '13 – 19 abr',
-        'title' => 'Cítricos & cerdo',
-        'items' => array(
-            'Cerdo glaseado a la naranja',
-            'Risotto de hongos del Chaco',
-            'Ensalada tibia de lentejas',
-            'Pollo al limón y tomillo',
-            'Pasta fresca al pesto de rúcula',
-        ),
-    ),
-    array(
-        'week'  => 'Semana 15',
-        'date'  => '6 – 12 abr',
-        'title' => 'Río alto',
-        'items' => array(
-            'Dorado al horno con hierbas',
-            'Tallarines negros de tinta de calamar',
-            'Bowl asiático de atún',
-            'Guiso de garbanzos y chorizo',
-            'Tarta de acelga y queso fresco',
-        ),
-    ),
-    array(
-        'week'  => 'Semana 14',
-        'date'  => '30 mar – 5 abr',
-        'title' => 'Otoño temprano',
-        'items' => array(
-            'Calabaza asada con tahini',
-            'Costeletas al romero',
-            'Curry verde de pollo',
-            'Ñoquis de papa, mantequilla noisette',
-            'Lomo a las tres pimientas',
-        ),
-    ),
+$gradient_palette = array(
+    'radial-gradient(circle at 35% 40%, #F0B765 0%, transparent 55%), radial-gradient(circle at 70% 65%, #E8A045 0%, transparent 55%), linear-gradient(135deg, #9A5A08, #C88B3A)',
+    'radial-gradient(circle at 30% 45%, #C88B3A 0%, transparent 48%), radial-gradient(circle at 70% 60%, #9A5A08 0%, transparent 55%), linear-gradient(135deg, #3B2A14, #6B4A1E 70%, #8B5A1C)',
+    'radial-gradient(circle at 30% 35%, #F0B765, transparent 50%), radial-gradient(circle at 72% 70%, #4A7A3A, transparent 55%), linear-gradient(135deg, #C88B3A, #9A5A08)',
+    'radial-gradient(circle at 35% 40%, #FFD783, transparent 55%), radial-gradient(circle at 72% 68%, #E8A045, transparent 55%), linear-gradient(135deg, #C88B3A, #9A5A08)',
+    'radial-gradient(circle at 35% 40%, #C9D97A, transparent 55%), radial-gradient(circle at 70% 65%, #6B8A3A, transparent 55%), linear-gradient(135deg, #3E5A27, #6B8A3A)',
+    'radial-gradient(circle at 35% 40%, #F0A8B8, transparent 55%), radial-gradient(circle at 70% 65%, #C86A7A, transparent 55%), linear-gradient(135deg, #9A3E4E, #C86A7A)',
 );
 
-$weeks = array(
-    array( 'num' => 'Semana 17 · activa',  'range' => '20 – 26 abril',   'tagline' => 'Río & monte · maracuyá', 'active' => true ),
-    array( 'num' => 'Semana 18 · preview', 'range' => '27 abr – 3 may',  'tagline' => 'Huerta de otoño · calabaza' ),
-    array( 'num' => 'Semana 19 · preview', 'range' => '4 – 10 mayo',     'tagline' => 'Asado de domingo' ),
-    array( 'num' => 'Semana 20 · preview', 'range' => '11 – 17 mayo',    'tagline' => 'Frío & guisos' ),
-);
+$selected_week = isset( $_GET['week'] ) ? max( 1, min( 4, absint( wp_unslash( $_GET['week'] ) ) ) ) : ogape_get_active_week();
+$week_records  = ogape_get_pilot_weeks();
+$raw_dishes    = ogape_get_week( $selected_week );
 
-/* Dishes as JSON for modal JS */
-$dishes_json = wp_json_encode( array_map( function ( $d ) {
-    return array(
-        'class'       => $d['class'],
-        'category'    => $d['category'],
-        'time'        => $d['time'],
-        'difficulty'  => $d['difficulty'],
-        'number'      => $d['number'],
-        'title'       => $d['title'],
-        'title_en'    => $d['title_en'],
-        'description' => $d['description'],
-        'stats'       => $d['stats'],
-        'tags'        => $d['tags'],
+if ( empty( $raw_dishes ) ) {
+    $raw_dishes = ogape_get_pilot_menu();
+}
+
+$find_week_record = static function ( $week_number ) use ( $week_records ) {
+    foreach ( $week_records as $week_record ) {
+        if ( (int) ( $week_record['number'] ?? 0 ) === (int) $week_number ) {
+            return $week_record;
+        }
+    }
+
+    return null;
+};
+
+$format_week_range = static function ( $week_number ) {
+    if ( ! defined( 'OGAPE_PILOT_START' ) || empty( OGAPE_PILOT_START ) || '0' === (string) OGAPE_PILOT_START ) {
+        return 'Rotación piloto';
+    }
+
+    $start_ts = is_numeric( OGAPE_PILOT_START ) ? (int) OGAPE_PILOT_START : strtotime( (string) OGAPE_PILOT_START );
+    if ( ! $start_ts ) {
+        return 'Rotación piloto';
+    }
+
+    $week_start = $start_ts + ( max( 0, (int) $week_number - 1 ) * WEEK_IN_SECONDS );
+    $week_end   = $week_start + ( 6 * DAY_IN_SECONDS );
+
+    return wp_date( 'j M', $week_start ) . ' – ' . wp_date( 'j M', $week_end );
+};
+
+$normalize_time_label = static function ( $time_label ) {
+    $time_label = trim( (string) $time_label );
+
+    if ( '' === $time_label ) {
+        return '35 min';
+    }
+
+    $time_label = str_replace(
+        array( ' minutos', ' minuto', ' Minutos', ' Minuto' ),
+        array( ' min', ' min', ' min', ' min' ),
+        $time_label
     );
-}, $dishes ) );
+
+    return $time_label;
+};
+
+$gradient_for_slug = static function ( $slug ) use ( $gradient_palette ) {
+    $index = (int) sprintf( '%u', crc32( (string) $slug ) ) % count( $gradient_palette );
+    return $gradient_palette[ $index ];
+};
+
+$hero_slug = '';
+foreach ( $raw_dishes as $dish_candidate ) {
+    if ( 'premium' === ( $dish_candidate['category'] ?? '' ) ) {
+        $hero_slug = $dish_candidate['slug'] ?? '';
+        break;
+    }
+}
+
+if ( '' === $hero_slug ) {
+    foreach ( $raw_dishes as $dish_candidate ) {
+        if ( empty( $dish_candidate['is_staple'] ) ) {
+            $hero_slug = $dish_candidate['slug'] ?? '';
+            break;
+        }
+    }
+}
+
+if ( '' === $hero_slug && ! empty( $raw_dishes[0]['slug'] ) ) {
+    $hero_slug = $raw_dishes[0]['slug'];
+}
+
+if ( $hero_slug ) {
+    foreach ( $raw_dishes as $idx => $dish_candidate ) {
+        if ( ( $dish_candidate['slug'] ?? '' ) !== $hero_slug ) {
+            continue;
+        }
+
+        if ( 0 !== $idx ) {
+            unset( $raw_dishes[ $idx ] );
+            array_unshift( $raw_dishes, $dish_candidate );
+        }
+        break;
+    }
+}
+
+$dishes = array_values(
+    array_map(
+        static function ( $dish ) use ( $selected_week, $category_labels, $gradient_for_slug, $tag_class_map, $hero_slug ) {
+            $slug           = $dish['slug'] ?? '';
+            $card_image     = ogape_get_menu_image_sources( $dish, 'md' );
+            $modal_image    = ogape_get_menu_image_sources( $dish, 'lg' );
+            $category_label = $category_labels[ $dish['category'] ?? '' ] ?? ( $dish['category'] ?? 'piloto' );
+            $number_label   = ! empty( $dish['is_staple'] )
+                ? 'Staple semanal · semanas 1–4'
+                : ( ! empty( $dish['weeks'] ) ? 'Semana ' . $selected_week . ' · ' . $category_label : 'Pool piloto · sin semana' );
+            $stats          = array(
+                array(
+                    'label' => 'Porciones',
+                    'value' => ! empty( $dish['portions_display'] ) ? $dish['portions_display'] : '2 · 4',
+                ),
+                array(
+                    'label' => 'Calorías',
+                    'value' => ! empty( $dish['calories_display'] ) ? $dish['calories_display'] : 'Sin dato',
+                ),
+                array(
+                    'label' => 'Contiene',
+                    'value' => ! empty( $dish['allergens_display'] ) ? $dish['allergens_display'] : 'Sin dato',
+                ),
+            );
+            $tags           = array();
+
+            foreach ( $dish['tags'] ?? array() as $tag ) {
+                $tag_type = $tag['type'] ?? '';
+                $tags[]   = array(
+                    'class' => $tag_class_map[ $tag_type ] ?? 'tag',
+                    'label' => $tag['label'] ?? '',
+                );
+            }
+
+            return array(
+                'slug'             => $slug,
+                'class'            => 'dish' . ( $slug === $hero_slug ? ' dish--hero' : '' ),
+                'category'         => $dish['category'] ?? 'regular',
+                'tags'             => $tags,
+                'time'             => $dish['time_display'] ?? '',
+                'difficulty'       => $dish['difficulty_label'] ?? 'media',
+                'number'           => $number_label,
+                'title'            => $dish['name_es'] ?? '',
+                'title_en'         => $dish['name_en'] ?? '',
+                'description'      => $dish['description_es'] ?? '',
+                'stats'            => $stats,
+                'gradient'         => $gradient_for_slug( $slug ),
+                'card_image_html'  => $card_image ? ogape_render_menu_picture_html( $card_image, '(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw' ) : '',
+                'modal_image_html' => $modal_image ? ogape_render_menu_picture_html( $modal_image, '100vw' ) : '',
+            );
+        },
+        $raw_dishes
+    )
+);
+
+$current_week = $find_week_record( $selected_week );
+$weeks        = array();
+foreach ( $week_records as $week_record ) {
+    $week_number = (int) ( $week_record['number'] ?? 0 );
+    if ( $week_number < 1 ) {
+        continue;
+    }
+
+    $weeks[] = array(
+        'number'  => $week_number,
+        'num'     => 'Semana ' . $week_number . ( $week_number === $selected_week ? ' · activa' : '' ),
+        'range'   => $format_week_range( $week_number ),
+        'tagline' => $week_record['theme'] ?? ( $week_record['tagline'] ?? 'Rotación piloto' ),
+        'url'     => add_query_arg( 'week', $week_number, $menu_url ),
+        'active'  => $week_number === $selected_week,
+    );
+}
+
+$archive_weeks = array();
+foreach ( $week_records as $week_record ) {
+    $week_number = (int) ( $week_record['number'] ?? 0 );
+    if ( $week_number < 1 || $week_number === $selected_week ) {
+        continue;
+    }
+
+    $archive_weeks[] = array(
+        'week'  => 'Semana ' . $week_number,
+        'date'  => $format_week_range( $week_number ),
+        'title' => $week_record['theme'] ?? 'Rotación piloto',
+        'items' => array_map(
+            static function ( $dish ) {
+                return $dish['name_es'] ?? '';
+            },
+            ogape_get_week( $week_number )
+        ),
+        'url'   => add_query_arg( 'week', $week_number, $menu_url ),
+    );
+}
+
+$selected_theme = $current_week['theme'] ?? 'Rotación piloto';
+$dishes_json    = wp_json_encode(
+    array_map(
+        static function ( $dish ) {
+            return array(
+                'slug'             => $dish['slug'],
+                'category'         => $dish['category'],
+                'time'             => $dish['time'],
+                'difficulty'       => $dish['difficulty'],
+                'title'            => $dish['title'],
+                'title_en'         => $dish['title_en'],
+                'description'      => $dish['description'],
+                'stats'            => $dish['stats'],
+                'tags'             => $dish['tags'],
+                'gradient'         => $dish['gradient'],
+                'modal_image_html' => $dish['modal_image_html'],
+            );
+        },
+        $dishes
+    )
+);
 ?>
 
 <main id="main" class="site-main menu-design" role="main">
 
-    <!-- PAGE HEADER -->
     <section class="pagehead">
         <div class="wrap">
             <div class="crumb rise">
@@ -275,26 +280,27 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
             </div>
             <div class="pagehead__grid">
                 <div>
-                    <span class="eyebrow rise" style="display:block;margin-bottom:var(--space-4)">Menú piloto · abril 2026</span>
+                    <span class="eyebrow rise" style="display:block;margin-bottom:var(--space-4)">
+                        Menú piloto · semana <?php echo (int) $selected_week; ?> / 4
+                    </span>
                     <h1 class="rise rise--2">El menú <em>de esta semana.</em></h1>
                     <p class="pagehead__lede rise rise--3">
-                        Cinco recetas nuevas, elegidas según lo que llega del río, del monte y de la
-                        huerta. Porcionadas, frías, con instrucciones simples — cocinás vos,
-                        en treinta minutos, y comés como en casa de alguien que cocina bien.
+                        Ocho platos por rotación: dos staples que vuelven todas las semanas y seis recetas
+                        que cambian según el piloto. Esta página ya usa el pool real aprobado de 20 platos.
                     </p>
                 </div>
                 <aside class="weekmeta rise rise--3">
                     <div class="weekmeta__row">
                         <span class="k">Semana</span>
-                        <span class="v">20 – 26 abril</span>
+                        <span class="v">Semana <?php echo (int) $selected_week; ?></span>
+                    </div>
+                    <div class="weekmeta__row">
+                        <span class="k">Rotación</span>
+                        <span class="v accent"><?php echo esc_html( $selected_theme ); ?></span>
                     </div>
                     <div class="weekmeta__row">
                         <span class="k">Estado</span>
                         <span class="pulse-row"><span class="pulse"></span>Aceptando pedidos</span>
-                    </div>
-                    <div class="weekmeta__row">
-                        <span class="k">Cierre</span>
-                        <span class="v accent">martes 23:59</span>
                     </div>
                     <div class="weekmeta__row">
                         <span class="k">Entrega</span>
@@ -305,14 +311,16 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
         </div>
     </section>
 
-    <!-- WEEK SWITCHER -->
     <section class="weeks">
         <div class="wrap">
             <div class="weeks__scroller" role="tablist" aria-label="Seleccionar semana">
-                <?php foreach ( $weeks as $week ) :
-                    $is_active = ! empty( $week['active'] );
-                    ?>
-                    <button class="weekchip<?php echo $is_active ? ' is-active' : ''; ?>" role="tab" aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>" type="button">
+                <?php foreach ( $weeks as $week ) : ?>
+                    <button
+                        class="weekchip<?php echo ! empty( $week['active'] ) ? ' is-active' : ''; ?>"
+                        role="tab"
+                        aria-selected="<?php echo ! empty( $week['active'] ) ? 'true' : 'false'; ?>"
+                        data-week-url="<?php echo esc_url( $week['url'] ); ?>"
+                        type="button">
                         <span class="wk-num"><?php echo esc_html( $week['num'] ); ?></span>
                         <span class="wk-range"><?php echo esc_html( $week['range'] ); ?></span>
                         <span class="wk-tagline"><?php echo esc_html( $week['tagline'] ); ?></span>
@@ -322,15 +330,12 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
         </div>
     </section>
 
-    <!-- MENU VIEWER -->
     <section class="menucat">
         <div class="wrap">
             <div class="menucat__layout">
-
-                <!-- CATEGORY SIDEBAR -->
                 <nav class="menucat__sidebar" aria-label="Categorías de platos">
                     <?php foreach ( $categories as $cat ) :
-                        $is_active = $cat['key'] === 'all';
+                        $is_active = 'all' === $cat['key'];
                         ?>
                         <button
                             class="catbtn<?php echo $is_active ? ' is-active' : ''; ?>"
@@ -345,7 +350,6 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
                     <?php endforeach; ?>
                 </nav>
 
-                <!-- DISH GRID -->
                 <div class="menucat__main">
                     <div class="dishes" id="dishes">
                         <?php foreach ( $dishes as $idx => $dish ) : ?>
@@ -355,8 +359,12 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
                                 data-index="<?php echo (int) $idx; ?>"
                                 role="button"
                                 tabindex="0"
-                                aria-label="<?php echo esc_attr( 'Ver detalle de ' . $dish['title'] ); ?>">
+                                aria-label="<?php echo esc_attr( 'Ver detalle de ' . $dish['title'] ); ?>"
+                                style="--dish-gradient: <?php echo esc_attr( $dish['gradient'] ); ?>">
                                 <div class="dish__img">
+                                    <?php if ( ! empty( $dish['card_image_html'] ) ) : ?>
+                                        <?php echo $dish['card_image_html']; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+                                    <?php endif; ?>
                                     <?php if ( ! empty( $dish['tags'] ) ) : ?>
                                         <div class="dish__tags">
                                             <?php foreach ( $dish['tags'] as $tag ) : ?>
@@ -365,7 +373,7 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
                                         </div>
                                     <?php endif; ?>
                                     <div class="dish__meta">
-                                        <span class="mleft"><?php echo $time_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?><?php echo esc_html( $dish['time'] ); ?></span>
+                                        <span class="mleft"><?php echo $time_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?><?php echo esc_html( $normalize_time_label( $dish['time'] ) ); ?></span>
                                         <span>Dificultad · <?php echo esc_html( $dish['difficulty'] ); ?></span>
                                     </div>
                                 </div>
@@ -393,7 +401,6 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
         </div>
     </section>
 
-    <!-- DISH DETAIL MODAL -->
     <div class="dish-modal" id="dishModal" role="dialog" aria-modal="true" aria-label="Detalle del plato" hidden>
         <div class="dish-modal__backdrop" id="dishModalBackdrop"></div>
         <div class="dish-modal__panel" id="dishModalPanel">
@@ -416,45 +423,18 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
         </div>
     </div>
 
-    <!-- SIDES / ADDONS -->
-    <section class="sides" id="sumas">
-        <div class="wrap">
-            <div class="sec-head">
-                <div>
-                    <span class="eyebrow" style="display:block;margin-bottom:var(--space-3)">Para sumar a tu caja</span>
-                    <h2>Guarniciones y extras de la semana.</h2>
-                </div>
-                <p>Todos vienen listos para calentar. Se agregan a cualquier tamaño de caja, sin cambiar tu suscripción.</p>
-            </div>
-
-            <div class="sides__grid">
-                <?php foreach ( $sides as $side ) : ?>
-                    <article class="side">
-                        <span class="side__num"><?php echo esc_html( $side['num'] ); ?></span>
-                        <h3><?php echo esc_html( $side['title'] ); ?></h3>
-                        <p><?php echo esc_html( $side['description'] ); ?></p>
-                        <div class="side__foot">
-                            <span class="addon"><?php echo esc_html( $side['addon'] ); ?></span>
-                        </div>
-                    </article>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-
-    <!-- ARCHIVE -->
     <section class="archive" id="pasadas">
         <div class="wrap">
             <div class="sec-head">
                 <div>
-                    <span class="eyebrow" style="display:block;margin-bottom:var(--space-3)">Semanas anteriores</span>
-                    <h2>Lo que estuvo en la caja.</h2>
+                    <span class="eyebrow" style="display:block;margin-bottom:var(--space-3)">Rotación completa</span>
+                    <h2>Las otras semanas del piloto.</h2>
                 </div>
-                <p>Nuestro menú cambia cada viernes. Algunos platos vuelven, otros no — depende del río, del monte y de lo que encontremos.</p>
+                <p>El piloto trabaja sobre un pool fijo de 20 platos. Acá podés ver cómo rota el resto del menú en las demás semanas.</p>
             </div>
 
             <div class="archive__grid">
-                <?php foreach ( $past_weeks as $past ) : ?>
+                <?php foreach ( $archive_weeks as $past ) : ?>
                     <article class="past">
                         <div class="past__head">
                             <span class="k"><?php echo esc_html( $past['week'] ); ?></span>
@@ -467,8 +447,8 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
                             <?php endforeach; ?>
                         </ul>
                         <div class="past__foot">
-                            <small><?php echo esc_html( count( $past['items'] ) ); ?> recetas · archivadas</small>
-                            <a href="<?php echo esc_url( $waitlist_url ); ?>" class="dish__link">Ver semana</a>
+                            <small><?php echo esc_html( count( $past['items'] ) ); ?> recetas · del piloto</small>
+                            <a href="<?php echo esc_url( $past['url'] ); ?>" class="dish__link">Ver semana</a>
                         </div>
                     </article>
                 <?php endforeach; ?>
@@ -476,12 +456,11 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
         </div>
     </section>
 
-    <!-- CTA STRIP -->
     <section class="strip">
         <div class="wrap strip__inner">
             <div>
                 <h3>¿Te gusta lo que ves? <em>Empezá con esta semana.</em></h3>
-                <p>Pedidos para la caja del 20 al 26 de abril cierran el martes a las 23:59. Después, los jueves — si vos querés.</p>
+                <p>El piloto rota sobre cuatro semanas y mantiene dos staples fijos. Podés explorar cada selección semanal antes de sumarte.</p>
             </div>
             <div class="strip__btns">
                 <a href="<?php echo esc_url( $waitlist_url ); ?>" class="btn btn--warm strip-btn">
@@ -500,37 +479,8 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
   var root = document.querySelector('.menu-design');
   if (!root) return;
 
-  /* ── Dish data ─────────────────────────────────────────────── */
   var dishes = <?php echo $dishes_json; // phpcs:ignore WordPress.Security.EscapeOutput ?>;
 
-  /* Image gradients indexed to match $dishes array order */
-  var dishGradients = [
-    /* surubi   */ 'radial-gradient(circle at 35% 40%, #F0B765 0%, transparent 55%), radial-gradient(circle at 70% 65%, #E8A045 0%, transparent 55%), linear-gradient(135deg, #9A5A08, #C88B3A)',
-    /* bife     */ 'radial-gradient(circle at 30% 45%, #C88B3A 0%, transparent 48%), radial-gradient(circle at 70% 60%, #9A5A08 0%, transparent 55%), linear-gradient(135deg, #3B2A14, #6B4A1E 70%, #8B5A1C)',
-    /* bowl     */ 'radial-gradient(circle at 30% 35%, #F0B765, transparent 50%), radial-gradient(circle at 72% 70%, #4a7a3a, transparent 55%), linear-gradient(135deg, #C88B3A, #9A5A08)',
-    /* curry    */ 'radial-gradient(circle at 35% 40%, #FFD783, transparent 55%), radial-gradient(circle at 72% 68%, #E8A045, transparent 55%), linear-gradient(135deg, #C88B3A, #9A5A08)',
-    /* milanesa */ 'radial-gradient(circle at 50% 50%, #E8A045, transparent 55%), linear-gradient(135deg, #C88B3A 0%, #9A5A08 50%, #6B4A1E 100%)',
-    /* gnocchi  */ 'radial-gradient(circle at 35% 40%, #c9d97a, transparent 55%), radial-gradient(circle at 70% 65%, #6b8a3a, transparent 55%), linear-gradient(135deg, #3e5a27, #6b8a3a)',
-  ];
-
-  /* ── Avatar menu ───────────────────────────────────────────── */
-  var avatarBtn = root.querySelector('#menuAvatarBtn');
-  var userMenu  = root.querySelector('#menuUserMenu');
-  if (avatarBtn && userMenu) {
-    avatarBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var open = userMenu.classList.toggle('is-open');
-      avatarBtn.classList.toggle('is-open', open);
-      avatarBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    document.addEventListener('click', function () {
-      userMenu.classList.remove('is-open');
-      avatarBtn.classList.remove('is-open');
-      avatarBtn.setAttribute('aria-expanded', 'false');
-    });
-  }
-
-  /* ── Category filter ───────────────────────────────────────── */
   var catBtns   = root.querySelectorAll('.catbtn[data-cat]');
   var dishCards = root.querySelectorAll('#dishes [data-cat]');
   var emptyMsg  = root.querySelector('#empty');
@@ -555,28 +505,34 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
     });
   });
 
-  /* ── Modal ─────────────────────────────────────────────────── */
-  var modal        = document.getElementById('dishModal');
-  var modalBackdrop= document.getElementById('dishModalBackdrop');
-  var modalClose   = document.getElementById('dishModalClose');
-  var modalImg     = document.getElementById('dishModalImg');
-  var modalTags    = document.getElementById('dishModalTags');
-  var modalTitle   = document.getElementById('dishModalTitle');
-  var modalSubtitle= document.getElementById('dishModalSubtitle');
-  var modalBadges  = document.getElementById('dishModalBadges');
-  var modalDesc    = document.getElementById('dishModalDesc');
-  var modalStats   = document.getElementById('dishModalStats');
-  var lastFocused  = null;
+  var modal         = document.getElementById('dishModal');
+  var modalBackdrop = document.getElementById('dishModalBackdrop');
+  var modalClose    = document.getElementById('dishModalClose');
+  var modalImg      = document.getElementById('dishModalImg');
+  var modalTags     = document.getElementById('dishModalTags');
+  var modalTitle    = document.getElementById('dishModalTitle');
+  var modalSubtitle = document.getElementById('dishModalSubtitle');
+  var modalBadges   = document.getElementById('dishModalBadges');
+  var modalDesc     = document.getElementById('dishModalDesc');
+  var modalStats    = document.getElementById('dishModalStats');
+  var lastFocused   = null;
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
 
   function openModal(idx) {
     var d = dishes[idx];
     if (!d) return;
     lastFocused = document.activeElement;
 
-    /* Image gradient */
-    modalImg.style.background = dishGradients[idx] || dishGradients[0];
+    modalImg.innerHTML = d.modal_image_html || '';
+    modalImg.style.background = d.modal_image_html ? 'none' : (d.gradient || '');
 
-    /* Tags */
     modalTags.innerHTML = '';
     (d.tags || []).forEach(function (t) {
       var s = document.createElement('span');
@@ -585,25 +541,21 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
       modalTags.appendChild(s);
     });
 
-    /* Title */
-    modalTitle.textContent    = d.title;
+    modalTitle.textContent = d.title;
     modalSubtitle.textContent = d.title_en;
 
-    /* Badges: time + difficulty */
     modalBadges.innerHTML =
       '<span class="dish-modal__badge">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" style="width:13px;height:13px"><path d="M5 13c0-3.5 3-7 7-7s7 3.5 7 7"/></svg>' +
-        d.time +
+        escHtml(d.time || '35 min') +
       '</span>' +
       '<span class="dish-modal__badge">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" style="width:13px;height:13px"><path d="M5 17h14M5 12h8M5 7h5"/></svg>' +
-        'Dificultad ' + d.difficulty +
+        'Dificultad ' + escHtml(d.difficulty || 'media') +
       '</span>';
 
-    /* Description */
     modalDesc.textContent = d.description;
 
-    /* Stats */
     modalStats.innerHTML = '';
     (d.stats || []).forEach(function (s) {
       var el = document.createElement('div');
@@ -625,15 +577,6 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
     if (lastFocused) lastFocused.focus();
   }
 
-  function escHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
-  /* Card clicks */
   dishCards.forEach(function (card) {
     card.addEventListener('click', function () {
       openModal(parseInt(card.dataset.index, 10));
@@ -646,26 +589,20 @@ $dishes_json = wp_json_encode( array_map( function ( $d ) {
     });
   });
 
-  /* Close triggers */
-  if (modalClose)    modalClose.addEventListener('click', closeModal);
+  if (modalClose) modalClose.addEventListener('click', closeModal);
   if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !modal.hasAttribute('hidden')) closeModal();
+    if (e.key === 'Escape' && modal && !modal.hasAttribute('hidden')) {
+      closeModal();
+    }
   });
 
-  /* ── Week switcher (visual only — piloto) ──────────────────── */
-  var weekchips = root.querySelectorAll('.weekchip');
+  var weekchips = root.querySelectorAll('.weekchip[data-week-url]');
   weekchips.forEach(function (wc) {
     wc.addEventListener('click', function () {
-      weekchips.forEach(function (w) {
-        w.classList.remove('is-active');
-        w.setAttribute('aria-selected', 'false');
-      });
-      wc.classList.add('is-active');
-      wc.setAttribute('aria-selected', 'true');
+      window.location.href = wc.dataset.weekUrl;
     });
   });
-
 })();
 </script>
 

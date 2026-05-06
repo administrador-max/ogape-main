@@ -1,109 +1,664 @@
 {
-  "mains": [
+  "meta": {
+    "source_manifest": "/Users/ogape/My Drive/04 — Product & Menu/_Drafts & Working Docs/Web Menu Asset Handoff/manifest.json",
+    "generated_on": "2026-05-05",
+    "pricing_visible": false
+  },
+  "weeks": [
     {
-      "title": "Surubí al Maracuyá",
-      "title_en": "Surubi with Passion Fruit Butter",
-      "slug": "surubi-al-maracuya",
-      "description": "Surubí del río Paraná con mantequilla de maracuyá, mandioca dorada y vegetales tiernos.",
-      "description_en": "Parana River surubi fillet with passion fruit butter, golden cassava, and tender vegetables.",
-      "price_pyg": 89000,
-      "show_price": false,
-      "is_hero": true,
-      "tags": [
-        { "label": "Plato Estrella", "type": "hero" },
-        { "label": "Local", "type": "local" }
-      ],
-      "img_src": "",
-      "img_srcset": "",
-      "img_alt": "Filete de surubí del Paraná sellado en mantequilla de maracuyá con arroz jazmín y hierbas frescas"
+      "number": 1,
+      "label": "Semana 1",
+      "range": "Rotacion piloto",
+      "theme": "Citricos & rio",
+      "tagline": "Locro, tilapia y linguini con camarones",
+      "dishes": ["sopa-paraguaya", "frittata-de-zucchini", "locro-paraguayo", "pasta-alfredo", "tilapia-con-salsa-de-limon", "chuletas-con-limon", "ensalada-de-rucula", "linguini-con-camarones"]
     },
     {
-      "title": "Bife Koygua Negro",
-      "title_en": "Black Beer Countryside Beef",
-      "slug": "bife-koygua-negro",
-      "description": "Costilla de res braseada con reducción de cerveza negra, cebolla asada y puré rústico.",
-      "description_en": "Slow-braised beef rib with dark beer reduction, roasted onion, and rustic mash.",
-      "price_pyg": 94000,
-      "show_price": false,
-      "is_hero": false,
-      "tags": [
-        { "label": "Favorito", "type": "nomad" }
-      ],
-      "img_src": "",
-      "img_srcset": "",
-      "img_alt": "Costilla de res braseada lentamente con reducción de cerveza negra y purée de mandioca"
+      "number": 2,
+      "label": "Semana 2",
+      "range": "Rotacion piloto",
+      "theme": "Mandio & monte",
+      "tagline": "Estofado, ravioles y salmon con papines",
+      "dishes": ["sopa-paraguaya", "frittata-de-zucchini", "mandio-chyryry", "estofado-de-carne", "ensalada-de-salmon-con-papines", "ravioles", "tartaleta-caprese", "pollo-al-verdeo"]
     },
     {
-      "title": "Bowl Proteico Ogape",
-      "title_en": "Ogape Protein Bowl",
-      "slug": "bowl-proteico-ogape",
-      "description": "Pollo grillado, arroz jazmín, hummus suave, verduras encurtidas y crocante de semillas.",
-      "description_en": "Grilled chicken, jasmine rice, greens, hummus, pickled vegetables, and seed crunch.",
-      "price_pyg": 72000,
-      "show_price": false,
-      "is_hero": false,
-      "tags": [
-        { "label": "Favorito", "type": "nomad" }
-      ],
-      "img_src": "",
-      "img_srcset": "",
-      "img_alt": "Bowl de quinoa con proteína grillada, chimichurri de la casa y vegetales encurtidos"
+      "number": 3,
+      "label": "Semana 3",
+      "range": "Rotacion piloto",
+      "theme": "Bife & chipa",
+      "tagline": "Bife koygua, costillas BBQ y chipa guasu",
+      "dishes": ["sopa-paraguaya", "frittata-de-zucchini", "bife-koygua", "estrogonof-de-carne", "ensalada-de-salmon-con-papines", "chipa-guasu", "costillas-de-cerdo-bbq", "ensalada-de-rucula"]
     },
     {
-      "title": "Pollo al Curry Suave",
-      "title_en": "Mild Curry Chicken",
-      "slug": "pollo-al-curry-suave",
-      "description": "Pollo en curry suave de coco con arroz perfumado y hierbas frescas.",
-      "description_en": "Slow-cooked chicken in mild coconut curry with fragrant rice and fresh herbs.",
-      "price_pyg": 76000,
-      "show_price": false,
-      "is_hero": false,
-      "tags": [
-        { "label": "Internacional", "type": "intl" }
-      ],
-      "img_src": "",
-      "img_srcset": "",
-      "img_alt": "Pechuga de pollo en curry suave de coco con arroz jazmín y cilantro fresco"
-    },
-    {
-      "title": "Milanesa Signature",
-      "title_en": "Signature Milanesa",
-      "slug": "milanesa-signature",
-      "description": "Milanesa crocante de corte premium con papas rústicas, limón y alioli casero.",
-      "description_en": "Crisp premium-cut milanesa with rustic potatoes, lemon, aioli, and fresh salad.",
-      "price_pyg": 81000,
-      "show_price": false,
-      "is_hero": false,
-      "tags": [
-        { "label": "Favorito", "type": "nomad" }
-      ],
-      "img_src": "",
-      "img_srcset": "",
-      "img_alt": "Milanesa en panko con rúcula fresca, parmesano en láminas y ralladura de limón"
+      "number": 4,
+      "label": "Semana 4",
+      "range": "Rotacion piloto",
+      "theme": "Citricos repetida",
+      "tagline": "Vuelven locro, tilapia y tartaleta caprese",
+      "dishes": ["sopa-paraguaya", "frittata-de-zucchini", "locro-paraguayo", "pasta-alfredo", "tilapia-con-salsa-de-limon", "chuletas-con-limon", "tartaleta-caprese", "pollo-al-verdeo"]
     }
   ],
-  "sides": [
+  "dishes": [
     {
-      "title": "Sopa Paraguaya Artesanal",
+      "dish_id": "T-003",
       "slug": "sopa-paraguaya",
-      "description": "Pan de maíz paraguayo horneado con queso fresco y cebolla caramelizada.",
-      "price_pyg": 18000,
-      "show_price": false
+      "name_es": "Sopa Paraguaya",
+      "name_en": "Sopa Paraguaya",
+      "category": "traditional",
+      "is_staple": true,
+      "weeks": [1, 2, 3, 4],
+      "status": "approved",
+      "tags": [{ "label": "Tradicional", "type": "local" }, { "label": "Staple", "type": "nomad" }],
+      "show_price": false,
+      "description_es": "Un plato tradicional y delicioso para el día a día, hecho con harina de maíz, cebolla y queso Paraguay.",
+      "description_en": "A traditional and delicious dish for everyday meals, made with corn flour, onion, and Paraguay cheese.",
+      "time_display": "",
+      "difficulty_label": "media",
+      "calories_display": "550 kcal por porción",
+      "allergens_display": "Lácteos (leche)",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/traditional/sopa paraguaya/sopa paraguaya.docx",
+        "en_path": "02 Recipe Library/traditional/sopa paraguaya/sopa paraguaya (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/sopa-paraguaya-md.jpg",
+        "srcset": "assets/img/menu/sopa-paraguaya-sm.jpg 400w, assets/img/menu/sopa-paraguaya-md.jpg 800w, assets/img/menu/sopa-paraguaya-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/sopa-paraguaya-sm.webp 400w, assets/img/menu/sopa-paraguaya-md.webp 800w, assets/img/menu/sopa-paraguaya-lg.webp 1600w",
+        "alt_es": "Sopa Paraguaya de Ogape lista para cocinar en casa",
+        "alt_en": "Sopa Paraguaya from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/traditional/sopa paraguaya/IMG_8277.jpg"
+      }
     },
     {
-      "title": "Mandioca Frita con Alioli",
-      "slug": "mandioca-frita-alioli",
-      "description": "Bastones de mandioca dorados con sal marina gruesa y alioli casero.",
-      "price_pyg": 16000,
-      "show_price": false
+      "dish_id": "R-014",
+      "slug": "frittata-de-zucchini",
+      "name_es": "Frittata de Zucchini",
+      "name_en": "Zucchini Frittata",
+      "category": "veggie",
+      "is_staple": true,
+      "weeks": [1, 2, 3, 4],
+      "status": "approved",
+      "tags": [{ "label": "Vegetariano", "type": "veg" }, { "label": "Staple", "type": "nomad" }],
+      "show_price": false,
+      "description_es": "Una frittata ligera y deliciosa perfecta para el día a día, elaborada con zucchini, cebolla y queso mozzarella, servida con una refrescante salsa de yogurt y cilantro.",
+      "description_en": "A light and versatile oven-baked omelet with tender zucchini and melted cheese. A pilot-rotation staple — quick, balanced, and adaptable to any meal of the day.",
+      "time_display": "40 minutos",
+      "difficulty_label": "media",
+      "calories_display": "250 kcal por porción",
+      "allergens_display": "Lácteos (queso, yogurt), Huevos",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/regular/frittata de zucchini/frittata de zucchini.docx",
+        "en_path": "02 Recipe Library/regular/frittata de zucchini/frittata de zucchini (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/frittata-de-zucchini-md.jpg",
+        "srcset": "assets/img/menu/frittata-de-zucchini-sm.jpg 400w, assets/img/menu/frittata-de-zucchini-md.jpg 800w, assets/img/menu/frittata-de-zucchini-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/frittata-de-zucchini-sm.webp 400w, assets/img/menu/frittata-de-zucchini-md.webp 800w, assets/img/menu/frittata-de-zucchini-lg.webp 1600w",
+        "alt_es": "Frittata de Zucchini de Ogape lista para cocinar en casa",
+        "alt_en": "Zucchini Frittata from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/regular/frittata de zucchini/IMG_8178.jpg"
+      }
     },
     {
-      "title": "Ensalada de Temporada",
-      "slug": "ensalada-de-temporada",
-      "description": "Hojas frescas de temporada con vegetales encurtidos y vinagreta cítrica de la casa.",
-      "price_pyg": 14000,
-      "show_price": false
+      "dish_id": "T-007",
+      "slug": "locro-paraguayo",
+      "name_es": "Locro Paraguayo",
+      "name_en": "Locro Paraguayo",
+      "category": "traditional",
+      "is_staple": false,
+      "weeks": [1, 4],
+      "status": "drafted",
+      "tags": [{ "label": "Tradicional", "type": "local" }],
+      "show_price": false,
+      "description_es": "Un guiso tradicional paraguayo, espeso y reconfortante, hecho con maíz blanco (locro), carne vacuna, zapallo y verduras. Versión kit con maíz pre-remojado para reducir el tiempo de cocción a 40 minutos sin perder el sabor de cocción lenta.",
+      "description_en": "A traditional Paraguayan stew — thick, hearty, and comforting — made with white corn (locro), beef, pumpkin, and vegetables. Kit version uses pre-soaked corn to bring the slow-cooked flavor to a 40-minute weeknight meal.",
+      "time_display": "40 minutos",
+      "difficulty_label": "media",
+      "calories_display": "520 kcal por porción",
+      "allergens_display": "Ninguno reconocido (verificar etiqueta del caldo si se utiliza).",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/traditional/locro paraguayo/locro paraguayo.docx",
+        "en_path": "02 Recipe Library/traditional/locro paraguayo/locro paraguayo (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/locro-paraguayo-md.jpg",
+        "srcset": "assets/img/menu/locro-paraguayo-sm.jpg 400w, assets/img/menu/locro-paraguayo-md.jpg 800w, assets/img/menu/locro-paraguayo-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/locro-paraguayo-sm.webp 400w, assets/img/menu/locro-paraguayo-md.webp 800w, assets/img/menu/locro-paraguayo-lg.webp 1600w",
+        "alt_es": "Locro Paraguayo de Ogape lista para cocinar en casa",
+        "alt_en": "Locro Paraguayo from Ogape ready to cook at home",
+        "seed_source": null
+      }
+    },
+    {
+      "dish_id": "R-021",
+      "slug": "pasta-alfredo",
+      "name_es": "Pasta Alfredo",
+      "name_en": "Pasta Alfredo",
+      "category": "regular",
+      "is_staple": false,
+      "weeks": [1, 4],
+      "status": "approved",
+      "tags": [{ "label": "Internacional", "type": "intl" }],
+      "show_price": false,
+      "description_es": "Un plato clásico y delicioso, perfecto para el día a día, hecho con espagueti, salsa Alfredo cremosa y pechuga de pollo.",
+      "description_en": "A classic and delicious dish, perfect for everyday meals, made with spaghetti, creamy Alfredo sauce, and chicken breast.",
+      "time_display": "30 minutos",
+      "difficulty_label": "baja",
+      "calories_display": "600 kcal por porción",
+      "allergens_display": "Lácteos (manteca, queso parmesano, crema de leche)",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/regular/pasta alfredo/pasta alfredo.docx",
+        "en_path": "02 Recipe Library/regular/pasta alfredo/pasta alfredo (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/pasta-alfredo-md.jpg",
+        "srcset": "assets/img/menu/pasta-alfredo-sm.jpg 400w, assets/img/menu/pasta-alfredo-md.jpg 800w, assets/img/menu/pasta-alfredo-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/pasta-alfredo-sm.webp 400w, assets/img/menu/pasta-alfredo-md.webp 800w, assets/img/menu/pasta-alfredo-lg.webp 1600w",
+        "alt_es": "Pasta Alfredo de Ogape lista para cocinar en casa",
+        "alt_en": "Pasta Alfredo from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/regular/pasta alfredo/IMG_8185.jpg"
+      }
+    },
+    {
+      "dish_id": "P-012",
+      "slug": "tilapia-con-salsa-de-limon",
+      "name_es": "Tilapia con Salsa de Limón",
+      "name_en": "Tilapia with Lemon Sauce",
+      "category": "premium",
+      "is_staple": false,
+      "weeks": [1, 4],
+      "status": "approved",
+      "tags": [{ "label": "Premium", "type": "hero" }, { "label": "Local", "type": "local" }],
+      "show_price": false,
+      "description_es": "Un plato delicioso y versátil, perfecto para el día a día o gourmet, hecho con tilapia en salsa de limón y acompañado de arroz frito.",
+      "description_en": "A delicious and versatile dish, perfect for everyday or gourmet meals, made with tilapia in lemon sauce and served with fried rice.",
+      "time_display": "30 minutos",
+      "difficulty_label": "baja",
+      "calories_display": "550 kcal por porción",
+      "allergens_display": "Lácteos",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/premium/tilapia con salsa de limon/tilapia con salsa de limon.docx",
+        "en_path": "02 Recipe Library/premium/tilapia con salsa de limon/tilapia con salsa de limon (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/tilapia-con-salsa-de-limon-md.jpg",
+        "srcset": "assets/img/menu/tilapia-con-salsa-de-limon-sm.jpg 400w, assets/img/menu/tilapia-con-salsa-de-limon-md.jpg 800w, assets/img/menu/tilapia-con-salsa-de-limon-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/tilapia-con-salsa-de-limon-sm.webp 400w, assets/img/menu/tilapia-con-salsa-de-limon-md.webp 800w, assets/img/menu/tilapia-con-salsa-de-limon-lg.webp 1600w",
+        "alt_es": "Tilapia con Salsa de Limón de Ogape lista para cocinar en casa",
+        "alt_en": "Tilapia with Lemon Sauce from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/premium/tilapia con salsa de limon/IMG_8065.jpg"
+      }
+    },
+    {
+      "dish_id": "P-002",
+      "slug": "chuletas-con-limon",
+      "name_es": "Chuletas de Cerdo con Limón",
+      "name_en": "Pork Chops with Lemon",
+      "category": "premium",
+      "is_staple": false,
+      "weeks": [1, 4],
+      "status": "approved",
+      "tags": [{ "label": "Premium", "type": "hero" }],
+      "show_price": false,
+      "description_es": "Un plato delicioso y fácil de preparar para el día a día, hecho con chuletas de cerdo y una sabrosa crema de limón.",
+      "description_en": "A delicious and easy-to-make dish for everyday meals, made with pork chops and a savory lemon cream sauce.",
+      "time_display": "",
+      "difficulty_label": "media",
+      "calories_display": "500 kcal por porción",
+      "allergens_display": "Gluten",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/premium/chuletas con limon/chuletas con limon.docx",
+        "en_path": "02 Recipe Library/premium/chuletas con limon/chuletas con limon (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/chuletas-con-limon-md.jpg",
+        "srcset": "assets/img/menu/chuletas-con-limon-sm.jpg 400w, assets/img/menu/chuletas-con-limon-md.jpg 800w, assets/img/menu/chuletas-con-limon-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/chuletas-con-limon-sm.webp 400w, assets/img/menu/chuletas-con-limon-md.webp 800w, assets/img/menu/chuletas-con-limon-lg.webp 1600w",
+        "alt_es": "Chuletas de Cerdo con Limón de Ogape lista para cocinar en casa",
+        "alt_en": "Pork Chops with Lemon from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/premium/chuletas con limon/IMG_7961.jpg"
+      }
+    },
+    {
+      "dish_id": "V-005",
+      "slug": "ensalada-de-rucula",
+      "name_es": "Ensalada de Rúcula",
+      "name_en": "Arugula Salad",
+      "category": "veggie",
+      "is_staple": false,
+      "weeks": [1, 3],
+      "status": "approved",
+      "tags": [{ "label": "Vegetariano", "type": "veg" }],
+      "show_price": false,
+      "description_es": "Una ensalada gourmet perfecta para el día a día, con rúcula fresca, tomates asados, mozzarella y nueces, aderezada con aceite de oliva, sal y pimienta.",
+      "description_en": "A gourmet salad perfect for everyday meals, featuring fresh arugula, roasted tomatoes, mozzarella, and walnuts, dressed with olive oil, salt, and pepper.",
+      "time_display": "",
+      "difficulty_label": "media",
+      "calories_display": "350 kcal por porción",
+      "allergens_display": "Lácteos (queso), Frutos secos (nueces)",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/veggie/ensalada de rucula/ensalada de rucula.docx",
+        "en_path": "02 Recipe Library/veggie/ensalada de rucula/ensalada de rucula (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/ensalada-de-rucula-md.jpg",
+        "srcset": "assets/img/menu/ensalada-de-rucula-sm.jpg 400w, assets/img/menu/ensalada-de-rucula-md.jpg 800w, assets/img/menu/ensalada-de-rucula-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/ensalada-de-rucula-sm.webp 400w, assets/img/menu/ensalada-de-rucula-md.webp 800w, assets/img/menu/ensalada-de-rucula-lg.webp 1600w",
+        "alt_es": "Ensalada de Rúcula de Ogape lista para cocinar en casa",
+        "alt_en": "Arugula Salad from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/veggie/ensalada de rucula/IMG_8299.jpg"
+      }
+    },
+    {
+      "dish_id": "P-009",
+      "slug": "linguini-con-camarones",
+      "name_es": "Linguini con Camarones",
+      "name_en": "Linguini with Shrimp",
+      "category": "premium",
+      "is_staple": false,
+      "weeks": [1],
+      "status": "approved",
+      "tags": [{ "label": "Premium", "type": "hero" }, { "label": "Internacional", "type": "intl" }],
+      "show_price": false,
+      "description_es": "Un plato gourmet perfecto para el día a día, hecho con camarones, una rica salsa de tomate, y pasta linguini, ideal para una cena rápida y deliciosa.",
+      "description_en": "A gourmet dish perfect for everyday meals, made with shrimp, a rich tomato sauce, and linguine pasta, ideal for a quick and delicious dinner.",
+      "time_display": "30 minutos",
+      "difficulty_label": "baja",
+      "calories_display": "400 kcal por porción",
+      "allergens_display": "Mariscos (camarones), Gluten (pasta)",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/premium/linguini con camarones/linguini con camarones.docx",
+        "en_path": "02 Recipe Library/premium/linguini con camarones/linguini con camarones (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/linguini-con-camarones-md.jpg",
+        "srcset": "assets/img/menu/linguini-con-camarones-sm.jpg 400w, assets/img/menu/linguini-con-camarones-md.jpg 800w, assets/img/menu/linguini-con-camarones-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/linguini-con-camarones-sm.webp 400w, assets/img/menu/linguini-con-camarones-md.webp 800w, assets/img/menu/linguini-con-camarones-lg.webp 1600w",
+        "alt_es": "Linguini con Camarones de Ogape lista para cocinar en casa",
+        "alt_en": "Linguini with Shrimp from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/premium/linguini con camarones/IMG_8186.jpg"
+      }
+    },
+    {
+      "dish_id": "T-005",
+      "slug": "mandio-chyryry",
+      "name_es": "Mandi'o Chyryry",
+      "name_en": "Mandi'o Chyryry (Paraguayan cassava)",
+      "category": "traditional",
+      "is_staple": false,
+      "weeks": [2],
+      "status": "approved",
+      "tags": [{ "label": "Tradicional", "type": "local" }],
+      "show_price": false,
+      "description_es": "Un plato delicioso y versátil, perfecto para el día a día o gourmet, hecho con mandioca, chorizos artesanales, y queso.",
+      "description_en": "A delicious and versatile dish, perfect for everyday or gourmet meals, made with mandioca, artisanal sausages, and cheese.",
+      "time_display": "45 minutos",
+      "difficulty_label": "media",
+      "calories_display": "700 kcal por porción",
+      "allergens_display": "Lácteos",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/traditional/mandio chyryry/mandio chyryry.docx",
+        "en_path": "02 Recipe Library/traditional/mandio chyryry/mandio chyryry (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/mandio-chyryry-md.jpg",
+        "srcset": "assets/img/menu/mandio-chyryry-sm.jpg 400w, assets/img/menu/mandio-chyryry-md.jpg 800w, assets/img/menu/mandio-chyryry-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/mandio-chyryry-sm.webp 400w, assets/img/menu/mandio-chyryry-md.webp 800w, assets/img/menu/mandio-chyryry-lg.webp 1600w",
+        "alt_es": "Mandi'o Chyryry de Ogape lista para cocinar en casa",
+        "alt_en": "Mandi'o Chyryry (Paraguayan cassava) from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/traditional/mandio chyryry/IMG_8180.jpg"
+      }
+    },
+    {
+      "dish_id": "R-007",
+      "slug": "estofado-de-carne",
+      "name_es": "Estofado de Carne",
+      "name_en": "Beef Stew",
+      "category": "regular",
+      "is_staple": false,
+      "weeks": [2],
+      "status": "approved",
+      "tags": [{ "label": "Favorito", "type": "nomad" }],
+      "show_price": false,
+      "description_es": "Un guiso sencillo y delicioso para el día a día, hecho con carne, arroz, y vegetales.",
+      "description_en": "A simple and delicious stew for everyday meals, made with beef, rice, and vegetables.",
+      "time_display": "45 minutos",
+      "difficulty_label": "media",
+      "calories_display": "550 kcal por porción",
+      "allergens_display": "N/A",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/regular/estofado de carne/estofado de carne.docx",
+        "en_path": "02 Recipe Library/regular/estofado de carne/estofado de carne (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/estofado-de-carne-md.jpg",
+        "srcset": "assets/img/menu/estofado-de-carne-sm.jpg 400w, assets/img/menu/estofado-de-carne-md.jpg 800w, assets/img/menu/estofado-de-carne-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/estofado-de-carne-sm.webp 400w, assets/img/menu/estofado-de-carne-md.webp 800w, assets/img/menu/estofado-de-carne-lg.webp 1600w",
+        "alt_es": "Estofado de Carne de Ogape lista para cocinar en casa",
+        "alt_en": "Beef Stew from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/regular/estofado de carne/IMG_8282.jpg"
+      }
+    },
+    {
+      "dish_id": "P-005",
+      "slug": "ensalada-de-salmon-con-papines",
+      "name_es": "Ensalada de Salmón con Papines",
+      "name_en": "Salmon Salad with Baby Potatoes",
+      "category": "premium",
+      "is_staple": false,
+      "weeks": [2, 3],
+      "status": "approved",
+      "tags": [{ "label": "Premium", "type": "hero" }],
+      "show_price": false,
+      "description_es": "Una ensalada ligera y gourmet con salmón dorado a la sartén, un mix de hojas verdes frescas, papines y aceitunas negras, aderezada con aceite de oliva y jugo de limón.",
+      "description_en": "A fresh and elegant salad combining grilled salmon, tender baby potatoes, mixed greens, and a light lemon-mustard vinaigrette. Perfect as a light dinner or refined lunch.",
+      "time_display": "45 minutos",
+      "difficulty_label": "media",
+      "calories_display": "400 kcal por porción",
+      "allergens_display": "",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/premium/ensalada de salmon con papines/ensalada de salmon con papines.docx",
+        "en_path": "02 Recipe Library/premium/ensalada de salmon con papines/ensalada de salmon con papines (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/ensalada-de-salmon-con-papines-md.jpg",
+        "srcset": "assets/img/menu/ensalada-de-salmon-con-papines-sm.jpg 400w, assets/img/menu/ensalada-de-salmon-con-papines-md.jpg 800w, assets/img/menu/ensalada-de-salmon-con-papines-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/ensalada-de-salmon-con-papines-sm.webp 400w, assets/img/menu/ensalada-de-salmon-con-papines-md.webp 800w, assets/img/menu/ensalada-de-salmon-con-papines-lg.webp 1600w",
+        "alt_es": "Ensalada de Salmón con Papines de Ogape lista para cocinar en casa",
+        "alt_en": "Salmon Salad with Baby Potatoes from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/premium/ensalada de salmon con papines/IMG_8229.jpg"
+      }
+    },
+    {
+      "dish_id": "R-031",
+      "slug": "ravioles",
+      "name_es": "Ravioles",
+      "name_en": "Ravioles",
+      "category": "regular",
+      "is_staple": false,
+      "weeks": [2],
+      "status": "approved",
+      "tags": [{ "label": "Internacional", "type": "intl" }],
+      "show_price": false,
+      "description_es": "Un plato delicioso y sencillo para el día a día, hecho con ravioles de verduras y una cremosa salsa de cuatro quesos.",
+      "description_en": "A delicious and simple dish for everyday meals, made with vegetable ravioli and a creamy four cheese sauce.",
+      "time_display": "30 minutos",
+      "difficulty_label": "baja",
+      "calories_display": "650 kcal por porción",
+      "allergens_display": "Lácteos, Gluten",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/regular/ravioli/ravioli.docx",
+        "en_path": "02 Recipe Library/regular/ravioli/ravioli (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/ravioles-md.jpg",
+        "srcset": "assets/img/menu/ravioles-sm.jpg 400w, assets/img/menu/ravioles-md.jpg 800w, assets/img/menu/ravioles-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/ravioles-sm.webp 400w, assets/img/menu/ravioles-md.webp 800w, assets/img/menu/ravioles-lg.webp 1600w",
+        "alt_es": "Ravioles de Ogape lista para cocinar en casa",
+        "alt_en": "Ravioles from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/regular/ravioli/IMG_8216.jpg"
+      }
+    },
+    {
+      "dish_id": "R-032",
+      "slug": "tartaleta-caprese",
+      "name_es": "Tartaleta Caprese",
+      "name_en": "Caprese Tartlet",
+      "category": "regular",
+      "is_staple": false,
+      "weeks": [2, 4],
+      "status": "approved",
+      "tags": [{ "label": "Vegetariano", "type": "veg" }],
+      "show_price": false,
+      "description_es": "Un plato perfecto para el día a día, hecho con hojaldre, queso mozzarella, jamón y tomates cherry, ideal para una comida ligera y deliciosa.",
+      "description_en": "A perfect dish for everyday meals, made with puff pastry, mozzarella cheese, ham, and cherry tomatoes, ideal for a light and delicious meal.",
+      "time_display": "",
+      "difficulty_label": "media",
+      "calories_display": "350 kcal por porción",
+      "allergens_display": "Lácteos, Gluten",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/regular/tartaleta caprese/tartaleta caprese.docx",
+        "en_path": "02 Recipe Library/regular/tartaleta caprese/tartaleta caprese (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/tartaleta-caprese-md.jpg",
+        "srcset": "assets/img/menu/tartaleta-caprese-sm.jpg 400w, assets/img/menu/tartaleta-caprese-md.jpg 800w, assets/img/menu/tartaleta-caprese-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/tartaleta-caprese-sm.webp 400w, assets/img/menu/tartaleta-caprese-md.webp 800w, assets/img/menu/tartaleta-caprese-lg.webp 1600w",
+        "alt_es": "Tartaleta Caprese de Ogape lista para cocinar en casa",
+        "alt_en": "Caprese Tartlet from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/regular/tartaleta caprese/IMG_8088.jpg"
+      }
+    },
+    {
+      "dish_id": "R-036",
+      "slug": "pollo-al-verdeo",
+      "name_es": "Pollo al Verdeo",
+      "name_en": "Chicken al Verdeo",
+      "category": "regular",
+      "is_staple": false,
+      "weeks": [2, 4],
+      "status": "drafted",
+      "tags": [{ "label": "Favorito", "type": "nomad" }],
+      "show_price": false,
+      "description_es": "Un clásico rioplatense — pechugas de pollo doradas en una salsa cremosa de cebollita de verdeo, ajo y vino blanco. Plato cremoso, suave y reconfortante, perfecto para un día de semana.",
+      "description_en": "A Río de la Plata classic — pan-seared chicken breasts in a creamy sauce of green onions, garlic, and white wine. Mild, rich, and comforting — a perfect weeknight dinner.",
+      "time_display": "30 minutos",
+      "difficulty_label": "baja",
+      "calories_display": "480 kcal por porción",
+      "allergens_display": "Lácteos, Gluten (harina), Sulfitos (vino).",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/regular/pollo al verdeo/pollo al verdeo.docx",
+        "en_path": "02 Recipe Library/regular/pollo al verdeo/pollo al verdeo (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/pollo-al-verdeo-md.jpg",
+        "srcset": "assets/img/menu/pollo-al-verdeo-sm.jpg 400w, assets/img/menu/pollo-al-verdeo-md.jpg 800w, assets/img/menu/pollo-al-verdeo-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/pollo-al-verdeo-sm.webp 400w, assets/img/menu/pollo-al-verdeo-md.webp 800w, assets/img/menu/pollo-al-verdeo-lg.webp 1600w",
+        "alt_es": "Pollo al Verdeo de Ogape lista para cocinar en casa",
+        "alt_en": "Chicken al Verdeo from Ogape ready to cook at home",
+        "seed_source": null
+      }
+    },
+    {
+      "dish_id": "R-002",
+      "slug": "bife-koygua",
+      "name_es": "Bife Koygua",
+      "name_en": "Bife Koygua (traditional Paraguayan)",
+      "category": "regular",
+      "is_staple": false,
+      "weeks": [3],
+      "status": "approved",
+      "tags": [{ "label": "Tradicional", "type": "local" }, { "label": "Favorito", "type": "nomad" }],
+      "show_price": false,
+      "description_es": "Un estofado sencillo y delicioso, perfecto para el día a día, hecho con lomito, vegetales frescos y huevos.",
+      "description_en": "A simple and delicious stew, perfect for everyday meals, made with beef, fresh vegetables, and eggs.",
+      "time_display": "30 minutos",
+      "difficulty_label": "baja",
+      "calories_display": "450 kcal por porción",
+      "allergens_display": "Huevos, Mostaza",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/regular/bife koygua/bife koygua.docx",
+        "en_path": "02 Recipe Library/regular/bife koygua/bife koygua (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/bife-koygua-md.jpg",
+        "srcset": "assets/img/menu/bife-koygua-sm.jpg 400w, assets/img/menu/bife-koygua-md.jpg 800w, assets/img/menu/bife-koygua-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/bife-koygua-sm.webp 400w, assets/img/menu/bife-koygua-md.webp 800w, assets/img/menu/bife-koygua-lg.webp 1600w",
+        "alt_es": "Bife Koygua de Ogape lista para cocinar en casa",
+        "alt_en": "Bife Koygua (traditional Paraguayan) from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/regular/bife koygua/IMG_8099.jpg"
+      }
+    },
+    {
+      "dish_id": "R-009",
+      "slug": "estrogonof-de-carne",
+      "name_es": "Estrogonof de Carne",
+      "name_en": "Beef Stroganoff",
+      "category": "regular",
+      "is_staple": false,
+      "weeks": [3],
+      "status": "approved",
+      "tags": [{ "label": "Internacional", "type": "intl" }],
+      "show_price": false,
+      "description_es": "Un estofado delicioso y sencillo para el día a día, hecho con carne, champiñones y crema de leche.",
+      "description_en": "A delicious and simple stew for everyday meals, made with beef, mushrooms, and heavy cream.",
+      "time_display": "30 minutos",
+      "difficulty_label": "baja",
+      "calories_display": "500 kcal por porción",
+      "allergens_display": "Lácteos",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/regular/estrogonof de carne/estrogonof de carne.docx",
+        "en_path": "02 Recipe Library/regular/estrogonof de carne/estrogonof de carne (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/estrogonof-de-carne-md.jpg",
+        "srcset": "assets/img/menu/estrogonof-de-carne-sm.jpg 400w, assets/img/menu/estrogonof-de-carne-md.jpg 800w, assets/img/menu/estrogonof-de-carne-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/estrogonof-de-carne-sm.webp 400w, assets/img/menu/estrogonof-de-carne-md.webp 800w, assets/img/menu/estrogonof-de-carne-lg.webp 1600w",
+        "alt_es": "Estrogonof de Carne de Ogape lista para cocinar en casa",
+        "alt_en": "Beef Stroganoff from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/regular/estrogonof de carne/IMG_8252.jpg"
+      }
+    },
+    {
+      "dish_id": "T-001",
+      "slug": "chipa-guasu",
+      "name_es": "Chipa Guasú",
+      "name_en": "Chipa Guasú",
+      "category": "traditional",
+      "is_staple": false,
+      "weeks": [3],
+      "status": "approved",
+      "tags": [{ "label": "Tradicional", "type": "local" }],
+      "show_price": false,
+      "description_es": "Un plato tradicional y delicioso para el día a día, hecho con choclo, queso Paraguay y cebolla.",
+      "description_en": "A traditional and delicious dish for everyday meals, made with corn, Paraguay cheese, and onion.",
+      "time_display": "1 hora",
+      "difficulty_label": "media",
+      "calories_display": "500 kcal por porción",
+      "allergens_display": "Lácteos",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/traditional/chipa guasu/chipa guasu.docx",
+        "en_path": "02 Recipe Library/traditional/chipa guasu/chipa guasu (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/chipa-guasu-md.jpg",
+        "srcset": "assets/img/menu/chipa-guasu-sm.jpg 400w, assets/img/menu/chipa-guasu-md.jpg 800w, assets/img/menu/chipa-guasu-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/chipa-guasu-sm.webp 400w, assets/img/menu/chipa-guasu-md.webp 800w, assets/img/menu/chipa-guasu-lg.webp 1600w",
+        "alt_es": "Chipa Guasú de Ogape lista para cocinar en casa",
+        "alt_en": "Chipa Guasú from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/traditional/chipa guasu/IMG_8210.jpg"
+      }
+    },
+    {
+      "dish_id": "P-004",
+      "slug": "costillas-de-cerdo-bbq",
+      "name_es": "Costillas de Cerdo BBQ",
+      "name_en": "Pork Ribs BBQ",
+      "category": "premium",
+      "is_staple": false,
+      "weeks": [3],
+      "status": "approved",
+      "tags": [{ "label": "Premium", "type": "hero" }, { "label": "Internacional", "type": "intl" }],
+      "show_price": false,
+      "description_es": "Un plato delicioso y sencillo para el día a día o para ocasiones gourmet, hecho con costillas de cerdo y una sabrosa salsa BBQ.",
+      "description_en": "A delicious and simple dish for everyday meals or gourmet occasions, made with pork ribs and a flavorful BBQ sauce.",
+      "time_display": "2 horas y 20 minutos",
+      "difficulty_label": "alta",
+      "calories_display": "800 kcal por porción",
+      "allergens_display": "N/A",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/premium/costillas de cerdo bbq/costilla de cerdo bbq.docx",
+        "en_path": "02 Recipe Library/premium/costillas de cerdo bbq/costillas de cerdo bbq (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/costillas-de-cerdo-bbq-md.jpg",
+        "srcset": "assets/img/menu/costillas-de-cerdo-bbq-sm.jpg 400w, assets/img/menu/costillas-de-cerdo-bbq-md.jpg 800w, assets/img/menu/costillas-de-cerdo-bbq-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/costillas-de-cerdo-bbq-sm.webp 400w, assets/img/menu/costillas-de-cerdo-bbq-md.webp 800w, assets/img/menu/costillas-de-cerdo-bbq-lg.webp 1600w",
+        "alt_es": "Costillas de Cerdo BBQ de Ogape lista para cocinar en casa",
+        "alt_en": "Pork Ribs BBQ from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/premium/costillas de cerdo bbq/IMG_8067.jpg"
+      }
+    },
+    {
+      "dish_id": "T-002",
+      "slug": "mbeju",
+      "name_es": "Mbejú",
+      "name_en": "Mbejú",
+      "category": "traditional",
+      "is_staple": false,
+      "weeks": [],
+      "status": "approved",
+      "tags": [{ "label": "Tradicional", "type": "local" }],
+      "show_price": false,
+      "description_es": "Un plato tradicional y sencillo para el día a día, hecho con almidón de mandioca, harina de maíz y grasa de cerdo o manteca.",
+      "description_en": "A traditional and simple dish for everyday meals, made with cassava starch, corn flour, and pork fat or butter.",
+      "time_display": "30 minutos",
+      "difficulty_label": "baja",
+      "calories_display": "400 kcal por porción",
+      "allergens_display": "Lácteos",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/traditional/mbeju/mbeju.docx",
+        "en_path": "02 Recipe Library/traditional/mbeju/mbeju (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/mbeju-md.jpg",
+        "srcset": "assets/img/menu/mbeju-sm.jpg 400w, assets/img/menu/mbeju-md.jpg 800w, assets/img/menu/mbeju-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/mbeju-sm.webp 400w, assets/img/menu/mbeju-md.webp 800w, assets/img/menu/mbeju-lg.webp 1600w",
+        "alt_es": "Mbejú de Ogape lista para cocinar en casa",
+        "alt_en": "Mbejú from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/traditional/mbeju/IMG_8211.jpg"
+      }
+    },
+    {
+      "dish_id": "R-013",
+      "slug": "frittata-de-morron",
+      "name_es": "Frittata de Morrón",
+      "name_en": "Bell Pepper Frittata",
+      "category": "veggie",
+      "is_staple": false,
+      "weeks": [],
+      "status": "approved",
+      "tags": [{ "label": "Vegetariano", "type": "veg" }],
+      "show_price": false,
+      "description_es": "Una frittata ligera y deliciosa perfecta para el día a día, hecha con pimientos rojos, tomates y cebolla verde, horneada a la perfección.",
+      "description_en": "A simple Italian-style oven-baked omelet packed with sweet roasted bell peppers and melted cheese — a nourishing, protein-rich option for any meal of the day.",
+      "time_display": "45 minutos",
+      "difficulty_label": "media",
+      "calories_display": "200 kcal por porción",
+      "allergens_display": "Huevos",
+      "portions_display": "2 · 4",
+      "recipe": {
+        "es_path": "02 Recipe Library/regular/frittata de morron/frittata de morron.docx",
+        "en_path": "02 Recipe Library/regular/frittata de morron/frittata de morron (english).docx"
+      },
+      "img": {
+        "src": "assets/img/menu/frittata-de-morron-md.jpg",
+        "srcset": "assets/img/menu/frittata-de-morron-sm.jpg 400w, assets/img/menu/frittata-de-morron-md.jpg 800w, assets/img/menu/frittata-de-morron-lg.jpg 1600w",
+        "webp_srcset": "assets/img/menu/frittata-de-morron-sm.webp 400w, assets/img/menu/frittata-de-morron-md.webp 800w, assets/img/menu/frittata-de-morron-lg.webp 1600w",
+        "alt_es": "Frittata de Morrón de Ogape lista para cocinar en casa",
+        "alt_en": "Bell Pepper Frittata from Ogape ready to cook at home",
+        "seed_source": "02 Recipe Library/regular/frittata de morron/IMG_8179.jpg"
+      }
     }
   ],
-  "image_placeholder_note": "PLACEHOLDER — no real photography yet. Keep show_price false until Alex confirms final pricing."
+  "sides": []
 }
