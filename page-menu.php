@@ -311,95 +311,97 @@ $dishes_json    = wp_json_encode(
         </div>
     </section>
 
-    <section class="weeks">
-        <div class="wrap">
-            <div class="weeks__scroller" role="tablist" aria-label="Seleccionar semana">
-                <?php foreach ( $weeks as $week ) : ?>
-                    <button
-                        class="weekchip<?php echo ! empty( $week['active'] ) ? ' is-active' : ''; ?>"
-                        role="tab"
-                        aria-selected="<?php echo ! empty( $week['active'] ) ? 'true' : 'false'; ?>"
-                        data-week-url="<?php echo esc_url( $week['url'] ); ?>"
-                        type="button">
-                        <span class="wk-num"><?php echo esc_html( $week['num'] ); ?></span>
-                        <span class="wk-range"><?php echo esc_html( $week['range'] ); ?></span>
-                        <span class="wk-tagline"><?php echo esc_html( $week['tagline'] ); ?></span>
-                    </button>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-
-    <section class="menucat">
-        <div class="wrap">
-            <div class="menucat__layout">
-                <nav class="menucat__sidebar" aria-label="Categorías de platos">
-                    <?php foreach ( $categories as $cat ) :
-                        $is_active = 'all' === $cat['key'];
-                        ?>
+    <div class="menu-stage">
+        <section class="weeks">
+            <div class="wrap">
+                <div class="weeks__scroller" role="tablist" aria-label="Seleccionar semana">
+                    <?php foreach ( $weeks as $week ) : ?>
                         <button
-                            class="catbtn<?php echo $is_active ? ' is-active' : ''; ?>"
-                            data-cat="<?php echo esc_attr( $cat['key'] ); ?>"
-                            type="button"
-                            aria-pressed="<?php echo $is_active ? 'true' : 'false'; ?>">
-                            <span class="catbtn__circle">
-                                <?php echo $cat_icons[ $cat['key'] ]; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                            </span>
-                            <span class="catbtn__label"><?php echo esc_html( $cat['label'] ); ?></span>
+                            class="weekchip<?php echo ! empty( $week['active'] ) ? ' is-active' : ''; ?>"
+                            role="tab"
+                            aria-selected="<?php echo ! empty( $week['active'] ) ? 'true' : 'false'; ?>"
+                            data-week-url="<?php echo esc_url( $week['url'] ); ?>"
+                            type="button">
+                            <span class="wk-num"><?php echo esc_html( $week['num'] ); ?></span>
+                            <span class="wk-range"><?php echo esc_html( $week['range'] ); ?></span>
+                            <span class="wk-tagline"><?php echo esc_html( $week['tagline'] ); ?></span>
                         </button>
                     <?php endforeach; ?>
-                </nav>
-
-                <div class="menucat__main">
-                    <div class="dishes" id="dishes">
-                        <?php foreach ( $dishes as $idx => $dish ) : ?>
-                            <article
-                                class="<?php echo esc_attr( $dish['class'] ); ?>"
-                                data-cat="<?php echo esc_attr( $dish['category'] ); ?>"
-                                data-index="<?php echo (int) $idx; ?>"
-                                role="button"
-                                tabindex="0"
-                                aria-label="<?php echo esc_attr( 'Ver detalle de ' . $dish['title'] ); ?>"
-                                style="--dish-gradient: <?php echo esc_attr( $dish['gradient'] ); ?>">
-                                <div class="dish__img">
-                                    <?php if ( ! empty( $dish['card_image_html'] ) ) : ?>
-                                        <?php echo $dish['card_image_html']; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                                    <?php endif; ?>
-                                    <?php if ( ! empty( $dish['tags'] ) ) : ?>
-                                        <div class="dish__tags">
-                                            <?php foreach ( $dish['tags'] as $tag ) : ?>
-                                                <span class="<?php echo esc_attr( $tag['class'] ); ?>"><?php echo esc_html( $tag['label'] ); ?></span>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    <?php endif; ?>
-                                    <div class="dish__meta">
-                                        <span class="mleft"><?php echo $time_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?><?php echo esc_html( $normalize_time_label( $dish['time'] ) ); ?></span>
-                                        <span>Dificultad · <?php echo esc_html( $dish['difficulty'] ); ?></span>
-                                    </div>
-                                </div>
-                                <div class="dish__body">
-                                    <span class="dish__num"><?php echo esc_html( $dish['number'] ); ?></span>
-                                    <h3 class="dish__title"><?php echo esc_html( $dish['title'] ); ?></h3>
-                                    <div class="dish__title-en"><?php echo esc_html( $dish['title_en'] ); ?></div>
-                                    <p class="dish__desc"><?php echo esc_html( $dish['description'] ); ?></p>
-                                    <div class="dish__foot">
-                                        <div class="dish__stats">
-                                            <?php foreach ( $dish['stats'] as $stat ) : ?>
-                                                <div><?php echo esc_html( $stat['label'] ); ?><b><?php echo esc_html( $stat['value'] ); ?></b></div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                        <span class="dish__peek">Ver <?php echo $arrow_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-                                    </div>
-                                </div>
-                            </article>
-                        <?php endforeach; ?>
-                    </div>
-                    <div class="menu-empty" id="empty">Sin platos en esta categoría esta semana.</div>
                 </div>
-
             </div>
-        </div>
-    </section>
+        </section>
+
+        <section class="menucat">
+            <div class="wrap">
+                <div class="menucat__layout">
+                    <nav class="menucat__sidebar" aria-label="Categorías de platos">
+                        <?php foreach ( $categories as $cat ) :
+                            $is_active = 'all' === $cat['key'];
+                            ?>
+                            <button
+                                class="catbtn<?php echo $is_active ? ' is-active' : ''; ?>"
+                                data-cat="<?php echo esc_attr( $cat['key'] ); ?>"
+                                type="button"
+                                aria-pressed="<?php echo $is_active ? 'true' : 'false'; ?>">
+                                <span class="catbtn__circle">
+                                    <?php echo $cat_icons[ $cat['key'] ]; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+                                </span>
+                                <span class="catbtn__label"><?php echo esc_html( $cat['label'] ); ?></span>
+                            </button>
+                        <?php endforeach; ?>
+                    </nav>
+
+                    <div class="menucat__main">
+                        <div class="dishes" id="dishes">
+                            <?php foreach ( $dishes as $idx => $dish ) : ?>
+                                <article
+                                    class="<?php echo esc_attr( $dish['class'] ); ?>"
+                                    data-cat="<?php echo esc_attr( $dish['category'] ); ?>"
+                                    data-index="<?php echo (int) $idx; ?>"
+                                    role="button"
+                                    tabindex="0"
+                                    aria-label="<?php echo esc_attr( 'Ver detalle de ' . $dish['title'] ); ?>"
+                                    style="--dish-gradient: <?php echo esc_attr( $dish['gradient'] ); ?>">
+                                    <div class="dish__img">
+                                        <?php if ( ! empty( $dish['card_image_html'] ) ) : ?>
+                                            <?php echo $dish['card_image_html']; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+                                        <?php endif; ?>
+                                        <?php if ( ! empty( $dish['tags'] ) ) : ?>
+                                            <div class="dish__tags">
+                                                <?php foreach ( $dish['tags'] as $tag ) : ?>
+                                                    <span class="<?php echo esc_attr( $tag['class'] ); ?>"><?php echo esc_html( $tag['label'] ); ?></span>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        <div class="dish__meta">
+                                            <span class="mleft"><?php echo $time_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?><?php echo esc_html( $normalize_time_label( $dish['time'] ) ); ?></span>
+                                            <span>Dificultad · <?php echo esc_html( $dish['difficulty'] ); ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="dish__body">
+                                        <span class="dish__num"><?php echo esc_html( $dish['number'] ); ?></span>
+                                        <h3 class="dish__title"><?php echo esc_html( $dish['title'] ); ?></h3>
+                                        <div class="dish__title-en"><?php echo esc_html( $dish['title_en'] ); ?></div>
+                                        <p class="dish__desc"><?php echo esc_html( $dish['description'] ); ?></p>
+                                        <div class="dish__foot">
+                                            <div class="dish__stats">
+                                                <?php foreach ( $dish['stats'] as $stat ) : ?>
+                                                    <div><?php echo esc_html( $stat['label'] ); ?><b><?php echo esc_html( $stat['value'] ); ?></b></div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                            <span class="dish__peek">Ver <?php echo $arrow_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+                                        </div>
+                                    </div>
+                                </article>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="menu-empty" id="empty">Sin platos en esta categoría esta semana.</div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
 
     <div class="dish-modal" id="dishModal" role="dialog" aria-modal="true" aria-label="Detalle del plato" hidden>
         <div class="dish-modal__backdrop" id="dishModalBackdrop"></div>
@@ -478,6 +480,23 @@ $dishes_json    = wp_json_encode(
 (function () {
   var root = document.querySelector('.menu-design');
   if (!root) return;
+
+  var nav = document.querySelector('.nav');
+  var weeksSection = root.querySelector('.weeks');
+
+  function syncMenuStickyOffsets() {
+    if (!weeksSection) return;
+
+    var navHeight = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
+    var weeksHeight = Math.round(weeksSection.getBoundingClientRect().height);
+
+    root.style.setProperty('--menu-nav-offset', navHeight + 'px');
+    root.style.setProperty('--menu-weeks-height', weeksHeight + 'px');
+  }
+
+  syncMenuStickyOffsets();
+  window.addEventListener('resize', syncMenuStickyOffsets);
+  window.addEventListener('load', syncMenuStickyOffsets);
 
   var dishes = <?php echo $dishes_json; // phpcs:ignore WordPress.Security.EscapeOutput ?>;
 
