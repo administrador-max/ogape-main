@@ -36,7 +36,7 @@
 .menu-design *,
 .menu-design *::before,
 .menu-design *::after { box-sizing: border-box; margin: 0; padding: 0; }
-.menu-design { font-family: var(--font-body); color: var(--text-primary); line-height: var(--leading-normal); background: #F7EFE3; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+.menu-design { font-family: var(--font-body); color: var(--text-primary); line-height: var(--leading-normal); background: #F7EFE3; -webkit-font-smoothing: antialiased; overflow-x: clip; }
 .menu-design ::selection { background: rgba(232,160,69,.22); color: var(--text-primary); }
 .menu-design a { color: inherit; text-decoration: none; }
 .menu-design img { max-width: 100%; display: block; }
@@ -110,7 +110,7 @@
 .menu-design .menucat__sidebar { display: flex; flex-direction: row; gap: var(--space-2); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: var(--space-1); flex: none; }
 .menu-design .menucat__sidebar::-webkit-scrollbar { display: none; }
 @media (min-width: 1024px) {
-  .menu-design .menucat__sidebar { flex-direction: column; width: 152px; overflow-x: visible; position: sticky; top: var(--space-8); gap: var(--space-1); padding-bottom: 0; }
+  .menu-design .menucat__sidebar { flex-direction: column; width: 208px; overflow-x: visible; position: sticky; top: var(--space-10); align-self: flex-start; gap: var(--space-2); padding-bottom: 0; }
 }
 
 .menu-design .catbtn { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); flex: none; cursor: pointer; border: none; background: none; padding: var(--space-2); border-radius: var(--radius-lg); transition: background .15s; min-width: 68px; }
@@ -121,10 +121,10 @@
 .menu-design .catbtn.is-active .catbtn__circle { border-color: var(--brand-primary); background: rgba(232,160,69,.1); box-shadow: 0 0 0 3px rgba(232,160,69,.18); color: var(--brand-primary-strong); }
 .menu-design .catbtn.is-active .catbtn__label { color: var(--brand-primary-strong); }
 @media (min-width: 1024px) {
-  .menu-design .catbtn { flex-direction: row; width: 100%; align-items: center; gap: var(--space-3); min-width: unset; padding: var(--space-2) var(--space-3); }
-  .menu-design .catbtn__circle { width: 40px; height: 40px; flex: none; }
-  .menu-design .catbtn__circle svg { width: 18px; height: 18px; }
-  .menu-design .catbtn__label { font-size: 11px; text-align: left; }
+  .menu-design .catbtn { flex-direction: row; width: 100%; align-items: center; justify-content: flex-start; gap: var(--space-4); min-width: unset; padding: var(--space-3) var(--space-4); }
+  .menu-design .catbtn__circle { width: 48px; height: 48px; flex: none; }
+  .menu-design .catbtn__circle svg { width: 20px; height: 20px; }
+  .menu-design .catbtn__label { font-size: 12px; text-align: left; }
 }
 
 /* ── Dish grid ── */
