@@ -46,6 +46,101 @@ function ogape_get_waitlist_url() {
 }
 
 /**
+ * Resolve the current public request path without leading/trailing slashes.
+ *
+ * @return string
+ */
+function ogape_get_request_path() {
+    $request_path = isset( $_SERVER['REQUEST_URI'] ) ? wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ) : '';
+    return is_string( $request_path ) ? trim( $request_path, '/' ) : '';
+}
+
+/**
+ * Virtual public pages that should render theme templates even without WP pages.
+ *
+ * @return array<string, array<string, string>>
+ */
+function ogape_get_virtual_theme_pages() {
+    return array(
+        'planes'          => array(
+            'template' => 'page-planes.php',
+            'title'    => __( 'Planes', 'ogape-child' ),
+        ),
+        'tarjetas-regalo' => array(
+            'template' => 'page-tarjetas-regalo.php',
+            'title'    => __( 'Tarjetas regalo', 'ogape-child' ),
+        ),
+        'sostenibilidad'  => array(
+            'template' => 'page-sostenibilidad.php',
+            'title'    => __( 'Sostenibilidad', 'ogape-child' ),
+        ),
+        'alianzas'        => array(
+            'template' => 'page-alianzas.php',
+            'title'    => __( 'Alianzas', 'ogape-child' ),
+        ),
+    );
+}
+
+/**
+ * Look up the current virtual public page, if the request matches one.
+ *
+ * @return array<string, string>|null
+ */
+function ogape_get_current_virtual_theme_page() {
+    static $virtual_page = null;
+    static $resolved     = false;
+
+    if ( $resolved ) {
+        return $virtual_page;
+    }
+
+    $resolved = true;
+
+    if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+        return null;
+    }
+
+    $request_path  = ogape_get_request_path();
+    $virtual_pages = ogape_get_virtual_theme_pages();
+
+    if ( ! isset( $virtual_pages[ $request_path ] ) ) {
+        return null;
+    }
+
+    $virtual_page         = $virtual_pages[ $request_path ];
+    $virtual_page['slug'] = $request_path;
+
+    return $virtual_page;
+}
+
+/**
+ * Make virtual public pages behave like first-class page requests.
+ */
+function ogape_prime_virtual_theme_page_query() {
+    $virtual_page = ogape_get_current_virtual_theme_page();
+
+    if ( ! $virtual_page ) {
+        return;
+    }
+
+    global $wp_query;
+
+    if ( ! $wp_query instanceof WP_Query ) {
+        return;
+    }
+
+    $wp_query->is_404      = false;
+    $wp_query->is_page     = true;
+    $wp_query->is_singular = true;
+    $wp_query->is_home     = false;
+    $wp_query->is_archive  = false;
+    $wp_query->is_search   = false;
+    $wp_query->is_feed     = false;
+    $wp_query->is_posts_page = false;
+    $wp_query->set( 'pagename', $virtual_page['slug'] );
+}
+
+/**
  * Build a first-party logout URL that avoids wp-login.php UI screens.
  *
  * @param string $redirect_to Destination after logout.
@@ -387,6 +482,16 @@ add_action( 'wp_enqueue_scripts', 'ogape_enqueue_assets' );
  * @return array
  */
 function ogape_body_classes( $classes ) {
+    $virtual_page = ogape_get_current_virtual_theme_page();
+
+    if ( $virtual_page ) {
+        $classes = array_diff( $classes, array( 'error404', '-template-default', 'page-id-', 'page-parent' ) );
+        $classes[] = 'page';
+        $classes[] = 'page-template';
+        $classes[] = 'page-template-default';
+        $classes[] = 'page-' . sanitize_html_class( $virtual_page['slug'] );
+    }
+
     if ( is_page( 'future-site' ) ) {
         $classes[] = 'ogape-future-site-page';
     }
@@ -411,7 +516,7 @@ function ogape_body_classes( $classes ) {
         $classes[] = 'ogape-elegir-menu-page';
     }
 
-    return $classes;
+    return array_values( array_unique( $classes ) );
 }
 add_filter( 'body_class', 'ogape_body_classes' );
 
@@ -564,21 +669,24 @@ function ogape_output_social_meta_tags() {
 
     global $wp;
 
-    $title       = wp_get_document_title();
-    $description = ogape_get_meta_description();
-    $request_uri = '/';
+    $virtual_page = ogape_get_current_virtual_theme_page();
+    $title        = wp_get_document_title();
+    $description  = ogape_get_meta_description();
+    $request_uri  = '/';
 
     if ( is_front_page() || is_page( 'waitlist' ) ) {
         $title       = __( 'Ogape — Tu Chef en Casa | Lista de Espera', 'ogape-child' );
         $description = __( 'Sumate a la lista de espera de Ogape y sé el primero en saber cuándo abrimos en tu barrio de Asunción.', 'ogape-child' );
     }
-    if ( isset( $wp ) && isset( $wp->request ) && '' !== $wp->request ) {
+    if ( $virtual_page ) {
+        $request_uri = '/' . trailingslashit( $virtual_page['slug'] );
+    } elseif ( isset( $wp ) && isset( $wp->request ) && '' !== $wp->request ) {
         $request_uri = '/' . ltrim( trailingslashit( $wp->request ), '/' );
     }
 
-    $url      = is_singular() ? get_permalink() : home_url( $request_uri );
-    $og_type     = is_singular( 'post' ) ? 'article' : 'website';
-    $og_image    = ogape_get_default_og_image_url();
+    $url      = $virtual_page ? home_url( $request_uri ) : ( is_singular() ? get_permalink() : home_url( $request_uri ) );
+    $og_type  = is_singular( 'post' ) ? 'article' : 'website';
+    $og_image = ogape_get_default_og_image_url();
 
     if ( is_singular() && has_post_thumbnail() ) {
         $og_image = get_the_post_thumbnail_url( get_queried_object_id(), 'full' );
@@ -609,6 +717,13 @@ add_action( 'wp_head', 'ogape_output_social_meta_tags', 5 );
  * @return array
  */
 function ogape_document_title_parts( $parts ) {
+    $virtual_page = ogape_get_current_virtual_theme_page();
+
+    if ( $virtual_page && ! empty( $virtual_page['title'] ) ) {
+        $parts['title'] = $virtual_page['title'];
+        return $parts;
+    }
+
     if ( is_singular() ) {
         $singular_title = single_post_title( '', false );
         if ( is_string( $singular_title ) && '' !== trim( $singular_title ) ) {
@@ -638,8 +753,7 @@ function ogape_redirect_non_waitlist_pages() {
         return;
     }
 
-    $request_path = isset( $_SERVER['REQUEST_URI'] ) ? wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ) : '';
-    $request_path = is_string( $request_path ) ? trim( $request_path, '/' ) : '';
+    $request_path = ogape_get_request_path();
 
     $allowed_paths = array(
         '',
@@ -690,17 +804,9 @@ function ogape_render_virtual_theme_page() {
         return;
     }
 
-    $request_path = isset( $_SERVER['REQUEST_URI'] ) ? wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ) : '';
-    $request_path = is_string( $request_path ) ? trim( $request_path, '/' ) : '';
+    $virtual_page = ogape_get_current_virtual_theme_page();
 
-    $virtual_templates = array(
-        'planes'           => 'page-planes.php',
-        'tarjetas-regalo'  => 'page-tarjetas-regalo.php',
-        'sostenibilidad'   => 'page-sostenibilidad.php',
-        'alianzas'         => 'page-alianzas.php',
-    );
-
-    if ( ! isset( $virtual_templates[ $request_path ] ) ) {
+    if ( ! $virtual_page ) {
         return;
     }
 
@@ -708,7 +814,9 @@ function ogape_render_virtual_theme_page() {
         return;
     }
 
-    $template = locate_template( $virtual_templates[ $request_path ] );
+    ogape_prime_virtual_theme_page_query();
+
+    $template = locate_template( $virtual_page['template'] );
     if ( ! $template ) {
         return;
     }
