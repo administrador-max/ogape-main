@@ -334,6 +334,7 @@ function ogape_enqueue_assets() {
 
     $is_future_site      = is_page( 'future-site' );
     $is_menu_page        = is_page( 'menu' );
+    $is_planes_page      = is_page( 'planes' );
     $is_register_page    = is_page( 'register' );
     $is_account_page     = is_page( 'account' );
     $is_login_page       = is_page( 'login' );
@@ -389,6 +390,15 @@ function ogape_enqueue_assets() {
             get_stylesheet_directory_uri() . '/assets/css/menu-page.css',
             array( 'ogape-production-polish' ),
             filemtime( get_stylesheet_directory() . '/assets/css/menu-page.css' )
+        );
+    }
+
+    if ( $is_planes_page ) {
+        wp_enqueue_style(
+            'ogape-planes-page',
+            get_stylesheet_directory_uri() . '/assets/css/planes-page.css',
+            array( 'ogape-production-polish' ),
+            filemtime( get_stylesheet_directory() . '/assets/css/planes-page.css' )
         );
     }
 
@@ -498,6 +508,10 @@ function ogape_body_classes( $classes ) {
 
     if ( is_page( 'menu' ) ) {
         $classes[] = 'ogape-menu-page';
+    }
+
+    if ( is_page( 'planes' ) ) {
+        $classes[] = 'ogape-planes-page';
     }
 
     if ( is_page( 'register' ) ) {
