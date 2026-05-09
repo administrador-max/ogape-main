@@ -96,110 +96,6 @@ $sustainability_url = $args['sustainability_url'] ?? home_url( '/sostenibilidad/
         </div>
     </section>
 
-    <section class="split" id="comparativa" data-screen-label="02 Lo que viene en tu caja">
-        <div class="wrap">
-            <div class="split__head">
-                <h2><em>Lo que viene</em> en tu caja Ogape.</h2>
-                <p class="lab">Te mandamos lo perecedero, lo dosificado y lo difícil de planear. Lo demás ya vive en tu alacena.</p>
-            </div>
-
-            <div class="split__grid">
-                <article class="split-col split-col--box" aria-labelledby="split-box">
-                    <div class="split-col__hdr">
-                        <div class="badge" aria-hidden="true">i.</div>
-                        <div>
-                            <span class="meta">En tu caja Ogape · semanal</span>
-                            <h3 id="split-box">Todo lo <em>fresco, medido</em> y específico de cada receta.</h3>
-                        </div>
-                    </div>
-
-                    <ul class="split-feat">
-                        <li>
-                            <span class="ico" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 14c2-5 5-8 9-8s5 4 5 4-1 6-5 8-9-4-9-4Z"/><path d="M9 12c1.5-2 3.5-3 5.5-3"/></svg>
-                            </span>
-                            <div><b>Proteínas frescas</b><span class="sub">surubí, costilla, pollo — porcionados al gramo</span></div>
-                        </li>
-                        <li>
-                            <span class="ico" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-3 4-3 9 0 12 3-3 3-8 0-12Z"/><path d="M12 15v6"/></svg>
-                            </span>
-                            <div><b>Verduras y hierbas</b><span class="sub">mandioca, cilantro, hierbas del monte — lavadas</span></div>
-                        </li>
-                        <li>
-                            <span class="ico" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l-1 5h-6Z"/><path d="M9 8c-2 1-3 3-3 6v6h12v-6c0-3-1-5-3-6"/></svg>
-                            </span>
-                            <div><b>Salsas, bases y marinadas</b><span class="sub">aliolis, mantequillas saborizadas, reducciones</span></div>
-                        </li>
-                        <li>
-                            <span class="ico" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12l-2 7H8Z"/><path d="M9 11v6a3 3 0 0 0 6 0v-6"/></svg>
-                            </span>
-                            <div><b>Especias y condimentos especiales</b><span class="sub">un sobre dosificado por receta · cero merma</span></div>
-                        </li>
-                        <li>
-                            <span class="ico" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12c1.5 1.5 4.5 1.5 6 0M9 9h.01M15 9h.01"/></svg>
-                            </span>
-                            <div><b>Porciones medidas para 2 o 4</b><span class="sub">pesado en cocina, no en el packaging</span></div>
-                        </li>
-                        <li>
-                            <span class="ico" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3V4Z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
-                            </span>
-                            <div><b>Recetas paso a paso</b><span class="sub">una ficha ilustrada por plato, con tiempos</span></div>
-                        </li>
-                        <li>
-                            <span class="ico" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v12H4Z"/><path d="M8 8V5h8v3M8 12h8M8 16h5"/></svg>
-                            </span>
-                            <div><b>Empaque frío cuando hace falta</b><span class="sub">cadena de frío a 4 °C, aislante de papel</span></div>
-                        </li>
-                    </ul>
-
-                    <p class="split-col__foot">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-                        <span>La caja resuelve <b>lo difícil de planear, lo difícil de medir y lo perecedero</b> — todo lo específico de la receta llega listo.</span>
-                    </p>
-                </article>
-
-                <aside class="split-col split-col--home" aria-labelledby="split-home">
-                    <div class="split-col__hdr">
-                        <div class="badge" aria-hidden="true">ii.</div>
-                        <div>
-                            <span class="meta">Nota · en tu cocina</span>
-                            <h3 id="split-home">Lo que ya tenés en casa.</h3>
-                        </div>
-                    </div>
-
-                    <p class="split-note">Solo los básicos de siempre — nada que tengas que ir a comprar especialmente.</p>
-
-                    <ul class="split-home-list">
-                        <li>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 7"/></svg>
-                            <span>Sal, pimienta y aceite</span>
-                        </li>
-                        <li>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 7"/></svg>
-                            <span>Cuchillo, tabla, sartén y olla</span>
-                        </li>
-                        <li>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 7"/></svg>
-                            <span>Hornalla u horno</span>
-                        </li>
-                        <li>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 7"/></svg>
-                            <span>Algún básico de alacena según la receta</span>
-                        </li>
-                    </ul>
-
-                    <p class="split-col__foot">Antes de elegir tu semana, te mostramos cualquier básico que necesitás tener en casa.</p>
-                </aside>
-            </div>
-        </div>
-    </section>
-
     <section class="inv" data-screen-label="03 Qué viene en la caja">
         <div class="wrap">
             <div class="sec-head">
@@ -411,11 +307,115 @@ $sustainability_url = $args['sustainability_url'] ?? home_url( '/sostenibilidad/
         </div>
     </section>
 
-    <section class="value" data-screen-label="05 Por qué funciona">
+    <section class="split" id="comparativa" data-screen-label="05 Lo que viene en tu caja">
+        <div class="wrap">
+            <div class="split__head">
+                <h2><em>Lo que viene</em> en tu caja Ogape.</h2>
+                <p class="lab">Te mandamos lo perecedero, lo dosificado y lo difícil de planear. Lo demás ya vive en tu alacena.</p>
+            </div>
+
+            <div class="split__grid">
+                <article class="split-col split-col--box" aria-labelledby="split-box">
+                    <div class="split-col__hdr">
+                        <div class="badge" aria-hidden="true">i.</div>
+                        <div>
+                            <span class="meta">En tu caja Ogape · semanal</span>
+                            <h3 id="split-box">Todo lo <em>fresco, medido</em> y específico de cada receta.</h3>
+                        </div>
+                    </div>
+
+                    <ul class="split-feat">
+                        <li>
+                            <span class="ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 14c2-5 5-8 9-8s5 4 5 4-1 6-5 8-9-4-9-4Z"/><path d="M9 12c1.5-2 3.5-3 5.5-3"/></svg>
+                            </span>
+                            <div><b>Proteínas frescas</b><span class="sub">surubí, costilla, pollo — porcionados al gramo</span></div>
+                        </li>
+                        <li>
+                            <span class="ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-3 4-3 9 0 12 3-3 3-8 0-12Z"/><path d="M12 15v6"/></svg>
+                            </span>
+                            <div><b>Verduras y hierbas</b><span class="sub">mandioca, cilantro, hierbas del monte — lavadas</span></div>
+                        </li>
+                        <li>
+                            <span class="ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l-1 5h-6Z"/><path d="M9 8c-2 1-3 3-3 6v6h12v-6c0-3-1-5-3-6"/></svg>
+                            </span>
+                            <div><b>Salsas, bases y marinadas</b><span class="sub">aliolis, mantequillas saborizadas, reducciones</span></div>
+                        </li>
+                        <li>
+                            <span class="ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12l-2 7H8Z"/><path d="M9 11v6a3 3 0 0 0 6 0v-6"/></svg>
+                            </span>
+                            <div><b>Especias y condimentos especiales</b><span class="sub">un sobre dosificado por receta · cero merma</span></div>
+                        </li>
+                        <li>
+                            <span class="ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12c1.5 1.5 4.5 1.5 6 0M9 9h.01M15 9h.01"/></svg>
+                            </span>
+                            <div><b>Porciones medidas para 2 o 4</b><span class="sub">pesado en cocina, no en el packaging</span></div>
+                        </li>
+                        <li>
+                            <span class="ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3V4Z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+                            </span>
+                            <div><b>Recetas paso a paso</b><span class="sub">una ficha ilustrada por plato, con tiempos</span></div>
+                        </li>
+                        <li>
+                            <span class="ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v12H4Z"/><path d="M8 8V5h8v3M8 12h8M8 16h5"/></svg>
+                            </span>
+                            <div><b>Empaque frío cuando hace falta</b><span class="sub">cadena de frío a 4 °C, aislante de papel</span></div>
+                        </li>
+                    </ul>
+
+                    <p class="split-col__foot">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+                        <span>La caja resuelve <b>lo difícil de planear, lo difícil de medir y lo perecedero</b> — todo lo específico de la receta llega listo.</span>
+                    </p>
+                </article>
+
+                <aside class="split-col split-col--home" aria-labelledby="split-home">
+                    <div class="split-col__hdr">
+                        <div class="badge" aria-hidden="true">ii.</div>
+                        <div>
+                            <span class="meta">Nota · en tu cocina</span>
+                            <h3 id="split-home">Lo que ya tenés en casa.</h3>
+                        </div>
+                    </div>
+
+                    <p class="split-note">Solo los básicos de siempre — nada que tengas que ir a comprar especialmente.</p>
+
+                    <ul class="split-home-list">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 7"/></svg>
+                            <span>Sal, pimienta y aceite</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 7"/></svg>
+                            <span>Cuchillo, tabla, sartén y olla</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 7"/></svg>
+                            <span>Hornalla u horno</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 7"/></svg>
+                            <span>Algún básico de alacena según la receta</span>
+                        </li>
+                    </ul>
+
+                    <p class="split-col__foot">Antes de elegir tu semana, te mostramos cualquier básico que necesitás tener en casa.</p>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section class="value" data-screen-label="06 Por qué funciona">
         <div class="wrap">
             <div class="sec-head">
                 <div>
-                    <span class="eyebrow hero__eyebrow">05 · Por qué vale la pena</span>
+                    <span class="eyebrow hero__eyebrow">06 · Por qué vale la pena</span>
                     <h2>Una caja que <em>respeta</em> tu tiempo, tu plata y tu apetito.</h2>
                 </div>
                 <p>No es una suscripción de comida congelada. Es la mise en place de un restaurante, dejada en tu portería el jueves.</p>
@@ -467,12 +467,12 @@ $sustainability_url = $args['sustainability_url'] ?? home_url( '/sostenibilidad/
         </div>
     </section>
 
-    <section class="sust" id="sostenibilidad" data-screen-label="06 Sostenibilidad">
+    <section class="sust" id="sostenibilidad" data-screen-label="07 Sostenibilidad">
         <div class="wrap">
             <div class="sust__card">
                 <div class="sust__grid">
                     <div>
-                        <span class="eyebrow">06 · Pensada para gastar menos</span>
+                        <span class="eyebrow">07 · Pensada para gastar menos</span>
                         <h2>La caja, <em>parte del plato.</em></h2>
                         <p>Porcionamos para que sobre menos, compramos más cerca cuando podemos, y diseñamos cada caja para viajar liviana. Lo cuidamos por vos, sin pedirte nada extra.</p>
                         <a href="<?php echo esc_url( $sustainability_url ); ?>" class="sust__cta">
