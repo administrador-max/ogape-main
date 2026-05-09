@@ -11,6 +11,7 @@ $home_url           = $args['home_url'] ?? home_url( '/' );
 $plans_url          = $args['plans_url'] ?? home_url( '/planes/' );
 $menu_url           = $args['menu_url'] ?? home_url( '/menu/' );
 $sustainability_url = $args['sustainability_url'] ?? home_url( '/sostenibilidad/' );
+$hero_image_url     = get_stylesheet_directory_uri() . '/assets/img/kits-hero-box.png';
 ?>
 
 <main id="main" class="site-main kits-design" role="main">
@@ -50,47 +51,18 @@ $sustainability_url = $args['sustainability_url'] ?? home_url( '/sostenibilidad/
                     </div>
                 </div>
 
-                <figure class="openbox" aria-label="Caja Ogape abierta con ingredientes saliendo">
-                    <div class="openbox__flap openbox__flap--back" aria-hidden="true"></div>
-                    <div class="openbox__body" aria-hidden="true"></div>
-                    <div class="openbox__flap openbox__flap--l" aria-hidden="true"></div>
-                    <div class="openbox__flap openbox__flap--r" aria-hidden="true"></div>
-
-                    <div class="openbox__items" aria-hidden="true">
-                        <span class="chip chip--accent">Surubí 320 g</span>
-                        <span class="chip chip--rose">Maracuyá ×2</span>
-                        <span class="chip chip--green">Cilantro fresco</span>
-                        <span class="chip">Mandioca 400 g</span>
-                        <span class="chip chip--ink">Receta · N.º 01</span>
-                        <span class="chip">Mantequilla 60 g</span>
-                        <span class="chip chip--green">Hierbas del monte</span>
-                        <span class="chip">Limón sutil</span>
+                <figure class="openbox">
+                    <div class="openbox__photo">
+                        <img
+                            src="<?php echo esc_url( $hero_image_url ); ?>"
+                            alt="Caja Ogape con ingredientes frescos sobre una mesa de cocina"
+                            width="1536"
+                            height="1024"
+                            loading="eager"
+                            decoding="async"
+                            fetchpriority="high"
+                        >
                     </div>
-
-                    <div class="openbox__dots" aria-hidden="true">
-                        <span class="d1"></span>
-                        <span class="d2"></span>
-                        <span class="d3"></span>
-                        <span class="d4"></span>
-                    </div>
-
-                    <div class="openbox__stamp" aria-hidden="true">
-                        <svg viewBox="0 0 100 100">
-                            <defs><path id="kits-stamp-circle" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs>
-                            <text fill="#1B1B1E" font-family="Cormorant Garamond, serif" font-size="9.5" letter-spacing="3">
-                                <textPath href="#kits-stamp-circle" startOffset="0">CAJA SEMANAL · 5 RECETAS · INGREDIENTES PORCIONADOS · </textPath>
-                            </text>
-                        </svg>
-                        <span class="core">Kit</span>
-                    </div>
-
-                    <figcaption class="openbox__caption">
-                        <div class="num">N.º 17</div>
-                        <div>
-                            <span class="lab">Caja semana</span>
-                            <span class="ttl">Del río, del monte<br>y de la huerta</span>
-                        </div>
-                    </figcaption>
                 </figure>
             </div>
         </div>

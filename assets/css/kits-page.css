@@ -311,10 +311,7 @@ body.ogape-kits-page {
   aspect-ratio: 1 / 1;
   border-radius: var(--radius-2xl);
   overflow: hidden;
-  background:
-    radial-gradient(120% 80% at 30% 10%, #F0B765 0%, transparent 50%),
-    radial-gradient(100% 80% at 80% 90%, #9A5A08 0%, transparent 55%),
-    linear-gradient(160deg, #C88B3A 0%, #9A5A08 60%, #6B4A1E 100%);
+  background: #E8D3B6;
   box-shadow: 0 30px 70px -20px rgba(17, 24, 39, .4), 0 10px 30px rgba(17, 24, 39, .16);
 }
 
@@ -323,249 +320,20 @@ body.ogape-kits-page {
   position: absolute;
   inset: 0;
   background:
-    repeating-linear-gradient(42deg, rgba(255, 255, 255, .04) 0 10px, transparent 10px 22px),
-    linear-gradient(180deg, transparent 35%, rgba(17, 24, 39, .4) 100%);
+    linear-gradient(180deg, rgba(255, 255, 255, .04) 0%, rgba(17, 24, 39, .08) 100%);
   pointer-events: none;
 }
 
-.kits-design .openbox__body {
-  position: absolute;
-  left: 50%;
-  bottom: 8%;
-  transform: translateX(-50%);
-  width: 74%;
-  height: 48%;
-  background: linear-gradient(180deg, #C89564 0%, #A87238 60%, #8A5A24 100%);
-  border-radius: 6px 6px 10px 10px;
-  box-shadow: inset 0 -22px 38px rgba(0, 0, 0, .32), inset 0 16px 24px rgba(255, 255, 255, .10), 0 24px 50px rgba(17, 24, 39, .4);
-  z-index: 2;
-}
-
-.kits-design .openbox__body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .04) 0 4px, transparent 4px 11px);
-  border-radius: inherit;
-}
-
-.kits-design .openbox__body::after {
-  content: "OGAPE";
-  position: absolute;
-  left: 50%;
-  top: 48%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(20px, 3.4vw, 38px);
-  font-weight: 500;
-  color: rgba(247, 239, 227, .86);
-  letter-spacing: .04em;
-}
-
-.kits-design .openbox__flap {
-  position: absolute;
-  width: 38%;
-  height: 18%;
-  background: linear-gradient(180deg, #D6A96E 0%, #A87238 100%);
-  box-shadow: inset 0 8px 14px rgba(255, 255, 255, .14), 0 6px 18px rgba(0, 0, 0, .3);
-  z-index: 3;
-}
-
-.kits-design .openbox__flap--l {
-  left: 6%;
-  top: 38%;
-  transform: rotate(-30deg) skewX(-6deg);
-  transform-origin: bottom right;
-  border-radius: 8px 4px 4px 12px;
-}
-
-.kits-design .openbox__flap--r {
-  right: 6%;
-  top: 38%;
-  transform: rotate(30deg) skewX(6deg);
-  transform-origin: bottom left;
-  border-radius: 4px 8px 12px 4px;
-}
-
-.kits-design .openbox__flap--back {
-  left: 50%;
-  top: 30%;
-  transform: translateX(-50%);
-  width: 74%;
-  height: 8%;
-  background: linear-gradient(180deg, #7C5022, #6B4118);
-  border-radius: 6px 6px 0 0;
-  z-index: 1;
-  box-shadow: inset 0 4px 10px rgba(0, 0, 0, .4);
-}
-
-.kits-design .openbox__items {
-  position: absolute;
-  left: 50%;
-  top: 18%;
-  transform: translateX(-50%);
-  width: 78%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px 10px;
-  z-index: 4;
-  pointer-events: none;
-}
-
-.kits-design .openbox__items .chip {
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(247, 239, 227, .94);
-  color: #1B1B1E;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .04em;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, .22);
-  white-space: nowrap;
-}
-
-.kits-design .openbox__items .chip--accent {
-  background: var(--brand-primary);
-}
-
-.kits-design .openbox__items .chip--rose {
-  background: #E86B9A;
-  color: #fff;
-}
-
-.kits-design .openbox__items .chip--green {
-  background: #83A86A;
-  color: #fff;
-}
-
-.kits-design .openbox__items .chip--ink {
-  background: #1B1B1E;
-  color: #F7EFE3;
-}
-
-.kits-design .openbox__dots {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-}
-
-.kits-design .openbox__dots span {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(247, 239, 227, .85);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, .2);
-}
-
-.kits-design .openbox__dots .d1 {
-  left: 14%;
-  top: 18%;
-  width: 14px;
-  height: 14px;
-  background: #E86B9A;
-}
-
-.kits-design .openbox__dots .d2 {
-  left: 80%;
-  top: 14%;
-  width: 18px;
-  height: 18px;
-  background: #F0B765;
-}
-
-.kits-design .openbox__dots .d3 {
-  left: 88%;
-  top: 46%;
-  width: 10px;
-  height: 10px;
-  background: #83A86A;
-}
-
-.kits-design .openbox__dots .d4 {
-  left: 8%;
-  top: 60%;
-  width: 12px;
-  height: 12px;
-  background: #F0B765;
-}
-
-.kits-design .openbox__stamp {
-  position: absolute;
-  top: var(--space-5);
-  right: var(--space-5);
-  z-index: 6;
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  background: rgba(247, 239, 227, .94);
-  color: var(--brand-primary-strong);
-  display: grid;
-  place-items: center;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(17, 24, 39, .22);
-  transform: rotate(8deg);
-}
-
-.kits-design .openbox__stamp svg {
-  position: absolute;
-  inset: 0;
+.kits-design .openbox__photo,
+.kits-design .openbox__photo img {
   width: 100%;
   height: 100%;
-  animation: spin 30s linear infinite;
 }
 
-.kits-design .openbox__stamp .core {
-  position: relative;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: var(--brand-primary);
-  display: grid;
-  place-items: center;
-  font-family: var(--font-display);
-  color: #1B1B1E;
-  font-size: 14px;
-  font-weight: 600;
-  font-style: italic;
-  line-height: 1;
-}
-
-.kits-design .openbox__caption {
-  position: absolute;
-  left: var(--space-6);
-  bottom: var(--space-6);
-  z-index: 6;
-  color: #F7EFE3;
-  display: flex;
-  align-items: flex-end;
-  gap: var(--space-4);
-}
-
-.kits-design .openbox__caption .num {
-  font-family: var(--font-display);
-  font-size: 60px;
-  font-weight: 500;
-  line-height: 1;
-  font-style: italic;
-  color: rgba(247, 239, 227, .85);
-}
-
-.kits-design .openbox__caption .lab {
+.kits-design .openbox__photo img {
   display: block;
-  font-size: 10px;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: rgba(247, 239, 227, .7);
-  margin-bottom: .3rem;
-}
-
-.kits-design .openbox__caption .ttl {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1.15;
+  object-fit: cover;
+  object-position: center center;
 }
 
 .kits-design .split {
@@ -1538,26 +1306,8 @@ body.ogape-kits-page {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .kits-design .rise,
-  .kits-design .openbox__stamp svg {
+  .kits-design .rise {
     animation: none;
-  }
-}
-
-@media (max-width: 700px) {
-  .kits-design .openbox__caption .num {
-    font-size: 44px;
-  }
-
-  .kits-design .openbox__stamp {
-    width: 78px;
-    height: 78px;
-  }
-
-  .kits-design .openbox__stamp .core {
-    width: 38px;
-    height: 38px;
-    font-size: 12px;
   }
 }
 
