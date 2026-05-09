@@ -32,6 +32,7 @@
     $nav_links         = array(
         array( 'label' => 'Planes',          'url' => home_url( '/planes/' ) ),
         array( 'label' => 'Nosotros',        'url' => home_url( '/nosotros/' ) ),
+        array( 'label' => 'Blog',            'url' => home_url( '/blog/' ) ),
         array( 'label' => 'Menús',           'url' => home_url( '/menu/' ) ),
         array( 'label' => 'Kits',            'url' => home_url( '/kits/' ) ),
         array( 'label' => 'Tarjetas regalo', 'url' => home_url( '/tarjetas-regalo/' ) ),

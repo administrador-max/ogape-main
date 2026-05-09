@@ -62,6 +62,10 @@ function ogape_get_request_path() {
  */
 function ogape_get_virtual_theme_pages() {
     return array(
+        'blog'            => array(
+            'template' => 'page-blog.php',
+            'title'    => __( 'Blog', 'ogape-child' ),
+        ),
         'kits'            => array(
             'template' => 'page-kits.php',
             'title'    => __( 'Kits', 'ogape-child' ),
@@ -354,6 +358,7 @@ function ogape_enqueue_assets() {
     $script_version   = filemtime( get_stylesheet_directory() . '/assets/js/main.js' );
 
     $is_future_site         = ogape_is_public_page( 'future-site' );
+    $is_blog_page           = ogape_is_public_page( 'blog' );
     $is_kits_page           = ogape_is_public_page( 'kits' ) || ogape_is_public_page( 'como-funciona' );
     $is_menu_page           = ogape_is_public_page( 'menu' );
     $is_planes_page         = ogape_is_public_page( 'planes' );
@@ -404,6 +409,15 @@ function ogape_enqueue_assets() {
             get_stylesheet_directory_uri() . '/assets/css/future-site.css',
             array( 'ogape-production-polish' ),
             filemtime( get_stylesheet_directory() . '/assets/css/future-site.css' )
+        );
+    }
+
+    if ( $is_blog_page ) {
+        wp_enqueue_style(
+            'ogape-blog-page',
+            get_stylesheet_directory_uri() . '/assets/css/blog-page.css',
+            array( 'ogape-production-polish' ),
+            filemtime( get_stylesheet_directory() . '/assets/css/blog-page.css' )
         );
     }
 
@@ -545,6 +559,10 @@ function ogape_body_classes( $classes ) {
 
     if ( ogape_is_public_page( 'future-site' ) ) {
         $classes[] = 'ogape-future-site-page';
+    }
+
+    if ( ogape_is_public_page( 'blog' ) ) {
+        $classes[] = 'ogape-blog-page';
     }
 
     if ( ogape_is_public_page( 'menu' ) ) {
@@ -822,6 +840,7 @@ function ogape_redirect_non_waitlist_pages() {
         '',
         'waitlist',
         'future-site',
+        'blog',
         'kits',
         'planes',
         'nosotros',
