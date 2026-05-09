@@ -213,6 +213,22 @@
 .register-design .price-line .v { font-family: var(--font-display); font-size: 36px; font-weight: 500; color: var(--brand-primary); line-height: 1; letter-spacing: -.02em; }
 .register-design .price-line .v small { display: block; font-family: var(--font-body); font-size: 11px; color: rgba(247,239,227,.55); margin-top: .35rem; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; text-align: right; }
 
+/* Premium add-on */
+.register-design .addon { position: relative; display: grid; grid-template-columns: 20px 1fr; gap: var(--space-4); align-items: start; padding: var(--space-5) var(--space-6); border-radius: var(--radius-xl); border: 1px solid rgba(232,160,69,.45); background: #FFF7E8; cursor: pointer; transition: border-color .15s, background .15s, box-shadow .15s; }
+.register-design .addon:hover { border-color: var(--brand-primary); background: #FCEFD3; }
+.register-design .addon input { position: absolute; opacity: 0; pointer-events: none; }
+.register-design .addon > .check__box { margin-top: 3px; }
+.register-design .addon input:checked + .check__box { background: #1B1B1E; border-color: #1B1B1E; color: #F7EFE3; }
+.register-design .addon.is-checked { border-color: var(--brand-primary); background: #FCEFD3; box-shadow: 0 6px 24px rgba(232,160,69,.18); }
+.register-design .addon__body { display: block; }
+.register-design .addon__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+.register-design .addon__title { font-family: var(--font-display); font-size: 20px; font-weight: 500; color: var(--text-primary); display: inline-flex; align-items: center; gap: .55rem; }
+.register-design .addon__badge { font-family: var(--font-body); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--brand-primary-strong); background: rgba(232,160,69,.22); padding: 3px 9px; border-radius: var(--radius-pill); font-weight: 600; }
+.register-design .addon__price { font-family: var(--font-display); font-size: 18px; font-weight: 500; color: var(--brand-primary-strong); white-space: nowrap; }
+.register-design .addon__desc { display: block; margin-top: var(--space-2); font-size: 13.5px; color: var(--text-secondary); line-height: 1.55; }
+.register-design .addon__chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: var(--space-3); }
+.register-design .addon__chip { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: var(--radius-pill); background: #fff; border: 1px solid rgba(154,90,8,.25); color: var(--brand-primary-strong); font-size: 12.5px; font-weight: 500; }
+
 /* Success / celebration */
 .register-design .celebrate { text-align: center; padding: var(--space-4) 0; }
 .register-design .celebrate__stamp { width: 110px; height: 110px; border-radius: 50%; background: var(--brand-primary); margin: 0 auto var(--space-6); display: grid; place-items: center; color: #1B1B1E; box-shadow: 0 16px 40px rgba(232,160,69,.4), inset 0 -4px 8px rgba(0,0,0,.08); }

@@ -283,6 +283,26 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
 	            <input class="input" id="register-allergies" name="allergies" type="text" placeholder="Maní, mariscos — opcional">
           </div>
 
+          <label class="addon" for="register-premium" style="margin-top:var(--space-6)">
+            <input type="checkbox" id="register-premium" name="premium" value="1">
+            <span class="check__box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg></span>
+            <span class="addon__body">
+              <span class="addon__head">
+                <span class="addon__title">Premium semanal <span class="addon__badge">Opcional</span></span>
+                <span class="addon__price">+ Gs 10.000</span>
+              </span>
+              <span class="addon__desc">Prioridad para nuestras recetas premium en rotación. Ventana de entrega preferida (9–13 o 17–21) y soporte directo por WhatsApp.</span>
+              <span class="addon__chips">
+                <span class="addon__chip">Linguini con camarones</span>
+                <span class="addon__chip">Ensalada de salmón con papines</span>
+                <span class="addon__chip">Tilapia con salsa de limón</span>
+                <span class="addon__chip">Costillas de cerdo BBQ</span>
+                <span class="addon__chip">Ravioles</span>
+                <span class="addon__chip">Tartaleta caprese</span>
+              </span>
+            </span>
+          </label>
+
           <div class="price-line" style="margin-top:var(--space-6)">
             <div class="k">Subtotal<b id="register-boxSubtotalLabel">Para 2 · 3 recetas</b></div>
             <div class="v" id="register-boxSubtotalPrice">Gs 285.000<small>/ semana</small></div>
@@ -599,11 +619,14 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
 	  $('#register-window').addEventListener('change', updateHiddenLabels);
 
   // ── SIDEBAR + SUMMARY refresh ─────────────────────────
+  var PREMIUM_FEE = 10000;
   function currentPlan() {
     var ppl = (root.querySelector('input[name="people"]:checked') || {}).value || '2';
     var rec = (root.querySelector('input[name="recipes"]:checked') || {}).value || '3';
-    var price = PRICE[ppl + '-' + rec] || 285000;
-    return { ppl: ppl, rec: rec, price: price, label: 'Para ' + ppl + ' · ' + rec + ' recetas' };
+    var premium = !!($('#register-premium') && $('#register-premium').checked);
+    var base = PRICE[ppl + '-' + rec] || 285000;
+    var price = base + (premium ? PREMIUM_FEE : 0);
+    return { ppl: ppl, rec: rec, base: base, premium: premium, price: price, label: 'Para ' + ppl + ' · ' + rec + ' recetas' };
   }
   function refreshAside() {
     var p = currentPlan();
@@ -633,7 +656,17 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
 	    $('#register-sumDeliverySub').textContent = deliveryShortLabel + ' · ' + win;
 
 	    var prefs = $$('input[name="preferences[]"]:checked').map(function (i) { return i.parentElement.textContent.trim(); });
-	    $('#register-sumBoxSub').textContent = prefs.length ? prefs.join(' · ') : 'Sin preferencias marcadas';
+	    var sub = prefs.length ? prefs.join(' · ') : 'Sin preferencias marcadas';
+	    if (p.premium) sub = 'Premium semanal' + (prefs.length ? ' · ' + prefs.join(' · ') : '');
+	    $('#register-sumBoxSub').textContent = sub;
+	  }
+
+	  var premiumToggle = $('#register-premium');
+	  if (premiumToggle) {
+	    premiumToggle.addEventListener('change', function () {
+	      premiumToggle.closest('.addon').classList.toggle('is-checked', premiumToggle.checked);
+	      refreshAside();
+	    });
 	  }
 
 	  updateHiddenLabels();
