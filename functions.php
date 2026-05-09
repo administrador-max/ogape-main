@@ -141,6 +141,23 @@ function ogape_prime_virtual_theme_page_query() {
 }
 
 /**
+ * Check whether the current request should behave like a given public page slug.
+ *
+ * Works for both real WP pages and virtual theme pages.
+ *
+ * @param string $slug Public page slug.
+ * @return bool
+ */
+function ogape_is_public_page( $slug ) {
+    if ( is_page( $slug ) ) {
+        return true;
+    }
+
+    $virtual_page = ogape_get_current_virtual_theme_page();
+    return $virtual_page && isset( $virtual_page['slug'] ) && $virtual_page['slug'] === $slug;
+}
+
+/**
  * Build a first-party logout URL that avoids wp-login.php UI screens.
  *
  * @param string $redirect_to Destination after logout.
@@ -332,13 +349,13 @@ function ogape_enqueue_assets() {
     $patterns_version = filemtime( get_stylesheet_directory() . '/assets/css/components/patterns.css' );
     $script_version   = filemtime( get_stylesheet_directory() . '/assets/js/main.js' );
 
-    $is_future_site      = is_page( 'future-site' );
-    $is_menu_page        = is_page( 'menu' );
-    $is_planes_page      = is_page( 'planes' );
-    $is_register_page    = is_page( 'register' );
-    $is_account_page     = is_page( 'account' );
-    $is_login_page       = is_page( 'login' );
-    $is_elegir_menu_page = is_page( 'elegir-menu' );
+    $is_future_site      = ogape_is_public_page( 'future-site' );
+    $is_menu_page        = ogape_is_public_page( 'menu' );
+    $is_planes_page      = ogape_is_public_page( 'planes' );
+    $is_register_page    = ogape_is_public_page( 'register' );
+    $is_account_page     = ogape_is_public_page( 'account' );
+    $is_login_page       = ogape_is_public_page( 'login' );
+    $is_elegir_menu_page = ogape_is_public_page( 'elegir-menu' );
     $is_handoff_design   = $is_register_page || $is_login_page || $is_elegir_menu_page;
 
     // 1. Design tokens (must load first — all other CSS depends on these)
@@ -502,31 +519,31 @@ function ogape_body_classes( $classes ) {
         $classes[] = 'page-' . sanitize_html_class( $virtual_page['slug'] );
     }
 
-    if ( is_page( 'future-site' ) ) {
+    if ( ogape_is_public_page( 'future-site' ) ) {
         $classes[] = 'ogape-future-site-page';
     }
 
-    if ( is_page( 'menu' ) ) {
+    if ( ogape_is_public_page( 'menu' ) ) {
         $classes[] = 'ogape-menu-page';
     }
 
-    if ( is_page( 'planes' ) ) {
+    if ( ogape_is_public_page( 'planes' ) ) {
         $classes[] = 'ogape-planes-page';
     }
 
-    if ( is_page( 'register' ) ) {
+    if ( ogape_is_public_page( 'register' ) ) {
         $classes[] = 'ogape-register-page';
     }
 
-    if ( is_page( 'account' ) ) {
+    if ( ogape_is_public_page( 'account' ) ) {
         $classes[] = 'ogape-account-page';
     }
 
-    if ( is_page( 'login' ) ) {
+    if ( ogape_is_public_page( 'login' ) ) {
         $classes[] = 'ogape-login-page';
     }
 
-    if ( is_page( 'elegir-menu' ) ) {
+    if ( ogape_is_public_page( 'elegir-menu' ) ) {
         $classes[] = 'ogape-elegir-menu-page';
     }
 
