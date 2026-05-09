@@ -36,6 +36,8 @@ $demo_recipes          = $demo_plan['recipes'] ?? '3';
 $demo_plan_label       = $demo_plan['label'] ?? 'Para 2 · 3 recetas';
 $demo_price            = $demo_plan['price'] ?? 285000;
 $demo_price_display    = $demo_plan['price_display'] ?? 'Gs 285.000';
+$demo_premium          = ! empty( $demo_plan['premium'] );
+$demo_premium_fee      = $demo_plan['premium_fee'] ?? 10000;
 $demo_price_plain      = number_format( (int) $demo_price, 0, ',', '.' );
 $demo_iva_display      = ogape_demo_format_price( (int) round( $demo_price / 11 ) );
 $delivery_label        = $demo_schedule['delivery_label'] ?? 'el próximo jueves';
@@ -419,6 +421,7 @@ if ( isset( $_GET['setup'] ) ) {
           <div class="plan-details">
             <div class="plan-detail"><span class="k">Porciones</span><span class="v"><?php echo esc_html( $demo_people ); ?> personas</span></div>
             <div class="plan-detail"><span class="k">Recetas</span><span class="v"><?php echo esc_html( $demo_recipes ); ?> por semana</span></div>
+            <div class="plan-detail"><span class="k">Premium</span><span class="v" id="planCardPremium"><?php echo $demo_premium ? 'Activo · + ' . esc_html( ogape_demo_format_price( $demo_premium_fee ) ) : 'No activado'; ?></span></div>
             <div class="plan-detail"><span class="k">Entrega</span><span class="v">Jueves · tarde</span></div>
             <div class="plan-detail"><span class="k">Barrio</span><span class="v"><?php echo esc_html( $demo_zone ); ?></span></div>
           </div>
@@ -889,6 +892,16 @@ if ( isset( $_GET['setup'] ) ) {
         </label>
       </div>
 
+      <label class="plan-premium<?php echo $demo_premium ? ' is-checked' : ''; ?>" id="planPremiumRow">
+        <input type="checkbox" id="planPremium" name="planPremium" value="1"<?php echo $demo_premium ? ' checked' : ''; ?>>
+        <span class="plan-premium__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg></span>
+        <span class="plan-premium__body">
+          <span class="plan-premium__title">Premium semanal <span class="plan-premium__badge">Opcional</span></span>
+          <span class="plan-premium__desc">Prioridad para nuestras recetas premium en rotación. Ventana de entrega preferida (9–13 o 17–21) y soporte directo por WhatsApp.</span>
+        </span>
+        <span class="plan-premium__price">+ <?php echo esc_html( ogape_demo_format_price( $demo_premium_fee ) ); ?></span>
+      </label>
+
       <div class="price-preview">
         <div class="label">Tu nuevo plan<b id="planPreviewLabel"><?php echo esc_html( $demo_plan_label ); ?></b></div>
         <div class="amount" id="planPreviewPrice"><?php echo esc_html( $demo_price_display ); ?><small>/ sem</small></div>
@@ -1213,20 +1226,58 @@ if ( isset( $_GET['setup'] ) ) {
   }
 
   // ── PLAN ─────────────────────────────────────────────────────────
+  var PLAN_PRICES = { '2-2':195000,'2-3':285000,'2-4':370000,'2-5':445000,'4-2':360000,'4-3':530000,'4-4':685000,'4-5':820000 };
+  var PLAN_PREMIUM_FEE = <?php echo (int) $demo_premium_fee; ?>;
+  function planFmtGs(n) { return 'Gs ' + n.toLocaleString('es-PY'); }
+  function planRecompute() {
+    var pEl = document.querySelector('#peopleOpts input[name=mp]:checked');
+    var rEl = document.querySelector('#recipesOpts input[name=mr]:checked');
+    var prem = document.getElementById('planPremium');
+    var people  = pEl ? pEl.value : '2';
+    var recipes = rEl ? rEl.value : '3';
+    var price = (PLAN_PRICES[people + '-' + recipes] || 285000) + (prem && prem.checked ? PLAN_PREMIUM_FEE : 0);
+    var label = 'Para ' + people + ' · ' + recipes + ' recetas';
+    var lblEl = document.getElementById('planPreviewLabel');
+    var prcEl = document.getElementById('planPreviewPrice');
+    if (lblEl) lblEl.textContent = label;
+    if (prcEl) prcEl.innerHTML = planFmtGs(price) + '<small>/ sem</small>';
+  }
+  document.querySelectorAll('#peopleOpts .plan-opt, #recipesOpts .plan-opt').forEach(function (opt) {
+    opt.addEventListener('click', function () {
+      var g = opt.dataset.group;
+      document.querySelectorAll('.plan-opt[data-group="' + g + '"]').forEach(function (x) { x.classList.remove('is-checked'); });
+      opt.classList.add('is-checked');
+      var inp = opt.querySelector('input'); if (inp) inp.checked = true;
+      planRecompute();
+    });
+  });
+  var planPremiumEl = document.getElementById('planPremium');
+  if (planPremiumEl) {
+    planPremiumEl.addEventListener('change', function () {
+      var row = document.getElementById('planPremiumRow');
+      if (row) row.classList.toggle('is-checked', planPremiumEl.checked);
+      planRecompute();
+    });
+  }
+
   var planConfirmBtn = document.getElementById('planConfirmBtn');
   if (planConfirmBtn) {
     planConfirmBtn.addEventListener('click', function () {
       setBtn(planConfirmBtn, true);
       var people  = document.querySelector('#peopleOpts input[name=mp]:checked');
       var recipes = document.querySelector('#recipesOpts input[name=mr]:checked');
+      var premium = document.getElementById('planPremium');
       post('ogape_update_plan', {
         people:  people  ? people.value  : '2',
         recipes: recipes ? recipes.value : '3',
+        premium: premium && premium.checked ? '1' : '',
       }, function (data) {
         var msg = document.getElementById('planSuccessMsg');
         if (msg && data.label && data.price_display) {
-          msg.textContent = 'Plan actualizado: ' + data.label + ' · ' + data.price_display + ' / sem.';
+          msg.textContent = 'Plan actualizado: ' + data.label + ' · ' + data.price_display + ' / sem' + (data.premium ? ' · Premium semanal activo.' : '.');
         }
+        var card = document.getElementById('planCardPremium');
+        if (card) card.textContent = data.premium ? 'Activo · + ' + planFmtGs(PLAN_PREMIUM_FEE) : 'No activado';
         document.getElementById('planForm').style.display = 'none';
         document.getElementById('planSuccess').style.display = '';
       }, function (msg) {

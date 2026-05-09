@@ -252,6 +252,20 @@
   .plan-opt.is-checked .plan-opt__check{border-color:var(--brand-primary);background:var(--brand-primary);color:#1B1B1E}
   .plan-opt__check svg{width:10px;height:10px}
 
+  /* Premium add-on toggle */
+  .plan-premium{position:relative;display:grid;grid-template-columns:20px 1fr auto;column-gap:var(--space-3);row-gap:.25rem;align-items:start;padding:var(--space-4) var(--space-5);margin-bottom:var(--space-4);border-radius:var(--radius-lg);border:1px solid rgba(232,160,69,.45);background:#FFF7E8;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s}
+  .plan-premium:hover{border-color:var(--brand-primary);background:#FCEFD3}
+  .plan-premium.is-checked{border-color:var(--brand-primary);background:#FCEFD3;box-shadow:0 6px 20px rgba(232,160,69,.18)}
+  .plan-premium input{position:absolute;opacity:0;pointer-events:none}
+  .plan-premium__check{flex:none;width:20px;height:20px;border-radius:5px;border:1.5px solid rgba(17,24,39,.2);background:#fff;display:grid;place-items:center;margin-top:2px;color:transparent;transition:background .15s,border-color .15s,color .15s}
+  .plan-premium__check svg{width:13px;height:13px}
+  .plan-premium input:checked + .plan-premium__check{background:#1B1B1E;border-color:#1B1B1E;color:#F7EFE3}
+  .plan-premium__body{display:block}
+  .plan-premium__title{font-family:var(--font-display);font-size:17px;font-weight:500;color:var(--text-primary);display:inline-flex;align-items:center;gap:.5rem}
+  .plan-premium__badge{font-family:var(--font-body);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brand-primary-strong);background:rgba(232,160,69,.22);padding:3px 8px;border-radius:999px;font-weight:600}
+  .plan-premium__desc{display:block;margin-top:.35rem;font-size:12.5px;color:var(--muted);line-height:1.5}
+  .plan-premium__price{font-family:var(--font-display);font-size:16px;font-weight:500;color:var(--brand-primary-strong);white-space:nowrap;align-self:center}
+
   /* Price preview strip */
   .price-preview{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) var(--space-5);background:#1B1B1E;border-radius:var(--radius-xl);margin-bottom:var(--space-5);gap:var(--space-3)}
   .price-preview .label{font-size:11.5px;color:rgba(247,239,227,.6);letter-spacing:.1em;text-transform:uppercase;font-weight:600}

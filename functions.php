@@ -839,6 +839,10 @@ function ogape_demo_plan_prices() {
     );
 }
 
+function ogape_demo_premium_fee() {
+    return 10000;
+}
+
 function ogape_demo_format_price( $amount ) {
     return 'Gs ' . number_format( (int) $amount, 0, ',', '.' );
 }
@@ -855,16 +859,24 @@ function ogape_demo_plan_from_state( $state ) {
     }
 
     $prices = ogape_demo_plan_prices();
-    $price  = $prices[ $people . '-' . $recipes ] ?? $prices['2-3'];
+    $base   = $prices[ $people . '-' . $recipes ] ?? $prices['2-3'];
+
+    $premium     = ! empty( $state['premium'] );
+    $premium_fee = $premium ? ogape_demo_premium_fee() : 0;
+    $price       = $base + $premium_fee;
 
     return array(
-        'people'        => $people,
-        'recipes'       => $recipes,
-        'label'         => sprintf( 'Para %1$s · %2$s recetas', $people, $recipes ),
-        'people_label'  => sprintf( '%s personas', $people ),
-        'recipes_label' => sprintf( '%s por semana', $recipes ),
-        'price'         => $price,
-        'price_display' => ogape_demo_format_price( $price ),
+        'people'             => $people,
+        'recipes'            => $recipes,
+        'label'              => sprintf( 'Para %1$s · %2$s recetas', $people, $recipes ),
+        'people_label'       => sprintf( '%s personas', $people ),
+        'recipes_label'      => sprintf( '%s por semana', $recipes ),
+        'base_price'         => $base,
+        'base_price_display' => ogape_demo_format_price( $base ),
+        'premium'            => $premium,
+        'premium_fee'        => ogape_demo_premium_fee(),
+        'price'              => $price,
+        'price_display'      => ogape_demo_format_price( $price ),
     );
 }
 
@@ -961,6 +973,7 @@ function ogape_save_customer_meta( $user_id, $data ) {
         'recipes'               => 'ogape_recipes',
         'plan'                  => 'ogape_plan',
         'price'                 => 'ogape_price',
+        'premium'               => 'ogape_premium',
         'preferences'           => 'ogape_preferences',
         'preference'            => 'ogape_preference',
         'allergies'             => 'ogape_allergies',
@@ -1011,6 +1024,7 @@ function ogape_get_customer_meta( $user_id ) {
         'recipes'               => (string) ( get_user_meta( $user_id, 'ogape_recipes', true ) ?: '3' ),
         'plan'                  => (string) get_user_meta( $user_id, 'ogape_plan', true ),
         'price'                 => get_user_meta( $user_id, 'ogape_price', true ) ?: 285000,
+        'premium'               => (bool) get_user_meta( $user_id, 'ogape_premium', true ),
         'preferences'           => (array) ( get_user_meta( $user_id, 'ogape_preferences', true ) ?: array() ),
         'preference'            => (string) get_user_meta( $user_id, 'ogape_preference', true ),
         'allergies'             => (string) get_user_meta( $user_id, 'ogape_allergies', true ),
@@ -1178,7 +1192,8 @@ function ogape_handle_demo_account_flow() {
 
         $people  = isset( $_POST['people'] ) ? (string) absint( wp_unslash( $_POST['people'] ) ) : '2';
         $recipes = isset( $_POST['recipes'] ) ? (string) absint( wp_unslash( $_POST['recipes'] ) ) : '3';
-        $plan    = ogape_demo_plan_from_state( array( 'people' => $people, 'recipes' => $recipes ) );
+        $premium = ! empty( $_POST['premium'] );
+        $plan    = ogape_demo_plan_from_state( array( 'people' => $people, 'recipes' => $recipes, 'premium' => $premium ) );
 
         $new_state = array(
             'name'                  => trim( $first_name . ' ' . $last_name ),
@@ -1188,6 +1203,7 @@ function ogape_handle_demo_account_flow() {
             'recipes'               => $plan['recipes'],
             'plan'                  => $plan['label'],
             'price'                 => $plan['price'],
+            'premium'               => $plan['premium'],
             'zone_key'              => sanitize_key( wp_unslash( $_POST['zone_key'] ?? '' ) ),
             'zone'                  => sanitize_text_field( wp_unslash( $_POST['zone'] ?? '' ) ),
             'address'               => sanitize_text_field( wp_unslash( $_POST['address'] ?? '' ) ),
@@ -1275,7 +1291,8 @@ function ogape_ajax_register() {
 
     $people  = isset( $_POST['people'] ) ? (string) absint( wp_unslash( $_POST['people'] ) ) : '2';
     $recipes = isset( $_POST['recipes'] ) ? (string) absint( wp_unslash( $_POST['recipes'] ) ) : '3';
-    $plan    = ogape_demo_plan_from_state( array( 'people' => $people, 'recipes' => $recipes ) );
+    $premium = ! empty( $_POST['premium'] );
+    $plan    = ogape_demo_plan_from_state( array( 'people' => $people, 'recipes' => $recipes, 'premium' => $premium ) );
 
     $new_state = array(
         'name'                  => trim( $first_name . ' ' . $last_name ),
@@ -1285,6 +1302,7 @@ function ogape_ajax_register() {
         'recipes'               => $plan['recipes'],
         'plan'                  => $plan['label'],
         'price'                 => $plan['price'],
+        'premium'               => $plan['premium'],
         'zone_key'              => sanitize_key( wp_unslash( $_POST['zone_key'] ?? '' ) ),
         'zone'                  => sanitize_text_field( wp_unslash( $_POST['zone'] ?? '' ) ),
         'address'               => sanitize_text_field( wp_unslash( $_POST['address'] ?? '' ) ),
@@ -1436,19 +1454,22 @@ function ogape_ajax_update_plan() {
         ? (string) absint( $_POST['people'] ) : '2';
     $recipes = in_array( (string) absint( $_POST['recipes'] ?? 3 ), array( '2', '3', '4', '5' ), true )
         ? (string) absint( $_POST['recipes'] ) : '3';
+    $premium = ! empty( $_POST['premium'] );
 
-    $plan = ogape_demo_plan_from_state( array( 'people' => $people, 'recipes' => $recipes ) );
+    $plan = ogape_demo_plan_from_state( array( 'people' => $people, 'recipes' => $recipes, 'premium' => $premium ) );
 
     ogape_save_customer_meta( $user_id, array(
         'people'  => $plan['people'],
         'recipes' => $plan['recipes'],
         'price'   => $plan['price'],
         'plan'    => $plan['label'],
+        'premium' => $plan['premium'],
     ) );
 
     wp_send_json_success( array(
         'label'         => $plan['label'],
         'price_display' => ogape_demo_format_price( $plan['price'] ),
+        'premium'       => $plan['premium'],
     ) );
 }
 add_action( 'wp_ajax_ogape_update_plan', 'ogape_ajax_update_plan' );
