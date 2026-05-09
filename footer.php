@@ -6,7 +6,7 @@
     $footer_contact_email = ogape_get_contact_email();
     $footer_orders_email  = 'pedidos@ogape.com.py';
     $footer_logo_url      = get_stylesheet_directory_uri() . '/assets/img/ogape-logo.svg';
-    $footer_how_url       = home_url( '/como-funciona/' );
+    $footer_kits_url      = home_url( '/kits/' );
     $footer_menu_url      = home_url( '/menu/' );
     $footer_plans_url     = home_url( '/planes/' );
     $footer_coverage_url  = home_url( '/cobertura/' );
@@ -32,7 +32,7 @@
                 <div class="foot__col">
                     <h4>El producto</h4>
                     <ul>
-                        <li><a href="<?php echo esc_url( $footer_how_url ); ?>">Cómo funciona</a></li>
+                        <li><a href="<?php echo esc_url( $footer_kits_url ); ?>">Qué viene en el kit</a></li>
                         <li><a href="<?php echo esc_url( $footer_menu_url ); ?>">Menú de la semana</a></li>
                         <li><a href="<?php echo esc_url( $footer_plans_url ); ?>">Cajas &amp; precios</a></li>
                         <li><a href="<?php echo esc_url( $footer_coverage_url ); ?>">Zonas de entrega</a></li>

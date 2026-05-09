@@ -1,9 +1,11 @@
 <?php
 /**
- * Template Name: Cómo funciona
+ * Template Name: Kits
  * Template Post Type: page
  *
- * Legacy route kept for the Kits page while the canonical public slug moves to /kits/.
+ * Source design: website/project/kits.html (Website-handoff bundle, 2026-05-09).
+ * Design styles live in assets/css/kits-page.css, scoped under .kits-design.
+ * Theme nav/footer (header.php / footer.php) wrap this page.
  */
 
 get_header();
