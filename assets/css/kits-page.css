@@ -1218,18 +1218,22 @@ body.ogape-kits-page {
   margin-bottom: .4rem;
 }
 
-.kits-design .sust__stats .v {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 2.4vw + .5rem, 40px);
-  font-weight: 500;
-  color: #F7EFE3;
-  line-height: 1;
-  letter-spacing: -.01em;
+.kits-design .sust__stats > div {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: rgba(247, 239, 227, .07);
+  border: 1px solid rgba(247, 239, 227, .1);
+  min-height: 100%;
 }
 
-.kits-design .sust__stats .v em {
-  font-style: italic;
-  color: #BDD5A4;
+.kits-design .sust__stats .copy {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+  color: #F7EFE3;
+  max-width: 14ch;
 }
 
 .kits-design .final {

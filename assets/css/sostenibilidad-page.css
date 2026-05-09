@@ -1,0 +1,746 @@
+/*
+ * sostenibilidad-page.css — /sostenibilidad/ page
+ *
+ * Scoped under .sustainability-design to keep the rest of the theme untouched.
+ * The visual language extends the existing Kits / Planes system.
+ */
+
+body.ogape-sostenibilidad-page {
+  background: linear-gradient(180deg, #FAF4EA 0%, #F7EFE3 42%, #F1E6D6 100%);
+  background-color: #FAF4EA;
+}
+
+.sustainability-design,
+.sustainability-design *,
+.sustainability-design *::before,
+.sustainability-design *::after {
+  box-sizing: border-box;
+}
+
+.sustainability-design {
+  --s-panel: #233228;
+  --s-panel-deep: #18211A;
+  --s-panel-soft: #314336;
+  --s-olive: #BDD5A4;
+  --s-olive-deep: #97B07D;
+  --s-cream: #FAF4EA;
+  --s-kraft: #E8D6B8;
+  --s-line: rgba(17, 24, 39, .08);
+  --s-line-strong: rgba(17, 24, 39, .14);
+  --s-text-inverse: rgba(247, 239, 227, .76);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+.sustainability-design img {
+  max-width: 100%;
+  display: block;
+}
+
+.sustainability-design a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sustainability-design h1,
+.sustainability-design h2,
+.sustainability-design h3,
+.sustainability-design p,
+.sustainability-design ul,
+.sustainability-design blockquote,
+.sustainability-design figure {
+  margin: 0;
+}
+
+.sustainability-design ul {
+  padding: 0;
+  list-style: none;
+}
+
+.sustainability-design .wrap {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .sustainability-design .wrap {
+    padding: 0 var(--space-8);
+  }
+}
+
+@media (min-width: 1024px) {
+  .sustainability-design .wrap {
+    padding: 0 var(--space-10);
+  }
+}
+
+.sustainability-design .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--brand-primary-strong);
+}
+
+.sustainability-design .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  min-height: 52px;
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 600;
+  transition: transform .15s, box-shadow .15s, background .15s, border-color .15s, color .15s;
+}
+
+.sustainability-design .btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sustainability-design .btn--olive {
+  background: var(--s-olive);
+  color: #172014;
+  box-shadow: 0 12px 26px rgba(151, 176, 125, .28);
+}
+
+.sustainability-design .btn--olive:hover {
+  background: #C9DEB3;
+  transform: translateY(-1px);
+}
+
+.sustainability-design .btn--mist {
+  background: rgba(247, 239, 227, .08);
+  color: #F7EFE3;
+  border-color: rgba(247, 239, 227, .16);
+}
+
+.sustainability-design .btn--mist:hover {
+  background: rgba(247, 239, 227, .14);
+  border-color: rgba(247, 239, 227, .3);
+}
+
+.sustainability-design .section,
+.sustainability-design .quote,
+.sustainability-design .cta {
+  padding: var(--space-16) 0;
+}
+
+@media (min-width: 1024px) {
+  .sustainability-design .section,
+  .sustainability-design .quote,
+  .sustainability-design .cta {
+    padding: var(--space-20) 0;
+  }
+}
+
+.sustainability-design .section-head {
+  display: grid;
+  gap: var(--space-4);
+  margin-bottom: var(--space-10);
+}
+
+@media (min-width: 900px) {
+  .sustainability-design .section-head {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+    align-items: end;
+    gap: var(--space-8) var(--space-12);
+  }
+}
+
+.sustainability-design .section-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 2.5vw + .95rem, 3.25rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -.018em;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+.sustainability-design .section-head p {
+  max-width: 44ch;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.sustainability-design .hero {
+  padding: var(--space-12) 0 var(--space-10);
+  background:
+    radial-gradient(90% 70% at 100% 0%, rgba(131, 168, 106, .12), transparent 58%),
+    radial-gradient(65% 45% at 0% 100%, rgba(232, 160, 69, .12), transparent 60%),
+    linear-gradient(180deg, #FAF4EA 0%, #F7EFE3 62%, #F1E6D6 100%);
+}
+
+@media (min-width: 1024px) {
+  .sustainability-design .hero {
+    padding: var(--space-16) 0 var(--space-16);
+  }
+}
+
+.sustainability-design .hero__crumb {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: var(--space-8);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.sustainability-design .hero__crumb a {
+  color: var(--brand-primary-strong);
+}
+
+.sustainability-design .hero__crumb .sep {
+  opacity: .4;
+}
+
+.sustainability-design .hero__panel {
+  position: relative;
+  display: grid;
+  gap: var(--space-8);
+  padding: var(--space-8);
+  background: linear-gradient(135deg, var(--s-panel) 0%, var(--s-panel-deep) 100%);
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px -28px rgba(17, 24, 39, .42);
+}
+
+.sustainability-design .hero__panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(58% 56% at 100% 0%, rgba(189, 213, 164, .18), transparent 58%),
+    radial-gradient(50% 50% at 0% 100%, rgba(232, 160, 69, .18), transparent 60%);
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .sustainability-design .hero__panel {
+    grid-template-columns: 1.12fr .88fr;
+    gap: var(--space-12);
+    padding: var(--space-10);
+  }
+}
+
+.sustainability-design .hero__copy,
+.sustainability-design .hero__principles {
+  position: relative;
+  z-index: 1;
+}
+
+.sustainability-design .hero__copy .eyebrow {
+  color: #A9C58D;
+  margin-bottom: var(--space-5);
+}
+
+.sustainability-design .hero__copy h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 5vw + .75rem, 5.15rem);
+  font-weight: 500;
+  line-height: .95;
+  letter-spacing: -.028em;
+  color: #F7EFE3;
+  max-width: 11ch;
+  text-wrap: balance;
+  margin-bottom: var(--space-6);
+}
+
+.sustainability-design .hero__copy p {
+  max-width: 46ch;
+  font-size: clamp(1.02rem, .4vw + .96rem, 1.18rem);
+  line-height: 1.72;
+  color: var(--s-text-inverse);
+}
+
+.sustainability-design .hero__actions,
+.sustainability-design .cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+
+.sustainability-design .hero__principles {
+  display: grid;
+  gap: var(--space-4);
+  align-content: center;
+}
+
+.sustainability-design .principle-card {
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  background: rgba(247, 239, 227, .07);
+  border: 1px solid rgba(247, 239, 227, .11);
+  backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+
+.sustainability-design .principle-card__label {
+  display: block;
+  margin-bottom: .6rem;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #BDD5A4;
+}
+
+.sustainability-design .principle-card p {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+  color: #F7EFE3;
+}
+
+.sustainability-design .intro {
+  padding: 0 0 var(--space-8);
+}
+
+@media (min-width: 1024px) {
+  .sustainability-design .intro {
+    padding-bottom: var(--space-10);
+  }
+}
+
+.sustainability-design .intro__card {
+  position: relative;
+  padding: var(--space-8);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .7) 0%, rgba(255, 255, 255, .92) 100%);
+  border: 1px solid rgba(17, 24, 39, .08);
+  border-radius: 28px;
+  box-shadow: 0 24px 60px -36px rgba(17, 24, 39, .3);
+}
+
+.sustainability-design .intro__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(45% 50% at 100% 0%, rgba(232, 160, 69, .12), transparent 58%);
+  pointer-events: none;
+}
+
+.sustainability-design .intro__card .eyebrow,
+.sustainability-design .packaging .eyebrow,
+.sustainability-design .delivery .eyebrow,
+.sustainability-design .sourcing .eyebrow,
+.sustainability-design .cta .eyebrow {
+  margin-bottom: var(--space-4);
+}
+
+.sustainability-design .intro__card h2,
+.sustainability-design .feature__copy h2,
+.sustainability-design .delivery__copy h2,
+.sustainability-design .cta__card h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 2.3vw + .9rem, 3.1rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -.018em;
+  text-wrap: balance;
+}
+
+.sustainability-design .intro__card h2 {
+  max-width: 14ch;
+  margin-bottom: var(--space-4);
+}
+
+.sustainability-design .intro__card p {
+  max-width: 56ch;
+  font-size: 16px;
+  line-height: 1.72;
+  color: var(--text-secondary);
+}
+
+.sustainability-design .pillars__grid,
+.sustainability-design .packaging__grid,
+.sustainability-design .roadmap__grid {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 780px) {
+  .sustainability-design .pillars__grid,
+  .sustainability-design .packaging__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .sustainability-design .packaging__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .sustainability-design .roadmap__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.sustainability-design .pillar-card,
+.sustainability-design .pack-card,
+.sustainability-design .roadmap-card,
+.sustainability-design .sourcing-note {
+  background: rgba(255, 255, 255, .8);
+  border: 1px solid var(--s-line);
+  border-radius: 24px;
+  box-shadow: 0 22px 48px -34px rgba(17, 24, 39, .3);
+}
+
+.sustainability-design .pillar-card {
+  padding: var(--space-7);
+  min-height: 100%;
+}
+
+.sustainability-design .pillar-card__index {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: var(--space-4);
+  font-size: 12px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--brand-primary-strong);
+}
+
+.sustainability-design .pillar-card__index::after {
+  content: "";
+  width: 32px;
+  height: 1px;
+  background: rgba(154, 90, 8, .35);
+}
+
+.sustainability-design .pillar-card h3,
+.sustainability-design .pack-card h3,
+.sustainability-design .sourcing-note h3,
+.sustainability-design .roadmap-card__eyebrow {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -.01em;
+}
+
+.sustainability-design .pillar-card h3,
+.sustainability-design .pack-card h3,
+.sustainability-design .sourcing-note h3 {
+  font-size: 27px;
+  line-height: 1.12;
+  margin-bottom: var(--space-3);
+}
+
+.sustainability-design .pillar-card p,
+.sustainability-design .pack-card p,
+.sustainability-design .feature__copy p,
+.sustainability-design .sourcing-note p,
+.sustainability-design .delivery__copy p,
+.sustainability-design .roadmap-card li {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.sustainability-design .feature {
+  display: grid;
+  gap: var(--space-6);
+}
+
+@media (min-width: 980px) {
+  .sustainability-design .feature--split {
+    grid-template-columns: 1.08fr .92fr;
+    gap: var(--space-10);
+    align-items: stretch;
+  }
+}
+
+.sustainability-design .feature__copy h2 {
+  margin-bottom: var(--space-4);
+  max-width: 14ch;
+}
+
+.sustainability-design .feature__copy p {
+  max-width: 52ch;
+}
+
+.sustainability-design .bullet-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.sustainability-design .bullet-list li,
+.sustainability-design .delivery__list li,
+.sustainability-design .roadmap-card li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.sustainability-design .bullet-list li::before,
+.sustainability-design .delivery__list li::before,
+.sustainability-design .roadmap-card li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .7em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand-primary);
+  box-shadow: 0 0 0 4px rgba(232, 160, 69, .12);
+}
+
+.sustainability-design .sourcing-note {
+  padding: var(--space-8);
+  background:
+    radial-gradient(65% 60% at 100% 0%, rgba(189, 213, 164, .24), transparent 55%),
+    linear-gradient(180deg, #FFF9EE 0%, #FFFFFF 100%);
+  border-color: rgba(154, 90, 8, .18);
+}
+
+.sustainability-design .sourcing-note__eyebrow {
+  display: inline-flex;
+  margin-bottom: var(--space-4);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--brand-primary-strong);
+}
+
+.sustainability-design .packaging {
+  background:
+    radial-gradient(65% 50% at 0% 0%, rgba(232, 160, 69, .12), transparent 62%),
+    linear-gradient(180deg, #F7EFE3 0%, #FAF4EA 100%);
+}
+
+.sustainability-design .pack-card {
+  padding: var(--space-6);
+  min-height: 100%;
+}
+
+.sustainability-design .delivery {
+  background: #F6EEDF;
+}
+
+.sustainability-design .delivery__card,
+.sustainability-design .cta__card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 32px;
+  background: linear-gradient(135deg, var(--s-panel) 0%, var(--s-panel-deep) 100%);
+  color: #F7EFE3;
+  box-shadow: 0 30px 80px -30px rgba(17, 24, 39, .42);
+}
+
+.sustainability-design .delivery__card::before,
+.sustainability-design .cta__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 50% at 100% 0%, rgba(189, 213, 164, .18), transparent 58%),
+    radial-gradient(50% 45% at 0% 100%, rgba(232, 160, 69, .18), transparent 60%);
+  pointer-events: none;
+}
+
+.sustainability-design .delivery__card {
+  display: grid;
+  gap: var(--space-8);
+  padding: var(--space-8);
+}
+
+@media (min-width: 960px) {
+  .sustainability-design .delivery__card {
+    grid-template-columns: 1.1fr .9fr;
+    gap: var(--space-10);
+    align-items: center;
+    padding: var(--space-10);
+  }
+}
+
+.sustainability-design .delivery__copy,
+.sustainability-design .delivery__list,
+.sustainability-design .cta__card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.sustainability-design .delivery__copy .eyebrow,
+.sustainability-design .cta__card .eyebrow {
+  color: #A9C58D;
+}
+
+.sustainability-design .delivery__copy h2 {
+  max-width: 13ch;
+  margin-bottom: var(--space-4);
+  color: #F7EFE3;
+}
+
+.sustainability-design .delivery__copy p {
+  color: var(--s-text-inverse);
+  max-width: 46ch;
+}
+
+.sustainability-design .delivery__list {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border-radius: 24px;
+  background: rgba(247, 239, 227, .07);
+  border: 1px solid rgba(247, 239, 227, .1);
+}
+
+.sustainability-design .delivery__list li {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #F7EFE3;
+}
+
+.sustainability-design .delivery__list li::before {
+  background: #BDD5A4;
+  box-shadow: 0 0 0 4px rgba(189, 213, 164, .12);
+}
+
+.sustainability-design .roadmap-card {
+  padding: var(--space-7);
+}
+
+.sustainability-design .roadmap-card--future {
+  background:
+    radial-gradient(60% 45% at 100% 0%, rgba(189, 213, 164, .18), transparent 55%),
+    rgba(255, 255, 255, .9);
+}
+
+.sustainability-design .roadmap-card__eyebrow {
+  display: block;
+  margin-bottom: var(--space-5);
+  font-size: 32px;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.sustainability-design .roadmap-card ul {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.sustainability-design .quote {
+  padding-top: var(--space-6);
+  background:
+    radial-gradient(80% 60% at 50% 0%, rgba(232, 160, 69, .16), transparent 60%),
+    linear-gradient(180deg, #FAF4EA 0%, #F7EFE3 100%);
+}
+
+.sustainability-design .quote__card {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.sustainability-design .quote__card p {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 2.8vw + 1rem, 4rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -.02em;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.sustainability-design .quote__card cite {
+  display: block;
+  max-width: 42ch;
+  margin: var(--space-5) auto 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  font-style: normal;
+}
+
+.sustainability-design .cta {
+  padding-top: var(--space-10);
+}
+
+.sustainability-design .cta__card {
+  padding: var(--space-8);
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .sustainability-design .cta__card {
+    padding: var(--space-10) var(--space-12);
+  }
+}
+
+.sustainability-design .cta__card h2 {
+  max-width: 12ch;
+  margin: 0 auto var(--space-4);
+  color: #F7EFE3;
+}
+
+.sustainability-design .cta__card p {
+  max-width: 42ch;
+  margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--s-text-inverse);
+}
+
+.sustainability-design .cta__actions {
+  justify-content: center;
+}
+
+@media (max-width: 779px) {
+  .sustainability-design .packaging__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 599px) {
+  .sustainability-design .hero__panel,
+  .sustainability-design .intro__card,
+  .sustainability-design .delivery__card,
+  .sustainability-design .cta__card,
+  .sustainability-design .sourcing-note,
+  .sustainability-design .pillar-card,
+  .sustainability-design .pack-card,
+  .sustainability-design .roadmap-card {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .sustainability-design .packaging__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sustainability-design .btn {
+    width: 100%;
+  }
+
+  .sustainability-design .hero__actions,
+  .sustainability-design .cta__actions {
+    flex-direction: column;
+  }
+
+  .sustainability-design .hero__copy h1 {
+    max-width: 9ch;
+  }
+}

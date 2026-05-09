@@ -132,17 +132,17 @@ $hero_image_url     = get_stylesheet_directory_uri() . '/assets/img/kits-hero-bo
                     <p>Cilantro fresco, hierbas del monte, mezclas de especias dosificadas — un sobre por receta, sin sobras de bolsas a medio usar.</p>
                     <div class="vis">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-3 4-3 9 0 12 3-3 3-8 0-12Z"/><path d="M12 15v6"/></svg>
-                        Sobres dosificados · cero merma
+                        Sobres dosificados · pensado para usar lo justo
                     </div>
                 </article>
 
                 <article class="inv-card inv--sm">
                     <span class="num">vi.</span>
-                    <h3>Embalaje compostable</h3>
+                    <h3>Empaque consciente</h3>
                     <p>Cartón reciclado, aislante de papel, bolsas de almidón. Te dejamos la guía de qué hacer con cada parte.</p>
                     <div class="vis">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6M9 6l3-3 3 3"/><path d="M5 12c0 5 3 8 7 8s7-3 7-8"/></svg>
-                        100 % compostable
+                        Compostable o reciclable según componente
                     </div>
                 </article>
             </div>
@@ -319,7 +319,7 @@ $hero_image_url     = get_stylesheet_directory_uri() . '/assets/img/kits-hero-bo
                             <span class="ico" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12l-2 7H8Z"/><path d="M9 11v6a3 3 0 0 0 6 0v-6"/></svg>
                             </span>
-                            <div><b>Especias y condimentos especiales</b><span class="sub">un sobre dosificado por receta · cero merma</span></div>
+                            <div><b>Especias y condimentos especiales</b><span class="sub">un sobre dosificado por receta · pensado para usar lo justo</span></div>
                         </li>
                         <li>
                             <span class="ico" aria-hidden="true">
@@ -403,7 +403,7 @@ $hero_image_url     = get_stylesheet_directory_uri() . '/assets/img/kits-hero-bo
 
                 <article class="v-card">
                     <span class="n">ii.</span>
-                    <h3>Cero desperdicio</h3>
+                    <h3>Menos desperdicio</h3>
                     <p>Te llega lo justo. La cebolla viene a la mitad si la receta pide media cebolla. El cilantro, en gramos. Lo que no entra a tu plato, no entra a tu basura.</p>
                     <p class="quote">Lo medimos en la cocina, no en el packaging.</p>
                 </article>
@@ -432,7 +432,7 @@ $hero_image_url     = get_stylesheet_directory_uri() . '/assets/img/kits-hero-bo
                 <article class="v-card">
                     <span class="n">vi.</span>
                     <h3>Frescura local</h3>
-                    <p>Productores del departamento Central, pescadores del Paraná, hierbas de huerta a 60 km. Pescado del jueves — no del congelador del miércoles pasado.</p>
+                    <p>Productores del departamento Central, pescadores del Paraná, hierbas de huerta de cerca. Pescado del jueves — no del congelador del miércoles pasado.</p>
                     <p class="quote">Sabe a Paraguay porque vive en Paraguay.</p>
                 </article>
             </div>
@@ -455,18 +455,15 @@ $hero_image_url     = get_stylesheet_directory_uri() . '/assets/img/kits-hero-bo
                     <div class="sust__stats">
                         <div>
                             <span class="k">Porción exacta</span>
-                            <span class="v"><em>-72 %</em></span>
-                            <span class="k">desperdicio</span>
+                            <span class="copy">Comprás lo que vas a cocinar.</span>
                         </div>
                         <div>
-                            <span class="k">Origen</span>
-                            <span class="v"><em>60 km</em></span>
-                            <span class="k">radio promedio</span>
+                            <span class="k">Origen cercano</span>
+                            <span class="copy">Priorizamos proveedores locales cuando es posible.</span>
                         </div>
                         <div>
-                            <span class="k">Embalaje</span>
-                            <span class="v"><em>100 %</em></span>
-                            <span class="k">compostable</span>
+                            <span class="k">Empaque consciente</span>
+                            <span class="copy">Protege, presenta y reduce residuos.</span>
                         </div>
                     </div>
                 </div>

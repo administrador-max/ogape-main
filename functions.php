@@ -353,15 +353,16 @@ function ogape_enqueue_assets() {
     $patterns_version = filemtime( get_stylesheet_directory() . '/assets/css/components/patterns.css' );
     $script_version   = filemtime( get_stylesheet_directory() . '/assets/js/main.js' );
 
-    $is_future_site      = ogape_is_public_page( 'future-site' );
-    $is_kits_page        = ogape_is_public_page( 'kits' ) || ogape_is_public_page( 'como-funciona' );
-    $is_menu_page        = ogape_is_public_page( 'menu' );
-    $is_planes_page      = ogape_is_public_page( 'planes' );
-    $is_register_page    = ogape_is_public_page( 'register' );
-    $is_account_page     = ogape_is_public_page( 'account' );
-    $is_login_page       = ogape_is_public_page( 'login' );
-    $is_elegir_menu_page = ogape_is_public_page( 'elegir-menu' );
-    $is_handoff_design   = $is_register_page || $is_login_page || $is_elegir_menu_page;
+    $is_future_site         = ogape_is_public_page( 'future-site' );
+    $is_kits_page           = ogape_is_public_page( 'kits' ) || ogape_is_public_page( 'como-funciona' );
+    $is_menu_page           = ogape_is_public_page( 'menu' );
+    $is_planes_page         = ogape_is_public_page( 'planes' );
+    $is_sostenibilidad_page = ogape_is_public_page( 'sostenibilidad' );
+    $is_register_page       = ogape_is_public_page( 'register' );
+    $is_account_page        = ogape_is_public_page( 'account' );
+    $is_login_page          = ogape_is_public_page( 'login' );
+    $is_elegir_menu_page    = ogape_is_public_page( 'elegir-menu' );
+    $is_handoff_design      = $is_register_page || $is_login_page || $is_elegir_menu_page;
 
     // 1. Design tokens (must load first — all other CSS depends on these)
     wp_enqueue_style(
@@ -430,6 +431,15 @@ function ogape_enqueue_assets() {
             get_stylesheet_directory_uri() . '/assets/css/planes-page.css',
             array( 'ogape-production-polish' ),
             filemtime( get_stylesheet_directory() . '/assets/css/planes-page.css' )
+        );
+    }
+
+    if ( $is_sostenibilidad_page ) {
+        wp_enqueue_style(
+            'ogape-sostenibilidad-page',
+            get_stylesheet_directory_uri() . '/assets/css/sostenibilidad-page.css',
+            array( 'ogape-production-polish' ),
+            filemtime( get_stylesheet_directory() . '/assets/css/sostenibilidad-page.css' )
         );
     }
 
@@ -547,6 +557,10 @@ function ogape_body_classes( $classes ) {
 
     if ( ogape_is_public_page( 'planes' ) ) {
         $classes[] = 'ogape-planes-page';
+    }
+
+    if ( ogape_is_public_page( 'sostenibilidad' ) ) {
+        $classes[] = 'ogape-sostenibilidad-page';
     }
 
     if ( ogape_is_public_page( 'register' ) ) {
