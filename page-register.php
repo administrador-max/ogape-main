@@ -65,15 +65,15 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
       <div class="steps" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1" id="register-stepper">
         <div class="step is-active" data-step="1">
           <div class="step__bar"></div>
-          <div class="step__label"><span class="step__num">i.</span> Tu cuenta</div>
+          <div class="step__label"><span class="step__num">i.</span> Tu caja</div>
         </div>
         <div class="step" data-step="2">
           <div class="step__bar"></div>
-          <div class="step__label"><span class="step__num">ii.</span> Entrega</div>
+          <div class="step__label"><span class="step__num">ii.</span> Tu cuenta</div>
         </div>
         <div class="step" data-step="3">
           <div class="step__bar"></div>
-          <div class="step__label"><span class="step__num">iii.</span> Tu caja</div>
+          <div class="step__label"><span class="step__num">iii.</span> Entrega</div>
         </div>
         <div class="step" data-step="4">
           <div class="step__bar"></div>
@@ -87,8 +87,8 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
 	        <input type="hidden" name="zone" id="register-zoneLabel" value="">
 	        <input type="hidden" name="delivery_window_label" id="register-windowLabel" value="Tarde · 14:00 – 19:00">
 
-        <!-- PANEL 1 — ACCOUNT -->
-        <div class="panel is-active" data-panel="1">
+        <!-- PANEL 2 — ACCOUNT -->
+        <div class="panel" data-panel="2">
           <h2 class="panel__h">Tu cuenta</h2>
           <p class="panel__p">Con esto guardamos tus preferencias, historial de recetas y la dirección para el repartidor.</p>
 
@@ -146,8 +146,8 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
           </div>
         </div>
 
-        <!-- PANEL 2 — DELIVERY -->
-        <div class="panel" data-panel="2">
+        <!-- PANEL 3 — DELIVERY -->
+        <div class="panel" data-panel="3">
           <h2 class="panel__h">Entrega en Asunción</h2>
           <p class="panel__p">Hacemos entregas los jueves entre 10:00 y 19:00. Elegí tu barrio y dejanos la dirección exacta — si no estás, dejamos en portería.</p>
 
@@ -199,8 +199,8 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
           </div>
         </div>
 
-        <!-- PANEL 3 — BOX -->
-        <div class="panel" data-panel="3">
+        <!-- PANEL 1 — BOX -->
+        <div class="panel is-active" data-panel="1">
           <h2 class="panel__h">Tu caja de la semana</h2>
           <p class="panel__p">Podés cambiar el tamaño cada semana — esto es solo tu punto de partida.</p>
 
@@ -228,6 +228,15 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
 
           <label class="lbl" style="margin-bottom:var(--space-3);display:block">¿Cuántas recetas por semana?</label>
           <div class="opts opts--4" style="margin-bottom:var(--space-6)">
+            <label class="opt" data-group="recipes" data-val="2">
+              <input type="radio" name="recipes" value="2">
+              <span class="opt__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg></span>
+              <span class="opt__body">
+                <span class="opt__k">2 recetas</span>
+                <span class="opt__n">Cata</span>
+                <span class="opt__p">probar el servicio</span>
+              </span>
+            </label>
             <label class="opt is-checked" data-group="recipes" data-val="3">
               <input type="radio" name="recipes" value="3" checked>
               <span class="opt__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg></span>
@@ -255,15 +264,6 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
                 <span class="opt__p">toda la semana</span>
               </span>
             </label>
-            <label class="opt" data-group="recipes" data-val="2">
-              <input type="radio" name="recipes" value="2">
-              <span class="opt__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"/></svg></span>
-              <span class="opt__body">
-                <span class="opt__k">2 recetas</span>
-                <span class="opt__n">Cata</span>
-                <span class="opt__p">probar el servicio</span>
-              </span>
-            </label>
           </div>
 
           <label class="lbl" style="margin-bottom:var(--space-3);display:block">Preferencias — podés marcar varias</label>
@@ -282,6 +282,11 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
             <label class="lbl" for="register-allergies">Alergias o ingredientes a evitar</label>
 	            <input class="input" id="register-allergies" name="allergies" type="text" placeholder="Maní, mariscos — opcional">
           </div>
+
+          <div class="price-line" style="margin-top:var(--space-6)">
+            <div class="k">Subtotal<b id="register-boxSubtotalLabel">Para 2 · 3 recetas</b></div>
+            <div class="v" id="register-boxSubtotalPrice">Gs 285.000<small>/ semana</small></div>
+          </div>
         </div>
 
         <!-- PANEL 4 — CONFIRM -->
@@ -295,9 +300,9 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
           </div>
 
           <div class="summary">
-            <div class="sum-row"><span class="k">Cuenta</span><span class="v" id="register-sumAccount">—<small id="register-sumAccountSub">—</small></span><button type="button" class="edit" data-goto="1">Editar</button></div>
-            <div class="sum-row"><span class="k">Entrega</span><span class="v" id="register-sumDelivery">—<small id="register-sumDeliverySub">Jueves · 14:00 – 19:00</small></span><button type="button" class="edit" data-goto="2">Editar</button></div>
-            <div class="sum-row"><span class="k">Caja</span><span class="v" id="register-sumBox">Para 2 · 3 recetas<small id="register-sumBoxSub">Sin preferencias marcadas</small></span><button type="button" class="edit" data-goto="3">Editar</button></div>
+            <div class="sum-row"><span class="k">Caja</span><span class="v" id="register-sumBox">Para 2 · 3 recetas<small id="register-sumBoxSub">Sin preferencias marcadas</small></span><button type="button" class="edit" data-goto="1">Editar</button></div>
+            <div class="sum-row"><span class="k">Cuenta</span><span class="v" id="register-sumAccount">—<small id="register-sumAccountSub">—</small></span><button type="button" class="edit" data-goto="2">Editar</button></div>
+            <div class="sum-row"><span class="k">Entrega</span><span class="v" id="register-sumDelivery">—<small id="register-sumDeliverySub">Jueves · 14:00 – 19:00</small></span><button type="button" class="edit" data-goto="3">Editar</button></div>
 	            <div class="sum-row"><span class="k">Primera entrega</span><span class="v"><?php echo esc_html( $delivery_short_label ); ?><small>Cierre de pedidos <?php echo esc_html( $cutoff_label ); ?> · <?php echo esc_html( $cutoff_time ); ?></small></span><span></span></div>
           </div>
 
@@ -442,7 +447,7 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
 	  function validateStep(step) {
 	    clearValidation();
 
-	    if (step === 1) {
+	    if (step === 2) {
 	      if (!$('#register-fname').value.trim()) {
 	        showValidation('Completá tu nombre para seguir.', $('#register-fname'));
 	        return false;
@@ -465,7 +470,7 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
 	      }
 	    }
 
-	    if (step === 2) {
+	    if (step === 3) {
 	      if (!$('#register-zone').value) {
 	        showValidation('Elegí tu barrio o zona de entrega.', $('#register-zone'));
 	        return false;
@@ -604,6 +609,10 @@ $cutoff_time          = $schedule['cutoff_time'] ?? '23:59';
     var p = currentPlan();
     $('#register-asidePlan').textContent = p.label;
     $('#register-asidePrice').textContent = fmtGs(p.price);
+    var subLabel = $('#register-boxSubtotalLabel');
+    var subPrice = $('#register-boxSubtotalPrice');
+    if (subLabel) subLabel.textContent = p.label;
+    if (subPrice) subPrice.innerHTML = fmtGs(p.price) + '<small>/ semana</small>';
   }
   function refreshSummary() {
     var p = currentPlan();
