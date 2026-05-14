@@ -16,7 +16,6 @@ $menu_url           = home_url( '/menu/' );
 $how_url            = home_url( '/kits/' );
 $gift_url           = home_url( '/tarjetas-regalo/' );
 $sustainability_url = home_url( '/sostenibilidad/' );
-$alliances_url      = home_url( '/alianzas/' );
 $coverage_url       = home_url( '/cobertura/' );
 $login_url          = home_url( '/login/' );
 $faq_url            = home_url( '/faq/' );
