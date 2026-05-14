@@ -37,7 +37,6 @@
         array( 'label' => 'Kits',            'url' => home_url( '/kits/' ) ),
         array( 'label' => 'Tarjetas regalo', 'url' => home_url( '/tarjetas-regalo/' ) ),
         array( 'label' => 'Sostenibilidad',  'url' => home_url( '/sostenibilidad/' ) ),
-        array( 'label' => 'Alianzas',        'url' => home_url( '/alianzas/' ) ),
     );
     ?>
 

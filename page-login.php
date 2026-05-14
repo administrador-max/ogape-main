@@ -55,7 +55,6 @@ if ( isset( $_GET['reset'] ) ) {
         <li><a href="<?php echo esc_url( $kits_url ); ?>">Kits</a></li>
         <li><a href="<?php echo esc_url( home_url( '/tarjetas-regalo/' ) ); ?>">Tarjetas regalo</a></li>
         <li><a href="<?php echo esc_url( home_url( '/sostenibilidad/' ) ); ?>">Sostenibilidad</a></li>
-        <li><a href="<?php echo esc_url( home_url( '/alianzas/' ) ); ?>">Alianzas</a></li>
       </ul>
     </nav>
     <div class="nav__right">

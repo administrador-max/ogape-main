@@ -82,10 +82,6 @@ function ogape_get_virtual_theme_pages() {
             'template' => 'page-sostenibilidad.php',
             'title'    => __( 'Sostenibilidad', 'ogape-child' ),
         ),
-        'alianzas'        => array(
-            'template' => 'page-alianzas.php',
-            'title'    => __( 'Alianzas', 'ogape-child' ),
-        ),
     );
 }
 
@@ -848,7 +844,6 @@ function ogape_redirect_non_waitlist_pages() {
         'como-funciona',
         'tarjetas-regalo',
         'sostenibilidad',
-        'alianzas',
         'cobertura',
         'contacto',
         'mision',
