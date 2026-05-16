@@ -1096,6 +1096,14 @@ function ogape_normalize_menu_recipe_item( $recipe ) {
 }
 
 function ogape_get_current_menu_recipes() {
+    $actual_menu = function_exists( 'ogape_get_week_menu_recipes' )
+        ? ogape_get_week_menu_recipes()
+        : array();
+
+    if ( $actual_menu ) {
+        return $actual_menu;
+    }
+
     $fallback = ogape_default_menu_recipes();
     $caja_obj = ogape_get_current_caja();
 
@@ -1180,11 +1188,6 @@ function ogape_get_user_selected_menu_recipe_snapshot( $user_id, $week_key = '' 
 }
 
 function ogape_get_account_selected_menu_recipes( $user_id, $week_key = '', $limit = 0 ) {
-    $snapshot = ogape_get_user_selected_menu_recipe_snapshot( $user_id, $week_key );
-    if ( $snapshot ) {
-        return $limit ? array_slice( $snapshot, 0, absint( $limit ) ) : $snapshot;
-    }
-
     $recipes = ogape_get_current_menu_recipes();
     if ( ! $recipes ) {
         return array();
@@ -1198,6 +1201,25 @@ function ogape_get_account_selected_menu_recipes( $user_id, $week_key = '', $lim
             continue;
         }
         $recipe_index[ $recipe['id'] ] = $recipe;
+    }
+
+    $snapshot = ogape_get_user_selected_menu_recipe_snapshot( $user_id, $week_key );
+    if ( $snapshot ) {
+        $snapshot_selected = array();
+
+        foreach ( $snapshot as $recipe ) {
+            $recipe_id = sanitize_key( $recipe['id'] ?? '' );
+            if ( '' === $recipe_id || empty( $recipe_index[ $recipe_id ] ) ) {
+                continue;
+            }
+
+            // Always render the latest canonical recipe payload for the active menu.
+            $snapshot_selected[] = $recipe_index[ $recipe_id ];
+        }
+
+        if ( $snapshot_selected ) {
+            return $limit ? array_slice( $snapshot_selected, 0, $limit ) : $snapshot_selected;
+        }
     }
 
     $selected_ids = ogape_get_user_selected_menu_recipe_ids( $user_id, $week_key );

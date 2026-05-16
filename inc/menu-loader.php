@@ -313,3 +313,151 @@ if ( ! function_exists( 'ogape_render_menu_picture_html' ) ) {
         return trim( ob_get_clean() );
     }
 }
+
+if ( ! function_exists( 'ogape_get_menu_recipe_gradients' ) ) {
+    function ogape_get_menu_recipe_gradients() {
+        return array(
+            'radial-gradient(circle at 35% 40%, #F0B765 0%, transparent 55%), radial-gradient(circle at 70% 65%, #E8A045 0%, transparent 55%), linear-gradient(135deg, #9A5A08, #C88B3A)',
+            'radial-gradient(circle at 30% 45%, #C88B3A 0%, transparent 48%), radial-gradient(circle at 70% 60%, #9A5A08 0%, transparent 55%), linear-gradient(135deg, #3B2A14, #6B4A1E 70%, #8B5A1C)',
+            'radial-gradient(circle at 30% 35%, #F0B765, transparent 50%), radial-gradient(circle at 72% 70%, #4A7A3A, transparent 55%), linear-gradient(135deg, #C88B3A, #9A5A08)',
+            'radial-gradient(circle at 35% 40%, #FFD783, transparent 55%), radial-gradient(circle at 72% 68%, #E8A045, transparent 55%), linear-gradient(135deg, #C88B3A, #9A5A08)',
+            'radial-gradient(circle at 35% 40%, #C9D97A, transparent 55%), radial-gradient(circle at 70% 65%, #6B8A3A, transparent 55%), linear-gradient(135deg, #3E5A27, #6B8A3A)',
+            'radial-gradient(circle at 35% 40%, #F0A8B8, transparent 55%), radial-gradient(circle at 70% 65%, #C86A7A, transparent 55%), linear-gradient(135deg, #9A3E4E, #C86A7A)',
+        );
+    }
+}
+
+if ( ! function_exists( 'ogape_get_menu_recipe_gradient' ) ) {
+    function ogape_get_menu_recipe_gradient( $slug ) {
+        $gradients = ogape_get_menu_recipe_gradients();
+        $index     = (int) sprintf( '%u', crc32( (string) $slug ) ) % count( $gradients );
+
+        return $gradients[ $index ];
+    }
+}
+
+if ( ! function_exists( 'ogape_normalize_menu_time_display' ) ) {
+    function ogape_normalize_menu_time_display( $time_label ) {
+        $time_label = trim( (string) $time_label );
+
+        if ( '' === $time_label ) {
+            return '35 min';
+        }
+
+        return str_replace(
+            array( ' minutos', ' minuto', ' Minutos', ' Minuto' ),
+            array( ' min', ' min', ' min', ' min' ),
+            $time_label
+        );
+    }
+}
+
+if ( ! function_exists( 'ogape_format_menu_difficulty_display' ) ) {
+    function ogape_format_menu_difficulty_display( $difficulty_label ) {
+        $difficulty = sanitize_text_field( $difficulty_label );
+
+        if ( '' === $difficulty ) {
+            return 'Media';
+        }
+
+        $difficulty_map = array(
+            'baja'  => 'Fácil',
+            'media' => 'Media',
+            'alta'  => 'Alta',
+            'facil' => 'Fácil',
+        );
+
+        $normalized = sanitize_key( remove_accents( $difficulty ) );
+
+        return $difficulty_map[ $normalized ] ?? ucfirst( strtolower( $difficulty ) );
+    }
+}
+
+if ( ! function_exists( 'ogape_get_week_menu_recipes' ) ) {
+    function ogape_get_week_menu_recipes( $week_number = 0 ) {
+        $week_number = absint( $week_number );
+        $raw_dishes  = $week_number ? ogape_get_week( $week_number ) : ogape_get_week( ogape_get_active_week() );
+
+        if ( empty( $raw_dishes ) ) {
+            $raw_dishes = ogape_get_pilot_menu();
+        }
+
+        $raw_dishes = array_values( $raw_dishes );
+        $hero_slug  = '';
+
+        foreach ( $raw_dishes as $dish_candidate ) {
+            if ( 'premium' === ( $dish_candidate['category'] ?? '' ) ) {
+                $hero_slug = $dish_candidate['slug'] ?? '';
+                break;
+            }
+        }
+
+        if ( '' === $hero_slug ) {
+            foreach ( $raw_dishes as $dish_candidate ) {
+                if ( empty( $dish_candidate['is_staple'] ) ) {
+                    $hero_slug = $dish_candidate['slug'] ?? '';
+                    break;
+                }
+            }
+        }
+
+        if ( '' === $hero_slug && ! empty( $raw_dishes[0]['slug'] ) ) {
+            $hero_slug = $raw_dishes[0]['slug'];
+        }
+
+        if ( $hero_slug ) {
+            foreach ( $raw_dishes as $index => $dish_candidate ) {
+                if ( ( $dish_candidate['slug'] ?? '' ) !== $hero_slug ) {
+                    continue;
+                }
+
+                if ( 0 !== $index ) {
+                    $hero_dish = $dish_candidate;
+                    array_splice( $raw_dishes, $index, 1 );
+                    array_unshift( $raw_dishes, $hero_dish );
+                }
+                break;
+            }
+        }
+
+        $recipes = array();
+        foreach ( $raw_dishes as $dish ) {
+            $dish_id = sanitize_key( $dish['slug'] ?? '' );
+            if ( '' === $dish_id ) {
+                continue;
+            }
+
+            $tags = array();
+            foreach ( $dish['tags'] ?? array() as $tag ) {
+                if ( ! is_array( $tag ) ) {
+                    continue;
+                }
+
+                $label = sanitize_text_field( $tag['label'] ?? '' );
+                $type  = sanitize_key( $tag['type'] ?? '' );
+                if ( '' === $label || '' === $type ) {
+                    continue;
+                }
+
+                $tags[] = array(
+                    'label' => $label,
+                    'type'  => $type,
+                );
+            }
+
+            $recipes[] = array(
+                'id'         => $dish_id,
+                'name'       => sanitize_text_field( $dish['name_es'] ?? '' ),
+                'desc'       => sanitize_textarea_field( $dish['description_es'] ?? '' ),
+                'tags'       => $tags,
+                'time'       => ogape_normalize_menu_time_display( $dish['time_display'] ?? '' ),
+                'difficulty' => ogape_format_menu_difficulty_display( $dish['difficulty_label'] ?? '' ),
+                'allergens'  => sanitize_text_field( $dish['allergens_display'] ?? 'Sin dato' ),
+                'isHero'     => $dish_id === sanitize_key( $hero_slug ),
+                'photoGrad'  => ogape_get_menu_recipe_gradient( $dish_id ),
+            );
+        }
+
+        return $recipes;
+    }
+}
