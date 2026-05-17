@@ -358,6 +358,7 @@ function ogape_enqueue_assets() {
     $is_kits_page           = ogape_is_public_page( 'kits' ) || ogape_is_public_page( 'como-funciona' );
     $is_menu_page           = ogape_is_public_page( 'menu' );
     $is_planes_page         = ogape_is_public_page( 'planes' );
+    $is_nosotros_page       = ogape_is_public_page( 'nosotros' );
     $is_sostenibilidad_page = ogape_is_public_page( 'sostenibilidad' );
     $is_register_page       = ogape_is_public_page( 'register' );
     $is_account_page        = ogape_is_public_page( 'account' );
@@ -450,6 +451,15 @@ function ogape_enqueue_assets() {
             get_stylesheet_directory_uri() . '/assets/css/sostenibilidad-page.css',
             array( 'ogape-production-polish' ),
             filemtime( get_stylesheet_directory() . '/assets/css/sostenibilidad-page.css' )
+        );
+    }
+
+    if ( $is_nosotros_page ) {
+        wp_enqueue_style(
+            'ogape-nosotros-page',
+            get_stylesheet_directory_uri() . '/assets/css/nosotros-page.css',
+            array( 'ogape-production-polish' ),
+            filemtime( get_stylesheet_directory() . '/assets/css/nosotros-page.css' )
         );
     }
 
