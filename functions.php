@@ -743,7 +743,12 @@ function ogape_get_default_og_image_url() {
         }
     }
 
-    return get_stylesheet_directory_uri() . '/assets/img/og-default.jpg';
+    $path = get_stylesheet_directory() . '/assets/img/og-default.jpg';
+    if ( file_exists( $path ) ) {
+        return get_stylesheet_directory_uri() . '/assets/img/og-default.jpg';
+    }
+
+    return '';
 }
 
 /**

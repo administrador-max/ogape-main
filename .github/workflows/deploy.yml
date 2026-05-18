@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Install rsync and SSH client
         run: |
@@ -40,5 +40,10 @@ jobs:
             --exclude='.git' \
             --exclude='.github' \
             --exclude='node_modules' \
+            --exclude='assets/images/' \
+            --exclude='.wp-env.json' \
+            --exclude='ASSET_BUILD_INSTRUCTIONS.md' \
+            --exclude='README-BRAND.md' \
+            --exclude='wp-config-sample.php' \
             -e "ssh -i ~/.ssh/id_ed25519 -p $PORT" \
             ./ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
