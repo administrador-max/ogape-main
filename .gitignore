@@ -1,3 +1,4 @@
 .claude/handoff-preview/
 node_modules/
 package-lock.json
+assets/images/
