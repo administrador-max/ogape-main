@@ -45,7 +45,7 @@
         <div class="container nav__inner">
 
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="nav__brand" aria-label="Ogape · inicio">
-                <img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/img/ogape-logo.svg' ); ?>" alt="">
+                <img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/img/ogape-logo.svg' ); ?>" alt="Ogape">
                 <span>
                     <span class="wordmark">Ogape</span>
                     <span class="where">Tu Chef en Casa</span>

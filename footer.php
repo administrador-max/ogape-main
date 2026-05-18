@@ -21,7 +21,7 @@
             <div class="foot__top">
                 <div>
                     <div class="foot__brand">
-                        <img src="<?php echo esc_url( $footer_logo_url ); ?>" alt="">
+                        <img src="<?php echo esc_url( $footer_logo_url ); ?>" alt="Ogape">
                         <div>
                             <div class="foot__wordmark">Ogape</div>
                             <span class="foot__where">Tu Chef en Casa</span>
