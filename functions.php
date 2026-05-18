@@ -924,33 +924,112 @@ add_action( 'template_redirect', 'ogape_render_virtual_theme_page', 0 );
 
 /**
  * Demo account helpers for test-ready future-site account flow.
+ *
+ * Cookie format: base64(json) . '.' . hmac_sha256(base64(json), AUTH_KEY)
+ * The HMAC prevents clients from forging or tampering with session state.
  */
 function ogape_get_demo_account_key() {
     return 'ogape_demo_account';
 }
 
+/**
+ * Sign a cookie payload with HMAC-SHA256.
+ *
+ * @param string $payload The base64-encoded JSON payload.
+ * @return string Signed value in the format "{payload}.{signature}".
+ */
+function ogape_sign_cookie_payload( $payload ) {
+    $secret = defined( 'AUTH_KEY' ) ? AUTH_KEY : wp_salt( 'auth' );
+    $sig    = hash_hmac( 'sha256', $payload, $secret );
+    return $payload . '.' . $sig;
+}
+
+/**
+ * Verify and decode a signed cookie value.
+ *
+ * Returns the decoded array on success, or null if the signature is invalid
+ * or the payload cannot be decoded. Null signals a tampered or legacy cookie.
+ *
+ * @param string $cookie_value Raw value from $_COOKIE.
+ * @return array|null
+ */
+function ogape_verify_cookie_payload( $cookie_value ) {
+    $last_dot = strrpos( $cookie_value, '.' );
+    if ( false === $last_dot ) {
+        return null; // Legacy unsigned cookie — reject.
+    }
+
+    $payload  = substr( $cookie_value, 0, $last_dot );
+    $sig      = substr( $cookie_value, $last_dot + 1 );
+    $secret   = defined( 'AUTH_KEY' ) ? AUTH_KEY : wp_salt( 'auth' );
+    $expected = hash_hmac( 'sha256', $payload, $secret );
+
+    if ( ! hash_equals( $expected, $sig ) ) {
+        return null; // Signature mismatch — reject.
+    }
+
+    $decoded = json_decode( base64_decode( $payload ), true );
+    return is_array( $decoded ) ? $decoded : null;
+}
+
+/**
+ * Read and verify the demo account state cookie.
+ *
+ * @return array Decoded state array, or empty array if missing/invalid.
+ */
 function ogape_get_demo_account_state() {
-    $state = isset( $_COOKIE[ ogape_get_demo_account_key() ] ) ? wp_unslash( $_COOKIE[ ogape_get_demo_account_key() ] ) : '';
-    if ( ! is_string( $state ) || '' === $state ) {
+    $raw = isset( $_COOKIE[ ogape_get_demo_account_key() ] ) ? wp_unslash( $_COOKIE[ ogape_get_demo_account_key() ] ) : '';
+    if ( ! is_string( $raw ) || '' === $raw ) {
         return array();
     }
 
-    $decoded = json_decode( base64_decode( $state ), true );
-    return is_array( $decoded ) ? $decoded : array();
+    $state = ogape_verify_cookie_payload( $raw );
+    return is_array( $state ) ? $state : array();
 }
 
+/**
+ * Write the demo account state to a signed, HttpOnly cookie.
+ *
+ * @param array $state Account state to persist.
+ */
 function ogape_set_demo_account_state( $state ) {
     if ( ! is_array( $state ) ) {
         $state = array();
     }
 
-    $encoded = base64_encode( wp_json_encode( $state ) );
-    setcookie( ogape_get_demo_account_key(), $encoded, time() + ( 30 * DAY_IN_SECONDS ), COOKIEPATH ?: '/', COOKIE_DOMAIN, is_ssl(), true );
-    $_COOKIE[ ogape_get_demo_account_key() ] = $encoded;
+    $signed = ogape_sign_cookie_payload( base64_encode( wp_json_encode( $state ) ) );
+
+    setcookie(
+        ogape_get_demo_account_key(),
+        $signed,
+        array(
+            'expires'  => time() + ( 30 * DAY_IN_SECONDS ),
+            'path'     => COOKIEPATH ?: '/',
+            'domain'   => COOKIE_DOMAIN,
+            'secure'   => is_ssl(),
+            'httponly' => true,
+            'samesite' => 'Lax',
+        )
+    );
+    $_COOKIE[ ogape_get_demo_account_key() ] = $signed;
 }
 
+/**
+ * Clear the demo account state cookie.
+ */
 function ogape_clear_demo_account_state() {
-    setcookie( ogape_get_demo_account_key(), '', time() - HOUR_IN_SECONDS, COOKIEPATH ?: '/', COOKIE_DOMAIN, is_ssl(), true );
+    setcookie(
+        ogape_get_demo_account_key(),
+        '',
+        array(
+            'expires'  => time() - HOUR_IN_SECONDS,
+            'path'     => COOKIEPATH ?: '/',
+            'domain'   => COOKIE_DOMAIN,
+            'secure'   => is_ssl(),
+            'httponly' => true,
+            'samesite' => 'Lax',
+        )
+    );
     unset( $_COOKIE[ ogape_get_demo_account_key() ] );
 }
 
