@@ -9,6 +9,51 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Security: prevent direct access
 
+// ── RATE LIMITING ─────────────────────────────────────────────────────────────
+
+/**
+ * Transient-based IP rate limiter for public-facing AJAX endpoints.
+ *
+ * Stores a hit counter per action per hashed IP address. Returns true (rate
+ * limit exceeded) when the caller has made more than $limit requests within
+ * the last $window seconds. Returns false when the request is allowed.
+ *
+ * The IP is SHA-256-hashed before storage so raw addresses never touch the DB.
+ *
+ * @param string $action Unique identifier for the endpoint being protected.
+ * @param int    $limit  Maximum number of requests allowed per window.
+ * @param int    $window Time window in seconds (default: 60).
+ * @return bool True if rate limit is exceeded, false if request is allowed.
+ */
+function ogape_is_rate_limited( $action, $limit = 5, $window = 60 ) {
+    $ip = isset( $_SERVER['REMOTE_ADDR'] ) ? (string) wp_unslash( $_SERVER['REMOTE_ADDR'] ) : 'unknown';
+
+    // Use a forwarded IP only when behind a trusted proxy (Cloudflare / Nginx).
+    if ( isset( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ) {
+        $ip = (string) wp_unslash( $_SERVER['HTTP_CF_CONNECTING_IP'] );
+    } elseif ( isset( $_SERVER['HTTP_X_REAL_IP'] ) ) {
+        $ip = (string) wp_unslash( $_SERVER['HTTP_X_REAL_IP'] );
+    }
+
+    $key   = 'ogape_rl_' . $action . '_' . hash( 'sha256', $ip );
+    $hits  = (int) get_transient( $key );
+
+    if ( $hits >= $limit ) {
+        return true;
+    }
+
+    if ( 0 === $hits ) {
+        set_transient( $key, 1, $window );
+    } else {
+        // Increment without resetting the TTL so the window is a fixed period.
+        set_transient( $key, $hits + 1, $window );
+    }
+
+    return false;
+}
+
+// ── INCLUDES ──────────────────────────────────────────────────────────────────
+
 require get_stylesheet_directory() . '/inc/branding.php';
 require get_stylesheet_directory() . '/inc/menu-loader.php';
 require get_stylesheet_directory() . '/inc/mail.php';
@@ -1605,6 +1650,17 @@ function ogape_ajax_register() {
          ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ogape_demo_nonce'] ) ), 'ogape_demo_account_flow' )
     ) {
         wp_send_json_error( array( 'code' => 'bad_nonce', 'message' => 'Sesión expirada. Recargá la página e intentá de nuevo.' ), 403 );
+    }
+
+    // Rate limit: 5 registration attempts per IP per minute.
+    if ( ogape_is_rate_limited( 'register', 5, 60 ) ) {
+        wp_send_json_error(
+            array(
+                'code'    => 'rate_limited',
+                'message' => 'Demasiados intentos. Esperá un momento e intentá de nuevo.',
+            ),
+            429
+        );
     }
 
     $reg = ogape_build_registration_state( $_POST );

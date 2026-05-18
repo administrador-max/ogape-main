@@ -96,6 +96,17 @@ if ( ! function_exists( 'ogape_handle_waitlist_submission' ) ) {
             );
         }
 
+        // Rate limit: 5 submissions per IP per minute.
+        if ( ogape_is_rate_limited( 'waitlist', 5, 60 ) ) {
+            wp_send_json_error(
+                array(
+                    'code'    => 'rate_limited',
+                    'message' => __( 'Demasiados intentos. Esperá un momento e intentá de nuevo.', 'ogape-child' ),
+                ),
+                429
+            );
+        }
+
         $first_name    = isset( $_POST['first_name'] ) ? sanitize_text_field( wp_unslash( $_POST['first_name'] ) ) : '';
         $email         = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
         $phone                = isset( $_POST['phone_whatsapp'] ) ? sanitize_text_field( wp_unslash( $_POST['phone_whatsapp'] ) ) : '';
