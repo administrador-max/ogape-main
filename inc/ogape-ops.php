@@ -16,6 +16,8 @@ function ogape_delivery_zones() {
         'mburucuya'      => 'Mburucuyá',
         'ykua-sati'      => 'Ykua Satí',
         'centro'         => 'Centro',
+        'san-lorenzo'    => 'San Lorenzo',
+        'lambare'        => 'Lambaré',
     );
 }
 
