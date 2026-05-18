@@ -27,7 +27,7 @@ get_header();
                     <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="btn btn--primary btn--lg">
                         Volver al inicio
                     </a>
-                    <a href="#menu" class="btn btn--secondary btn--lg">
+                    <a href="<?php echo esc_url( home_url( '/menu/' ) ); ?>" class="btn btn--secondary btn--lg">
                         Ver el menú
                     </a>
                 </div>

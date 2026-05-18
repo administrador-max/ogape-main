@@ -12,6 +12,7 @@ $plans_url          = $args['plans_url'] ?? home_url( '/planes/' );
 $menu_url           = $args['menu_url'] ?? home_url( '/menu/' );
 $sustainability_url = $args['sustainability_url'] ?? home_url( '/sostenibilidad/' );
 $hero_image_url     = get_stylesheet_directory_uri() . '/assets/img/kits-hero-box.png';
+$hero_image_webp    = get_stylesheet_directory_uri() . '/assets/img/kits-hero-box.webp';
 ?>
 
 <main id="main" class="site-main kits-design" role="main">
@@ -53,15 +54,18 @@ $hero_image_url     = get_stylesheet_directory_uri() . '/assets/img/kits-hero-bo
 
                 <figure class="openbox">
                     <div class="openbox__photo">
-                        <img
-                            src="<?php echo esc_url( $hero_image_url ); ?>"
-                            alt="Caja Ogape con ingredientes frescos sobre una mesa de cocina"
-                            width="1536"
-                            height="1024"
-                            loading="eager"
-                            decoding="async"
-                            fetchpriority="high"
-                        >
+                        <picture>
+                            <source srcset="<?php echo esc_url( $hero_image_webp ); ?>" type="image/webp">
+                            <img
+                                src="<?php echo esc_url( $hero_image_url ); ?>"
+                                alt="Caja Ogape con ingredientes frescos sobre una mesa de cocina"
+                                width="1536"
+                                height="1024"
+                                loading="eager"
+                                decoding="async"
+                                fetchpriority="high"
+                            >
+                        </picture>
                     </div>
                 </figure>
             </div>
